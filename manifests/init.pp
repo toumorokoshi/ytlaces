@@ -58,13 +58,26 @@ class ytlaces () {
   file { "xinitrc":
     path => "/home/tsutsumi/.xinitrc",
     ensure => "file",
-    source => "puppet:///modules/ytlaces/.xinitrc"
+    source => "puppet:///modules/ytlaces/.xinitrc",
+    owner => "tsutsumi"
+  }
+
+  file { "gitconfig":
+    path => "/home/tsutsumi/.gitconfig",
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/.gitconfig",
+    owner => "tsutsumi"
+  }
+
+  file { "/home/tsutsumi/.gitignore_global":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/.gitignore",
+    owner => "tsutsumi"
   }
 
   package {"openssh":
   }
 
-    # create a directory
   file { '/home/tsutsumi/.ssh/':
     ensure => 'directory',
     owner => "tsutsumi"
