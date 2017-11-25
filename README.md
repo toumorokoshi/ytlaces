@@ -1,5 +1,12 @@
 # laces
 
+## Installing
+
+* install puppet
+* clone this repo
+* symlink repo to /opt/puppetlabs/puppet/modules/laces
+* $ puppet apply examples/init.pp
+
 #### Table of Contents
 
 1. [Description](#description)
