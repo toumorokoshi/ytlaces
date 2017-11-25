@@ -60,4 +60,21 @@ class ytlaces () {
     ensure => "file",
     source => "puppet:///modules/ytlaces/.xinitrc"
   }
+
+  package {"openssh":
+  }
+
+    # create a directory
+  file { '/home/tsutsumi/.ssh/':
+    ensure => 'directory',
+    owner => "tsutsumi"
+  }
+
+  exec {"ssh-keygen -f id_rsa -t rsa -N ''":
+    path => "/usr/bin",
+    creates => "/home/tsutsumi/.ssh/id_rsa.pub",
+    user => "tsutsumi",
+    cwd => "/home/tsutsumi/.ssh/"
+  }
+
 }
