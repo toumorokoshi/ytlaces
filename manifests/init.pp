@@ -42,7 +42,7 @@
 #
 # Copyright 2017 Your name here, unless otherwise noted.
 #
-class laces () {
+class ytlaces () {
   user { "tsutsumi":
     ensure => present,
     shell => "/bin/bash",
@@ -52,12 +52,12 @@ class laces () {
   file { "xresources":
     path => "/home/tsutsumi/.Xresources",
     ensure => "file",
-    source => "puppet:///modules/laces/xresources"
+    source => "puppet:///modules/ytlaces/.Xresources"
   }
 
   file { "xinitrc":
     path => "/home/tsutsumi/.xinitrc",
     ensure => "file",
-    source => "puppet:///modules/laces/xinitrc"
+    source => "puppet:///modules/ytlaces/.xinitrc"
   }
 }
