@@ -1,0 +1,18 @@
+{
+  "name": "yt-laces",
+  "version": "0.1.0",
+  "author": "yt",
+  "summary": "Yusuke Tsutsumi's custom setup",
+  "license": "MIT",
+  "source": "github",
+  "project_page": "me",
+  "issues_url": "me",
+  "dependencies": [
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">= 1.0.0"
+    }
+  ],
+  "data_provider": null
+}
+
