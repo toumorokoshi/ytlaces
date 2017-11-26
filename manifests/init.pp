@@ -75,14 +75,6 @@ class ytlaces () {
     owner => "tsutsumi"
   }
 
-  file { ".xmonad":
-    path => '/home/tsutsumi/.xmonad',
-    ensure => "directory",
-    recurse => "remote",
-    source => "puppet:///modules/ytlaces/xmonad",
-    owner => "tsutsumi"
-  }
-
   package {"openssh":
   }
 
@@ -100,4 +92,5 @@ class ytlaces () {
   }
 
   include ytlaces::laptop
+  include ytlaces::xmonad
 }
