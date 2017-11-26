@@ -55,10 +55,9 @@ class ytlaces () {
     source => "puppet:///modules/ytlaces/.Xresources"
   }
 
-  file { "xinitrc":
-    path => "/home/tsutsumi/.xinitrc",
+  file {"/home/tsutsumi/.profile":
     ensure => "file",
-    source => "puppet:///modules/ytlaces/.xinitrc",
+    source => "puppet:///modules/ytlaces/.profile",
     owner => "tsutsumi"
   }
 
@@ -75,6 +74,7 @@ class ytlaces () {
     owner => "tsutsumi"
   }
 
+
   package {"openssh":
   }
 
@@ -90,6 +90,8 @@ class ytlaces () {
     user => "tsutsumi",
     cwd => "/home/tsutsumi/.ssh/"
   }
+
+  package {"tree":}
 
   include ytlaces::laptop
   include ytlaces::xmonad
