@@ -1,7 +1,10 @@
 class ytlaces::xmonad {
   package {"xmonad-contrib":}
+  # status bar
   package {"dzen2":}
   package {"conky":}
+  # app launch bar
+  package {"dmenu":}
 
   file {".xmonad":
     path => '/home/tsutsumi/.xmonad',

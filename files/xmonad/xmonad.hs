@@ -13,12 +13,13 @@ import qualified Data.Map as M
 main = do
   leftBar <- spawnPipe myXmonadBar
   rightBar <- spawnPipe myStatusBar
-  xmonad $ defaultConfig {
+  xmonad $ docks defaultConfig {
                manageHook = myManageHook
              , workspaces = myWorkspaces
              , modMask = mod4Mask
              , terminal = "urxvt"
              , borderWidth = 2
+             , handleEventHook = docksEventHook
              , layoutHook = avoidStruts $ myLayout
              -- setWMName to LG3D for java app compatability
              -- ewmhDesktopsStartup fixes issues with chrome
@@ -30,9 +31,9 @@ main = do
   }
 
 -- status bar about the machine (uses dzen2 + conky)
-myStatusBar = "conky -c $HOME/.xmonad/conky_dzen | dzen2 -w '1920' -x '2000' -ta 'r'"
+myStatusBar = "conky -c $HOME/.xmonad/conky_dzen | dzen2 -w '1920' -x '2000' -ta 'r' -dock"
 -- status bar about xmonad
-myXmonadBar = "dzen2 -w '2000' -ta 'l'"
+myXmonadBar = "dzen2 -w '2000' -ta 'l' -dock"
 
 -- automatically move apps to a specific page
 myManageHook = composeAll

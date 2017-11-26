@@ -61,6 +61,12 @@ class ytlaces () {
     owner => "tsutsumi"
   }
 
+  file {"/home/tsutsumi/.xprofile":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/.xprofile",
+    owner => "tsutsumi"
+  }
+
   file { "gitconfig":
     path => "/home/tsutsumi/.gitconfig",
     ensure => "file",
