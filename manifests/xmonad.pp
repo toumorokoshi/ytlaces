@@ -1,5 +1,7 @@
 class ytlaces::xmonad {
   package {"xmonad-contrib":}
+  package {"dzen2":}
+  package {"conky":}
 
   file {".xmonad":
     path => '/home/tsutsumi/.xmonad',

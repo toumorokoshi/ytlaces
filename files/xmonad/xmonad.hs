@@ -30,9 +30,9 @@ main = do
   }
 
 -- status bar about the machine (uses dzen2 + conky)
-myStatusBar = "conky -c $HOME/.xmonad/conky_dzen | dzen2 -w '920' -x '1000' -ta 'r'"
+myStatusBar = "conky -c $HOME/.xmonad/conky_dzen | dzen2 -w '1920' -x '2000' -ta 'r'"
 -- status bar about xmonad
-myXmonadBar = "dzen2 -w '1000' -ta 'l'"
+myXmonadBar = "dzen2 -w '2000' -ta 'l'"
 
 -- automatically move apps to a specific page
 myManageHook = composeAll
