@@ -1,0 +1,2 @@
+#!/usr/bin/env python
+# install this puppet recipe. This file should be run as root (helps package manager install things)
