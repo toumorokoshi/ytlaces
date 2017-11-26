@@ -1,2 +1,2 @@
-setterm -blength 0
+xset -b
 setxkbmap -option caps:escape

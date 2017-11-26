@@ -7,8 +7,10 @@ lua_load $HOME/.xmonad/conky_scripts/conky_lua_scripts.lua
 # note: dropbox needed dropbox-cli on arch
 
 TEXT
+# battery
+${execi 6 cat /sys/class/power_supply/BAT0/capacity}%: \
+(${execi 6 cat /sys/class/power_supply/BAT0/status})\
 # network i/o
-${execi 6 /usr/bin/acpi -b} \
 | ^fg(\#8888FF) ^i($HOME/.xmonad/icons/net_down_03.xbm) ${lua_parse format %7s ${downspeed}} ^fg() / \
 ^fg(\#AA0000) ^i($HOME/.xmonad/icons/net_up_03.xbm) ${lua_parse format %7s ${upspeed}} ^fg()\
 # dropbox
