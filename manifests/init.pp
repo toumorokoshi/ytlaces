@@ -99,6 +99,9 @@ class ytlaces () {
 
   package {"tree":}
 
+  include ytlaces::audio
+  include ytlaces::dropbox
+  include ytlaces::fonts
   include ytlaces::laptop
   include ytlaces::xmonad
 }
