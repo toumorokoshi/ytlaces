@@ -1,3 +1,4 @@
 class ytlaces::dropbox {
-  package {"dropbox":}
+  # can't get it working due to yaourt needing to run
+  # package {"dropbox":}
 }
