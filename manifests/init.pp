@@ -104,4 +104,6 @@ class ytlaces () {
   include ytlaces::fonts
   include ytlaces::laptop
   include ytlaces::xmonad
+  include ytlaces::programming
+  include ytlaces::ui
 }
