@@ -41,7 +41,8 @@
   file { "/etc/acpi/handlers/bl":
     ensure => "file",
     source => "puppet:///modules/ytlaces/acpi/handlers/bl",
-    owner => "root"
+    owner => "root",
+    source_permissions => "use"
   }
 
   file { "/etc/acpi/events/bl-u":
