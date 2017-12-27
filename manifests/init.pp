@@ -10,7 +10,7 @@
 #
 # * `sample parameter`
 # Explanation of what this parameter affects and what it defaults to.
-# e.g. "Specify one or more upstream ntp servers as an array."
+#https://github.com/tegan-lamoureux/Rotate-Spectre/blob/master/rotate.py e.g. "Specify one or more upstream ntp servers as an array."
 #
 # Variables
 # ----------
@@ -97,13 +97,12 @@ class ytlaces () {
     cwd => "/home/tsutsumi/.ssh/"
   }
 
-  package {"tree":}
-
   include ytlaces::audio
   include ytlaces::dropbox
   include ytlaces::fonts
   include ytlaces::laptop
-  include ytlaces::xmonad
   include ytlaces::programming
+  include ytlaces::programs
   include ytlaces::ui
+  include ytlaces::xmonad
 }
