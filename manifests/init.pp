@@ -103,6 +103,7 @@ class ytlaces () {
   include ytlaces::laptop
   include ytlaces::programming
   include ytlaces::programs
+  include ytlaces::secrets
   include ytlaces::ui
   include ytlaces::xmonad
 }

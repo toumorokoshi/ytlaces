@@ -56,4 +56,22 @@
     source => "puppet:///modules/ytlaces/acpi/events/bl-d",
     owner => "root"
   }
+
+  # touchscreen rotation
+  file { "/opt/scripts/":
+    ensure => "directory",
+    owner => "root"
+  }
+
+  file { "/opt/scripts/rotate_screen.py":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/scripts/rotate_screen.py",
+    owner => "root"
+  }
+
+  service { "rotate_screen":
+    ensure => "running",
+    start => "python /opt/scripts/rotate_screen.py &",
+    enable => true
+  }
 }
