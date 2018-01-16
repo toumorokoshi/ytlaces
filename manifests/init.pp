@@ -104,6 +104,8 @@ class ytlaces () {
   include ytlaces::programming
   include ytlaces::programs
   include ytlaces::secrets
+  include ytlaces::time
   include ytlaces::ui
+  include ytlaces::vpn
   include ytlaces::xmonad
 }
