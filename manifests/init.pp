@@ -111,6 +111,7 @@ class ytlaces (String $type = 'desktop') {
   # conditional includes
   case $type {
     'desktop': {
+      include ytlaces::desktop
       include ytlaces::virtualization
     }
     'laptop': {
