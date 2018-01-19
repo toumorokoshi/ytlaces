@@ -42,7 +42,7 @@
 #
 # Copyright 2017 Your name here, unless otherwise noted.
 #
-class ytlaces () {
+class ytlaces (String $type = 'desktop') {
   user { "tsutsumi":
     ensure => present,
     shell => "/bin/bash",
@@ -100,7 +100,6 @@ class ytlaces () {
   include ytlaces::audio
   include ytlaces::dropbox
   include ytlaces::fonts
-  include ytlaces::laptop
   include ytlaces::programming
   include ytlaces::programs
   include ytlaces::secrets
@@ -108,4 +107,14 @@ class ytlaces () {
   include ytlaces::ui
   include ytlaces::vpn
   include ytlaces::xmonad
+
+  # conditional includes
+  case $type {
+    'desktop': {
+      include ytlaces::virtualization
+    }
+    'laptop': {
+      include ytlaces::laptop
+    }
+  }
 }

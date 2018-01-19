@@ -1,0 +1,3 @@
+class {'::ytlaces':
+  type => 'laptop'
+}
