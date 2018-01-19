@@ -1,2 +1,4 @@
 xset -b
 setxkbmap -option caps:escape
+[[ -f ~/.xprofile.desktop ]] && . ~/.xprofile.desktop
+[[ -f ~/.Xresources.laptop ]] && xrdb -merge ~/.Xresources.laptop

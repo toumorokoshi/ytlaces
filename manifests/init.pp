@@ -52,7 +52,8 @@ class ytlaces (String $type = 'desktop') {
   file { "xresources":
     path => "/home/tsutsumi/.Xresources",
     ensure => "file",
-    source => "puppet:///modules/ytlaces/.Xresources"
+    source => "puppet:///modules/ytlaces/.Xresources",
+    owner => "tsutsumi"
   }
 
   file {"/home/tsutsumi/.profile":

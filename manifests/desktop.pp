@@ -1,7 +1,7 @@
 class ytlaces::desktop {
-  file {"/home/tsutsumi/.xinitrc.desktop":
+  file {"/home/tsutsumi/.xprofile.desktop":
     ensure => "file",
-    source => "puppet:///modules/ytlaces/.xinitrc.desktop",
+    source => "puppet:///modules/ytlaces/.xprofile.desktop",
     owner => "tsutsumi"
   }
 }
