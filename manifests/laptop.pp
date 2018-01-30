@@ -69,9 +69,23 @@
     owner => "root"
   }
 
-  service { "rotate_screen":
-    ensure => "running",
-    start => "python /opt/scripts/rotate_screen.py &",
-    enable => true
+  file { "/etc/systemd/user/rotate-screen.service":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/laptop/rotate-screen.service",
+    owner => "root"
+  }
+
+  # for now, have to enable by running
+  # systemctl --user enable rotate-screen.service
+
+  file { "/home/tsutsumi/.Xresources.d":
+    ensure => "directory",
+    owner => "tsutsumi"
+  }
+
+  file {"/home/tsutsumi/.Xresources.d/laptop":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/.Xresources.laptop",
+    owner => "tsutsumi"
   }
 }
