@@ -1,2 +1,2 @@
 event=button/mute
-action=amixer set Master toggle
+action=pactl set-sink-mute 0 toggle
