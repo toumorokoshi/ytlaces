@@ -81,6 +81,11 @@ class ytlaces (String $type = 'desktop') {
     owner => "tsutsumi"
   }
 
+  file { "/etc/pacman.conf":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/etc/pacman.conf",
+    owner => "root",
+  }
 
   package {"openssh":
   }
