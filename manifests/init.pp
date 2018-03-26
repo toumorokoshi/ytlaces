@@ -103,6 +103,12 @@ class ytlaces (String $type = 'desktop') {
     cwd => "/home/tsutsumi/.ssh/"
   }
 
+  file {"/etc/security/limits.conf":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/etc/security/limits.conf",
+    owner => "root",
+  }
+
   include ytlaces::audio
   include ytlaces::dropbox
   include ytlaces::fonts
