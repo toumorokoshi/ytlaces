@@ -109,6 +109,12 @@ class ytlaces (String $type = 'desktop') {
     owner => "root",
   }
 
+  file {"/etc/systemd/user.conf":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/etc/systemd/user.conf",
+    owner => "root",
+  }
+
   include ytlaces::audio
   include ytlaces::dropbox
   include ytlaces::fonts
