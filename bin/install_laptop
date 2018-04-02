@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
-sudo puppet apply --modulepath=../ examples/laptop.pp
+BASE=`dirname $0`
+sudo puppet apply $BASE/../examples/laptop.pp
 # install this puppet recipe. This file should be run as root (helps package manager install things)

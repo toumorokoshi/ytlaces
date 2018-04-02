@@ -1,10 +1,14 @@
-# laces
+# ytlaces
 
 ## Installing
 
 * install puppet
 * clone this repo
-* symlink repo to /opt/puppetlabs/puppet/modules/laces
+* symlink repo to /opt/puppetlabs/puppet/modules/ytlaces
+* install the following modules:
+
+    puppet module install puppetlabs-vcsrepo
+
 * $ puppet apply examples/init.pp
 
 ## post-install setup.

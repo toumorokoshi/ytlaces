@@ -121,6 +121,7 @@ class ytlaces (String $type = 'desktop') {
   include ytlaces::programming
   include ytlaces::programs
   include ytlaces::secrets
+  include ytlaces::sub
   include ytlaces::terminal
   include ytlaces::terminal_config
   include ytlaces::time

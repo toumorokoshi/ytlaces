@@ -11,8 +11,11 @@
     {
       "name": "puppetlabs-stdlib",
       "version_requirement": ">= 1.0.0"
+    },
+    {
+      "name": "puppetlabs-vcsrepo",
+      "version_requirement": ">= 1.0.0"
     }
   ],
   "data_provider": null
 }
-
