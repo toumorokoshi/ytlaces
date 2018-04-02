@@ -9,4 +9,5 @@
     source => "puppet:///modules/ytlaces/rc.d/common",
     owner => "tsutsumi"
    }
+   package {"fzf":}
 }
