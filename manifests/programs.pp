@@ -3,4 +3,5 @@ class ytlaces::programs {
   # uses the AUR + yaourt.
   # package {"write-stylus":}
   package {"tree":}
+  package {"hexchat":}
 }
