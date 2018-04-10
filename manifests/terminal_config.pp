@@ -10,4 +10,10 @@
     owner => "tsutsumi"
    }
    package {"fzf":}
+
+   file {"/home/tsutsumi/.tmux.conf":
+    ensure => 'file',
+    source => "puppet:///modules/ytlaces/home/.tmux.conf",
+    owner => "tsutsumi"
+   }
 }
