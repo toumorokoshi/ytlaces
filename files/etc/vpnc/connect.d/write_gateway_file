@@ -1,0 +1,2 @@
+#!/bin/sh
+echo $VPNGATEWAY > /tmp/vpn-gateway-address

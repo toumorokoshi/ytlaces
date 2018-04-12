@@ -1,0 +1,40 @@
+#!/bin/sh
+
+IF=$1
+STATUS=$2
+
+case "$STATUS" in
+    up)
+    logger -s "NM Script up triggered"
+    # this uses a modified vpnc-script
+    # to write the ip of the gateway to the file
+    # /tmp/vpn-gateway-address
+    # which then gets re-added to the route on startup
+    ADDRESS_FILEPATH="/tmp/vpn-gateway-address"
+    ROUTE=`ip route show default dev $IF | cut -d' ' -f2-`
+    echo $ROUTE > /tmp/handle_vpn_output
+    if [ -f $ADDRESS_FILEPATH ]; then
+      GATEWAY_ADDRESS=`cat $ADDRESS_FILEPATH`
+      # we don't quote route on purpose, to expand params.
+      ip route add $GATEWAY_ADDRESS $ROUTE
+      # finally, we kick the openconnect process with SIGUSR2,
+      # telling the vpn to disconnect and reconnect.
+      OPENCONNECT_PID=`pgrep openconnect`
+      kill -12 $OPENCONNECT_PID
+    fi
+    ;;
+    # down)
+    # logger -s "NM Script down triggered"
+    # command2
+    # ;;
+    # pre-up)
+    # logger -s "NM Script pre-up triggered"
+    # command3
+    # ;;
+    # post-down)
+    # logger -s "NM Script post-down triggered"
+    # command4
+    # ;;
+    *)
+    ;;
+esac
