@@ -94,3 +94,6 @@ export PS1="$IYELLOW\u:\w\\[\033[\$(parse_git_dirty_color)\]\$(parse_git_repo)\$
 
 # add sub
 tmp=`pwd`; cd $HOME/.ytlaces/sub/libexec/ && . ./sub-init && cd $tmp
+
+# add rustup directories
+PATH=$HOME/.cargo/bin:$PATH

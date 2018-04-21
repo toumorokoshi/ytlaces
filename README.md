@@ -5,7 +5,9 @@
 * install puppet
 * clone this repo
 * symlink repo to /opt/puppetlabs/puppet/modules/ytlaces
-* install the following modules:
+* install the following modules:A
+
+asdfklj
 
     puppet module install puppetlabs-vcsrepo
 
