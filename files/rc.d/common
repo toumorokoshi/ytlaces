@@ -97,3 +97,4 @@ tmp=`pwd`; cd $HOME/.ytlaces/sub/libexec/ && . ./sub-init && cd $tmp
 
 # add rustup directories
 PATH=$HOME/.cargo/bin:$PATH
+export PATH=$PATH:$HOME/bin

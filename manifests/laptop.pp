@@ -88,4 +88,17 @@
     source => "puppet:///modules/ytlaces/.Xresources.laptop",
     owner => "tsutsumi"
   }
+
+  vcsrepo { '/home/tsutsumi/.ytlaces/autorandr':
+    ensure   => present,
+    provider => git,
+    source   => 'https://github.com/wertarbyte/autorandr',
+    owner => 'tsutsumi',
+  }
+
+  file { '/home/tsutsumi/bin/autorandr':
+    ensure => 'link',
+    target => '/home/tsutsumi/.ytlaces/autorandr/autorandr',
+    mode => '0755',
+  }
 }

@@ -13,11 +13,18 @@
       ensure => "file",
       source => "https://dist.nuget.org/win-x86-commandline/v4.7.0/nuget.exe",
       owner => "tsutsumi",
-   }
-   file {"/home/tsutsumi/bin/nuget":
+  }
+  file {"/home/tsutsumi/bin/nuget":
       ensure => "file",
       source => "puppet:///modules/ytlaces/home/bin/nuget",
       owner => "tsutsumi",
       mode => "0755"
-   }
+  }
+
+  package {"gdb":}
+  file { '/home/tsutsumi/.gdbinit':
+    ensure => 'file',
+    source => "puppet:///modules/ytlaces/home/.gdbinit",
+    mode => '0755',
+  }
 }
