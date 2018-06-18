@@ -87,11 +87,25 @@ class ytlaces (String $type = 'desktop') {
     owner => "root",
   }
 
-  package {"openssh":
-  }
+  package {"openssh":}
 
   file {".ssh":
     path => '/home/tsutsumi/.ssh/',
+    ensure => 'directory',
+    owner => "tsutsumi"
+  }
+
+  file {"/home/tsutsumi/lib":
+    ensure => 'directory',
+    owner => "tsutsumi"
+  }
+
+  file {"/home/tsutsumi/bin":
+    ensure => 'directory',
+    owner => "tsutsumi"
+  }
+
+  file {"/home/tsutsumi/.config":
     ensure => 'directory',
     owner => "tsutsumi"
   }
@@ -114,6 +128,9 @@ class ytlaces (String $type = 'desktop') {
     source => "puppet:///modules/ytlaces/etc/systemd/user.conf",
     owner => "root",
   }
+
+  # add to network.pp
+  package {"networkmanager":}
 
   include ytlaces::audio
   include ytlaces::dropbox

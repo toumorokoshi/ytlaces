@@ -1,0 +1,8 @@
+#!/bin/sh
+
+TMP_DIR=`mktemp -d`
+cd $TMP_DIR
+sudo pacman -S make fakeroot
+git clone https://aur.archlinux.org/yay.git
+cd yay
+mkpkg -si --noconfirm

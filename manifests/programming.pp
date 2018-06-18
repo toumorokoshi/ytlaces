@@ -1,4 +1,5 @@
  class ytlaces::programming {
+   package {"atom":}
    package {"python":}
    package {"clojure":}
    package {"docker":}

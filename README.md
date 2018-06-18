@@ -16,7 +16,9 @@
 There's a couple more steps that need to run, post-install for now:
 
 * add a section into your bash/zsh rc file that sources in a whole directory of rc files:
+* add a resolv.conf line for google's 8.8.8.8 dns. This ensures that a public
 
+### Install from the AUR:
 
 * add a resolv.conf line for google's 8.8.8.8 dns. This ensures that a public
   dns is used before a private one.
@@ -34,3 +36,10 @@ There's a couple more steps that need to run, post-install for now:
 ## Setting up Arch
 
 * wifi-menu can be used to connect to the network.
+    bin/install_yay
+    yay -S install dropbox
+    yay -S install dropbox-cli
+    systemctl enable dropbox@tsutsumi
+
+* dropbox
+* dropbox-cli
