@@ -11,6 +11,7 @@ import XMonad.Hooks.ManageDocks
 import qualified Data.Map as M
 
 main = do
+  staloneTray <- spawnPipe myStaloneTray
   leftBar <- spawnPipe myXmonadBar
   rightBar <- spawnPipe myStatusBar
   xmonad $ docks defaultConfig {
@@ -33,7 +34,8 @@ main = do
 -- status bar about the machine (uses dzen2 + conky)
 myStatusBar = "conky -c $HOME/.xmonad/conky_dzen | dzen2 -w '1920' -x '2000' -ta 'r' -dock"
 -- status bar about xmonad
-myXmonadBar = "dzen2 -w '2000' -ta 'l' -dock"
+myXmonadBar = "dzen2 -x '200' -w '2000' -ta 'l' -dock"
+myStaloneTray = "stalonetray"
 
 -- automatically move apps to a specific page
 myManageHook = composeAll
@@ -43,7 +45,7 @@ myManageHook = composeAll
     ]
 
 -- workspaces
-myWorkspaces = ["1:⌨", "2:🕸", "3:🗨", "4:🎧", "5:❓", "6:♻", "7:💿"]
+myWorkspaces = ["1:⌨", "2:W", "3:C", "4:M", "5:X", "6:♻", "7:Z"]
 
 myLogHook :: Handle -> X ()
 myLogHook h = dynamicLogWithPP $ defaultPP {
