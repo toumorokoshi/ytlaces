@@ -43,7 +43,7 @@ myManageHook = composeAll
     ]
 
 -- workspaces
-myWorkspaces = ["1:code", "2:chrome", "3:steam", "4:music", "5:other"]
+myWorkspaces = ["1:⌨", "2:🕸", "3:🗨", "4:🎧", "5:❓", "6:♻", "7:💿"]
 
 myLogHook :: Handle -> X ()
 myLogHook h = dynamicLogWithPP $ defaultPP {

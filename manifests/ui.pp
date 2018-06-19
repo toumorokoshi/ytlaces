@@ -1,4 +1,8 @@
 class ytlaces::ui {
+  package {"noto-fonts":}
+  package {"ttf-hack":}
+  package {"xorg-xfontsel":}
+  package {"xorg-xlsfonts":}
   package {"xorg":}
   package {"lightdm":}
   package {"lightdm-gtk-greeter":}
