@@ -27,4 +27,11 @@
     source => "puppet:///modules/ytlaces/home/.gdbinit",
     mode => '0755',
   }
+
+  file {"/home/tsutsumi/bin/flamegraph.pl":
+      ensure => "file",
+      source => "https://raw.githubusercontent.com/brendangregg/FlameGraph/master/flamegraph.pl",
+      owner => "tsutsumi",
+      mode => "0755"
+  }
 }
