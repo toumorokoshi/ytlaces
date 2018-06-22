@@ -1,6 +1,7 @@
 class ytlaces::ui {
   package {"noto-fonts":}
   package {"ttf-hack":}
+  package {"xscreensaver":}
   package {"xorg-xfontsel":}
   package {"xorg-xlsfonts":}
   package {"xorg":}
