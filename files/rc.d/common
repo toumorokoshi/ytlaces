@@ -98,3 +98,8 @@ tmp=`pwd`; cd $HOME/.ytlaces/sub/libexec/ && . ./sub-init && cd $tmp
 # add rustup directories
 PATH=$HOME/.cargo/bin:$PATH
 export PATH=$PATH:$HOME/bin
+
+# use IBUS as the input manager
+export GTK_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+export QT_IM_MODULE=ibus

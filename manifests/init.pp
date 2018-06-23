@@ -135,6 +135,7 @@ class ytlaces (String $type = 'desktop') {
   include ytlaces::audio
   include ytlaces::dropbox
   include ytlaces::fonts
+  include ytlaces::input
   include ytlaces::programming
   include ytlaces::programs
   include ytlaces::secrets
