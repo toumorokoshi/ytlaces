@@ -2,7 +2,9 @@
 
 TMP_DIR=`mktemp -d`
 cd $TMP_DIR
-sudo pacman -S make fakeroot
+sudo pacman -S make fakeroot --noconfirm
 git clone https://aur.archlinux.org/yay.git
 cd yay
-mkpkg -si --noconfirm
+echo `pwd`
+makepkg -si
+rm $TMP_DIR
