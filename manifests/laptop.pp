@@ -7,6 +7,13 @@
     owner => "root"
   }
 
+  file { "/usr/lib/systemd/system-sleep/local.sh":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/usr/lib/systemd/system-sleep/local.sh",
+    owner => "root",
+    source_permissions => "use",
+  }
+
   package {"acpid":}
   # installed by acpid
   service { "acpid.service":
