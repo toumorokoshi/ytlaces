@@ -1,8 +1,15 @@
- class ytlaces::programming {
-   package {"atom":}
+class ytlaces::programming {
+  package {"atom":}
+  package {"clojure":}
+  package {"docker":}
+  service {"docker":
+    ensure => "running",
+    enable => "true"
+  }
+  group {"docker":
+    members => ["tsutsumi"]
+  }
    package {"python":}
-   package {"clojure":}
-   package {"docker":}
    # yaourt
    # package {"code":}
    package {"dotnet-runtime":}

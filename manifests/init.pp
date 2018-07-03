@@ -75,6 +75,12 @@ class ytlaces (String $type = 'desktop') {
     owner => "tsutsumi"
   }
 
+  file { "/home/tsutsumi/.gitconfig.zillow":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/.gitconfig.zillow",
+    owner => "tsutsumi"
+  }
+
   file { "/home/tsutsumi/.gitignore_global":
     ensure => "file",
     source => "puppet:///modules/ytlaces/.gitignore",

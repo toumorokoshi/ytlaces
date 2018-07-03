@@ -9,3 +9,12 @@ sh
   and navigate to that on a browser.
 
 # thunar for file management
+
+
+# tbtadm to approve thunderbolt 3 docks.
+
+  sudo tbtadm approve-all works great.
+
+I've noticed removing and re-connecting the devices doesn't cause the devices to come back.
+
+removing and unauthorizing the device, then reconnecting and waiting a while before approving has worked.
