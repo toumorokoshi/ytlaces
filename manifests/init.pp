@@ -150,8 +150,9 @@ class ytlaces (String $type = 'desktop') {
   include ytlaces::terminal_config
   include ytlaces::time
   include ytlaces::ui
+  include ytlaces::ui_xmonad
+  include ytlaces::ui_awesome
   include ytlaces::vpn
-  include ytlaces::xmonad
 
   # conditional includes
   case $type {

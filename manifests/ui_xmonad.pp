@@ -1,4 +1,4 @@
-class ytlaces::xmonad {
+class ytlaces::ui_xmonad {
   package {"xmonad-contrib":}
   # status bar
   package {"dzen2":}
@@ -12,6 +12,15 @@ class ytlaces::xmonad {
     recurse => "remote",
     source => "puppet:///modules/ytlaces/xmonad",
     owner => "tsutsumi"
+  }
+
+  # for tray
+  package {"stalonetray":}
+  file {"/home/tsutsumi/.stalonetrayrc":
+   ensure => "file",
+   source => "puppet:///modules/ytlaces/home/.stalonetrayrc",
+   owner => "root",
+   mode => "0644"
   }
 
   /* exec {"xmonad --recompile":
