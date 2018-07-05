@@ -1,4 +1,5 @@
 xset -b
 setxkbmap -option caps:escape
+xscreensaver -no-splash &
 [[ -f ~/.xprofile.desktop ]] && . ~/.xprofile.desktop
 [[ -f ~/.Xresources.laptop ]] && xrdb -merge ~/.Xresources.laptop
