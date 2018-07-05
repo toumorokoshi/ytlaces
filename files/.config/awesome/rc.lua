@@ -283,6 +283,9 @@ globalkeys = gears.table.join(
     awful.key({ modkey,   "Shift" }, "w",
               function () client.focus:move_to_screen(1) end,
               {description = "move focus client to screen 1", group = "tag"}),
+    awful.key({}, "F12",
+              function () awful.util.spawn("xscreensaver-command -lock") end,
+              {description = "lock screen", group = "awesome"}),
 
 
     -- Layout manipulation
