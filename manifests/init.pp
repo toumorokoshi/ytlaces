@@ -135,8 +135,10 @@ class ytlaces (String $type = 'desktop') {
     owner => "root",
   }
 
-  # add to network.pp
-  package {"networkmanager":}
+  # this is needed to clone certain repos, even outside
+  # of programming
+  package {"git":}
+  package {"git-lfs":}
 
   include ytlaces::audio
   include ytlaces::dropbox
