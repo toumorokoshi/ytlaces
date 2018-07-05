@@ -58,10 +58,10 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
-    awful.layout.suit.tile.bottom,
     awful.layout.suit.tile.top,
     awful.layout.suit.max,
+    -- awful.layout.suit.tile.bottom,
+    -- awful.layout.suit.tile.left,
     -- awful.layout.suit.floating,
     -- awful.layout.suit.fair,
     -- awful.layout.suit.fair.horizontal,
@@ -218,6 +218,10 @@ awful.screen.connect_for_each_screen(function(s)
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
             wibox.widget.systray(),
+            -- require("awesome-wm-widgets.cpu-widget.cpu-widget"),
+            -- require("awesome-wm-widgets.ram-widget.ram-widget"),
+            require("cpu-widget"),
+            require("ram-widget"),
             require("battery-widget") {},
             mytextclock,
             s.mylayoutbox,
