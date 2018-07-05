@@ -178,12 +178,14 @@ end
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 
+-- shared tags across screens, like xmonad
+
+awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9"},1,awful.layout.layouts[1])
+sharedtaglist = screen[1].tags
+
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     set_wallpaper(s)
-
-    -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -261,8 +263,26 @@ globalkeys = gears.table.join(
         end,
         {description = "focus previous by index", group = "client"}
     ),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
+    awful.key({ modkey,           }, "y", function () mymainmenu:show() end,
               {description = "show main menu", group = "awesome"}),
+
+    --
+    awful.key({ modkey,           }, "r", function () awful.screen.focus(3) end,
+              {description = "focus screen 3", group = "screen"}),
+    awful.key({ modkey,           }, "e", function () awful.screen.focus(2) end,
+              {description = "focus screen 2", group = "screen"}),
+    awful.key({ modkey,           }, "w", function () awful.screen.focus(1) end,
+              {description = "focus screen 1", group = "screen"}),
+    awful.key({ modkey,   "Shift" }, "r",
+              function () client.focus:move_to_screen(3) end,
+              {description = "move focus client to screen 3", group = "tag"}),
+    awful.key({ modkey,   "Shift" }, "e",
+              function () client.focus:move_to_screen(2) end,
+              {description = "move focus client to screen 2", group = "tag"}),
+    awful.key({ modkey,   "Shift" }, "w",
+              function () client.focus:move_to_screen(1) end,
+              {description = "move focus client to screen 1", group = "tag"}),
+
 
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
@@ -321,8 +341,8 @@ globalkeys = gears.table.join(
               {description = "restore minimized", group = "client"}),
 
     -- Prompt
-    awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
-              {description = "run prompt", group = "launcher"}),
+    -- awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
+    --          {description = "run prompt", group = "launcher"}),
 
     awful.key({ modkey }, "x",
               function ()
@@ -392,17 +412,18 @@ for i = 1, 9 do
         awful.key({ modkey }, "#" .. i + 9,
                   function ()
                         local screen = awful.screen.focused()
-                        local tag = screen.tags[i]
+                        local tag = sharedtaglist[i]
                         if tag then
-                           tag:view_only()
+                          awful.tag.setscreen(screen, tag)
+                          tag:view_only()
                         end
                   end,
                   {description = "view tag #"..i, group = "tag"}),
         -- Toggle tag display.
         awful.key({ modkey, "Control" }, "#" .. i + 9,
                   function ()
-                      local screen = awful.screen.focused()
-                      local tag = screen.tags[i]
+                      -- local screen = awful.screen.focused()
+                      local tag = sharedtaglist[i]
                       if tag then
                          awful.tag.viewtoggle(tag)
                       end
@@ -412,7 +433,7 @@ for i = 1, 9 do
         awful.key({ modkey, "Shift" }, "#" .. i + 9,
                   function ()
                       if client.focus then
-                          local tag = client.focus.screen.tags[i]
+                          local tag = sharedtaglist[i]
                           if tag then
                               client.focus:move_to_tag(tag)
                           end
@@ -423,7 +444,7 @@ for i = 1, 9 do
         awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
                   function ()
                       if client.focus then
-                          local tag = client.focus.screen.tags[i]
+                          local tag = sharedtaglist[i]
                           if tag then
                               client.focus:toggle_tag(tag)
                           end
