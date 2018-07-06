@@ -183,15 +183,15 @@ screen.connect_signal("property::geometry", set_wallpaper)
 -- shared tags across screens, like xmonad
 
 local tags = sharedtags({
-    { name = "1: ⌨"},
-    { name = "2: W"},
-    { name = "3: C"},
-    { name = "4: M"},
-    { name = "5: X"},
-    { name = "6: Y"},
-    { name = "7: Z"},
-    { name = "8: Z"},
-    { name = "9: Z"},
+    { name = "1: ⌨", layout = awful.layout.layouts[1]},
+    { name = "2: W", layout = awful.layout.layouts[1]},
+    { name = "3: C", layout = awful.layout.layouts[1]},
+    { name = "4: M", layout = awful.layout.layouts[1]},
+    { name = "5: X", layout = awful.layout.layouts[1]},
+    { name = "6: Y", layout = awful.layout.layouts[1]},
+    { name = "7: Z", layout = awful.layout.layouts[1]},
+    { name = "8: Z", layout = awful.layout.layouts[1]},
+    { name = "9: Z", layout = awful.layout.layouts[1]},
 })
 
 awful.screen.connect_for_each_screen(function(s)
