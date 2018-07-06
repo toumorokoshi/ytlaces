@@ -1,6 +1,7 @@
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
+local sharedtags = require("awesome-sharedtags")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
@@ -181,8 +182,17 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 -- shared tags across screens, like xmonad
 
-awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9"},1,awful.layout.layouts[1])
-sharedtaglist = screen[1].tags
+local tags = sharedtags({
+    { name = "1: ⌨"},
+    { name = "2: W"},
+    { name = "3: C"},
+    { name = "4: M"},
+    { name = "5: X"},
+    { name = "6: Y"},
+    { name = "7: Z"},
+    { name = "8: Z"},
+    { name = "9: Z"},
+})
 
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
@@ -285,7 +295,10 @@ globalkeys = gears.table.join(
               {description = "move focus client to screen 1", group = "tag"}),
     awful.key({}, "F12",
               function () awful.util.spawn("xscreensaver-command -lock") end,
-              {description = "lock screen", group = "awesome"}),
+              {description = "lock screen", group = "general"}),
+    awful.key({}, "F4",
+              function() xrandr.xrandr() end,
+              {description = "configure monitors", group = "general"}),
 
 
     -- Layout manipulation
@@ -416,10 +429,9 @@ for i = 1, 9 do
         awful.key({ modkey }, "#" .. i + 9,
                   function ()
                         local screen = awful.screen.focused()
-                        local tag = sharedtaglist[i]
+                        local tag = tags[i]
                         if tag then
-                          awful.tag.setscreen(screen, tag)
-                          tag:view_only()
+                          sharedtags.viewonly(tag, screen)
                         end
                   end,
                   {description = "view tag #"..i, group = "tag"}),
@@ -427,9 +439,9 @@ for i = 1, 9 do
         awful.key({ modkey, "Control" }, "#" .. i + 9,
                   function ()
                       -- local screen = awful.screen.focused()
-                      local tag = sharedtaglist[i]
+                      local tag = tags[i]
                       if tag then
-                         awful.tag.viewtoggle(tag)
+                         sharedtags.viewtoggle(tag, screen)
                       end
                   end,
                   {description = "toggle tag #" .. i, group = "tag"}),
@@ -437,7 +449,7 @@ for i = 1, 9 do
         awful.key({ modkey, "Shift" }, "#" .. i + 9,
                   function ()
                       if client.focus then
-                          local tag = sharedtaglist[i]
+                          local tag = tags[i]
                           if tag then
                               client.focus:move_to_tag(tag)
                           end
@@ -448,7 +460,7 @@ for i = 1, 9 do
         awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
                   function ()
                       if client.focus then
-                          local tag = sharedtaglist[i]
+                          local tag = tags[i]
                           if tag then
                               client.focus:toggle_tag(tag)
                           end
