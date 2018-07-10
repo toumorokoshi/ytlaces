@@ -49,43 +49,38 @@ class ytlaces (String $type = 'desktop') {
     home => "/home/tsutsumi"
   }
 
-  file { "xresources":
-    path => "/home/tsutsumi/.Xresources",
-    ensure => "file",
-    source => "puppet:///modules/ytlaces/.Xresources",
-    owner => "tsutsumi"
+  # a majority of the relevant files are copied over
+  # here. This makes it easy to add to existing configs
+  # by modifying the single home directory in ytlaces.
+  # this doesn't work well if sockets and fifos
+  # exist under the root directory. to find them run:
+  # $ find . -type s
+  # $ find . -type p
+  file {"/home/tsutsumi/":
+    ensure => "directory",
+    recurse => false,
+    purge => false,
+    source => "puppet:///modules/ytlaces/home/",
+    owner => "tsutsumi",
   }
 
-  file {"/home/tsutsumi/.profile":
-    ensure => "file",
-    source => "puppet:///modules/ytlaces/.profile",
-    owner => "tsutsumi"
+  file {"/home/tsutsumi/.config":
+    ensure => "directory",
+    recurse => true,
+    purge => false,
+    source => "puppet:///modules/ytlaces/home/.config",
+    owner => "tsutsumi",
   }
 
-  file {"/home/tsutsumi/.xprofile":
-    ensure => "file",
-    source => "puppet:///modules/ytlaces/.xprofile",
-    owner => "tsutsumi"
+  file {"/home/tsutsumi/bin":
+    ensure => "directory",
+    recurse => true,
+    purge => false,
+    source => "puppet:///modules/ytlaces/home/bin",
+    owner => "tsutsumi",
   }
 
-  file { "gitconfig":
-    path => "/home/tsutsumi/.gitconfig",
-    ensure => "file",
-    source => "puppet:///modules/ytlaces/.gitconfig",
-    owner => "tsutsumi"
-  }
 
-  file { "/home/tsutsumi/.gitconfig.zillow":
-    ensure => "file",
-    source => "puppet:///modules/ytlaces/.gitconfig.zillow",
-    owner => "tsutsumi"
-  }
-
-  file { "/home/tsutsumi/.gitignore_global":
-    ensure => "file",
-    source => "puppet:///modules/ytlaces/.gitignore",
-    owner => "tsutsumi"
-  }
 
   file { "/etc/pacman.conf":
     ensure => "file",
@@ -97,21 +92,6 @@ class ytlaces (String $type = 'desktop') {
 
   file {".ssh":
     path => '/home/tsutsumi/.ssh/',
-    ensure => 'directory',
-    owner => "tsutsumi"
-  }
-
-  file {"/home/tsutsumi/lib":
-    ensure => 'directory',
-    owner => "tsutsumi"
-  }
-
-  file {"/home/tsutsumi/bin":
-    ensure => 'directory',
-    owner => "tsutsumi"
-  }
-
-  file {"/home/tsutsumi/.config":
     ensure => 'directory',
     owner => "tsutsumi"
   }

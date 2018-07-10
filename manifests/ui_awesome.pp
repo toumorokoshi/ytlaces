@@ -1,13 +1,6 @@
 class ytlaces::ui_awesome {
   package {"awesome":}
 
-  file {"/home/tsutsumi/.config/awesome/":
-    ensure => 'directory',
-    owner => "tsutsumi",
-    recurse => "remote",
-    source => "puppet:///modules/ytlaces/.config/awesome/",
-  }
-
   vcsrepo { '/home/tsutsumi/.config/awesome/battery-widget':
     ensure   => present,
     provider => git,

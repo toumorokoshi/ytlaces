@@ -1,2 +1,1 @@
 xsetroot -cursor_name left_ptr
-# xmodmap -e "pointer = 3 2 1"
