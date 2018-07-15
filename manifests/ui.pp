@@ -13,6 +13,7 @@ class ytlaces::ui {
   }
   # file management
   package {"thunar":}
+  package {"gvfs":}
   # for thumbnails
   package {"tumbler":}
   package {"ffmpegthumbnailer":}
