@@ -1,3 +1,4 @@
 class {'::ytlaces':
-  type => 'desktop'
+  type => 'desktop',
+  username => 'tsutsumi'
 }

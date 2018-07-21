@@ -1,4 +1,6 @@
-class ytlaces::programming {
+class ytlaces::programming(
+  String $username = 'tsutsumi'
+) {
   package {"atom":}
   package {"clojure":}
   package {"docker":}
@@ -7,7 +9,7 @@ class ytlaces::programming {
     enable => "true"
   }
   group {"docker":
-    members => ["tsutsumi"]
+    members => [$username]
   }
    package {"python":}
    # yaourt
@@ -16,29 +18,30 @@ class ytlaces::programming {
    package {"dotnet-sdk":}
    package {"mono":}
    # this next part sets up nuget
-   file {"/home/tsutsumi/lib/nuget.exe":
+   file {"/home/$username/lib/nuget.exe":
       ensure => "file",
       source => "https://dist.nuget.org/win-x86-commandline/v4.7.0/nuget.exe",
-      owner => "tsutsumi",
+      owner => "$username",
   }
-  file {"/home/tsutsumi/bin/nuget":
+  file {"/home/$username/bin/nuget":
       ensure => "file",
       source => "puppet:///modules/ytlaces/home/bin/nuget",
-      owner => "tsutsumi",
+      owner => "$username",
       mode => "0755"
   }
 
   package {"gdb":}
-  file { '/home/tsutsumi/.gdbinit':
+  file {"/home/$username/.gdbinit":
     ensure => 'file',
     source => "puppet:///modules/ytlaces/home/.gdbinit",
     mode => '0755',
+    owner => $username,
   }
 
-  file {"/home/tsutsumi/bin/flamegraph.pl":
+  file {"/home/$username/bin/flamegraph.pl":
       ensure => "file",
       source => "https://raw.githubusercontent.com/brendangregg/FlameGraph/master/flamegraph.pl",
-      owner => "tsutsumi",
+      owner => $username,
       mode => "0755"
   }
 }

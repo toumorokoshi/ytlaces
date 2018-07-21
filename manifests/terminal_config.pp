@@ -1,19 +1,20 @@
- class ytlaces::terminal_config{
-   file {"/home/tsutsumi/.rc.d/":
+class ytlaces::terminal_config(
+  String $username = 'tsutsumi'
+){
+   file {"/home/$username/.rc.d/":
     ensure => 'directory',
-    owner => "tsutsumi"
+    owner => $username,
    }
 
-   file {"/home/tsutsumi/.rc.d/common":
+   file {"/home/$username/.rc.d/common":
     ensure => 'file',
     source => "puppet:///modules/ytlaces/rc.d/common",
-    owner => "tsutsumi"
+    owner => $username,
    }
-   package {"fzf":}
 
-   file {"/home/tsutsumi/.tmux.conf":
+   file {"/home/$username/.tmux.conf":
     ensure => 'file',
     source => "puppet:///modules/ytlaces/home/.tmux.conf",
-    owner => "tsutsumi"
+    owner => $username,
    }
 }

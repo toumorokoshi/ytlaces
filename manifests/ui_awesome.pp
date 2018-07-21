@@ -1,17 +1,19 @@
-class ytlaces::ui_awesome {
+class ytlaces::ui_awesome(
+  String $username = 'tsutsumi'
+) {
   package {"awesome":}
 
-  vcsrepo { '/home/tsutsumi/.config/awesome/battery-widget':
+  vcsrepo {"/home/$username/.config/awesome/battery-widget":
     ensure   => present,
     provider => git,
     source => 'https://github.com/deficient/battery-widget.git',
-    owner => 'tsutsumi',
+    owner => $username,
   }
 
-  vcsrepo { '/home/tsutsumi/.config/awesome/awesome-sharedtags':
+  vcsrepo {"/home/$username/.config/awesome/awesome-sharedtags":
     ensure   => present,
     provider => git,
     source => 'https://github.com/Drauthius/awesome-sharedtags.git',
-    owner => 'tsutsumi',
+    owner => $username,
   }
 }

@@ -2,11 +2,8 @@ class ytlaces::programs {
   # programs to install
   # uses the AUR + yaourt.
   # package {"write-stylus":}
-  package {"firefox":}
   package {"hexchat":}
-  package {"patch":}
-  package {"tree":}
-  package {"tmux":}
+  package {"fzf":}
 
   file {"/home/tsutsumi/bin/pacman-static":
     ensure => "file",

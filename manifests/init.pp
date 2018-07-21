@@ -42,11 +42,14 @@
 #
 # Copyright 2017 Your name here, unless otherwise noted.
 #
-class ytlaces (String $type = 'desktop') {
-  user { "tsutsumi":
+class ytlaces (
+  String $type = 'desktop',
+  String $username = 'tsutsumi',
+) {
+  user { $username:
     ensure => present,
     shell => "/bin/bash",
-    home => "/home/tsutsumi"
+    home => "/home/$username"
   }
 
   # a majority of the relevant files are copied over
@@ -56,51 +59,48 @@ class ytlaces (String $type = 'desktop') {
   # exist under the root directory. to find them run:
   # $ find . -type s
   # $ find . -type p
-  file {"/home/tsutsumi/":
+  file {"/home/$username/":
     ensure => "directory",
-    recurse => false,
+    recurse => "remote",
+    recurselimit => 1,
     purge => false,
     source => "puppet:///modules/ytlaces/home/",
-    owner => "tsutsumi",
+    owner => $username,
   }
 
-  file {"/home/tsutsumi/.config":
+  file {"/home/$username/.config":
     ensure => "directory",
     recurse => true,
     purge => false,
     source => "puppet:///modules/ytlaces/home/.config",
-    owner => "tsutsumi",
+    owner => $username,
   }
 
-  file {"/home/tsutsumi/bin":
+  file {"/home/$username/bin":
     ensure => "directory",
     recurse => true,
     purge => false,
     source => "puppet:///modules/ytlaces/home/bin",
-    owner => "tsutsumi",
+    owner => $username,
   }
 
-
-
-  file { "/etc/pacman.conf":
-    ensure => "file",
-    source => "puppet:///modules/ytlaces/etc/pacman.conf",
-    owner => "root",
+  file {"/home/$username/lib":
+    ensure => "directory",
+    owner => $username,
   }
 
-  package {"openssh":}
 
   file {".ssh":
-    path => '/home/tsutsumi/.ssh/',
+    path => "/home/$username/.ssh/",
     ensure => 'directory',
-    owner => "tsutsumi"
+    owner => $username,
   }
 
   exec {"ssh-keygen -f id_rsa -t rsa -N ''":
     path => "/usr/bin",
-    creates => "/home/tsutsumi/.ssh/id_rsa.pub",
-    user => "tsutsumi",
-    cwd => "/home/tsutsumi/.ssh/"
+    creates => "/home/$username/.ssh/id_rsa.pub",
+    user => $username,
+    cwd => "/home/$username/.ssh/",
   }
 
   file {"/etc/security/limits.conf":
@@ -120,30 +120,33 @@ class ytlaces (String $type = 'desktop') {
   package {"git":}
   package {"git-lfs":}
 
-  include ytlaces::audio
-  include ytlaces::dropbox
-  include ytlaces::fonts
-  include ytlaces::input
-  include ytlaces::programming
-  include ytlaces::programs
-  include ytlaces::secrets
-  include ytlaces::sub
-  include ytlaces::terminal
-  include ytlaces::terminal_config
-  include ytlaces::time
-  include ytlaces::ui
-  include ytlaces::ui_xmonad
-  include ytlaces::ui_awesome
-  include ytlaces::vpn
+  include ytlaces::programs_universal
+  class {'::ytlaces::sub':
+    username => $username
+  }
+  class {'::ytlaces::terminal_config':
+    username => $username
+  }
+  class {'::ytlaces::ui_awesome':
+    username => $username
+  }
 
   # conditional includes
   case $type {
     'desktop': {
+      class {'::ytlaces::arch':
+        username => $username
+      }
       include ytlaces::desktop
       include ytlaces::virtualization
     }
     'laptop': {
+      class {'::ytlaces::arch':
+        username => $username
+      }
       include ytlaces::laptop
+    }
+    'work': {
     }
   }
 }

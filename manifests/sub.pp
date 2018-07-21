@@ -1,13 +1,15 @@
-class ytlaces::sub {
-  file {"/home/tsutsumi/.ytlaces":
+class ytlaces::sub(
+  String $username = 'tsutsumi'
+) {
+  file {"/home/$username/.ytlaces":
     ensure => 'directory',
-    owner => "tsutsumi"
+    owner => $username,
   }
 
-  vcsrepo { '/home/tsutsumi/.ytlaces/sub':
+  vcsrepo {"/home/$username/.ytlaces/sub":
     ensure   => present,
     provider => git,
     source   => 'https://github.com/toumorokoshi/sub.git',
-    owner => 'tsutsumi',
+    owner => $username,
   }
 }
