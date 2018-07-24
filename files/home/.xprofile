@@ -2,3 +2,4 @@ xset -b
 setxkbmap -option caps:escape
 xscreensaver -no-splash &
 [[ -f ~/.xprofile.desktop ]] && . ~/.xprofile.desktop
+[[ -f ~/.xprofile.work ]] && . ~/.xprofile.work

@@ -98,7 +98,7 @@ class ytlaces (
 
   exec {"ssh-keygen -f id_rsa -t rsa -N ''":
     path => "/usr/bin",
-    creates => "/home/$username/.ssh/id_rsa.pub",
+    creates => "/home/$username/.ssh/id_rsa",
     user => $username,
     cwd => "/home/$username/.ssh/",
   }
@@ -147,6 +147,9 @@ class ytlaces (
       include ytlaces::laptop
     }
     'work': {
+      class {'::ytlaces::work':
+        username => $username
+      }
     }
   }
 }

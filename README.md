@@ -8,6 +8,7 @@
 * install the following modules:
 
     puppet module install puppetlabs-vcsrepo
+    puppet module install puppetlabs-apt
 
 * $ puppet apply examples/init.pp
 
