@@ -1,4 +1,5 @@
 --- Main ram widget shown on wibar
+local awful = require("awful")
 local watch = require("awful.widget.watch")
 local wibox = require("wibox")
 
@@ -9,8 +10,20 @@ local cpu_widget = wibox.widget {
   widget = wibox.widget.textbox
 }
 
+local cpu_tooltip = awful.tooltip({
+  objects={cpu_widget},
+})
+
+
 local total_prev = 0
 local idle_prev = 0
+
+watch('bash -c "cat /proc/cpuinfo | grep \"MHz\""', 1,
+  function(tooltip, stdout, stderr, exitreason, exitcode)
+    tooltip:set_text(stdout)
+  end,
+  cpu_tooltip
+)
 
 watch("cat /proc/stat | grep '^cpu '", 1,
     function(widget, stdout, stderr, exitreason, exitcode)
@@ -27,7 +40,6 @@ watch("cat /proc/stat | grep '^cpu '", 1,
         idle_prev = idle
 
         widget.markup = string.format("CPU: %.0f%% ", diff_usage)
-        -- widget.markup = string.format("CPU: %.1f %", diff_usage)
     end,
     cpu_widget
 )
