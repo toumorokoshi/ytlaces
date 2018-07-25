@@ -43,6 +43,7 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.font = "sans 13"
 
 -- This is used later as the default terminal and editor to run.
 terminal = os.getenv("TERMINAL") or "termite"
@@ -215,7 +216,12 @@ awful.screen.connect_for_each_screen(function(s)
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s })
+    s.mywibox = awful.wibar({
+      position = "top",
+      screen = s,
+      height = s.workarea.height * 0.015
+    })
+
 
     -- Add widgets to the wibox
     s.mywibox:setup {
