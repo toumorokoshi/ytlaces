@@ -1,5 +1,5 @@
 class ytlaces::arch(
-  $username => 'tsutsumi',
+  String $username = 'tsutsumi',
 ) {
   file { "/etc/pacman.conf":
     ensure => "file",
@@ -18,7 +18,7 @@ class ytlaces::arch(
     username => $username
   }
   include ytlaces::secrets
-  include ytlaces::termite
+  include ytlaces::terminal
   include ytlaces::time
   include ytlaces::ui
   include ytlaces::ui_xmonad

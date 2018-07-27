@@ -1,4 +1,4 @@
-class ytlaces::programming(
+class ytlaces::programming_arch(
   String $username = 'tsutsumi'
 ) {
   package {"atom":}
