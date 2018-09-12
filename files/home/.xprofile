@@ -1,5 +1,6 @@
 xset -b
 setxkbmap -option caps:escape
 xscreensaver -no-splash &
+ibus-daemon &
 [[ -f ~/.xprofile.desktop ]] && . ~/.xprofile.desktop
 [[ -f ~/.xprofile.work ]] && . ~/.xprofile.work
