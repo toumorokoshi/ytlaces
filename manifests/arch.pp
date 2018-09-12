@@ -23,4 +23,5 @@ class ytlaces::arch(
   include ytlaces::ui
   include ytlaces::ui_xmonad
   include ytlaces::vpn
+  include ytlaces::yubikey
 }

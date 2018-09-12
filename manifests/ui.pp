@@ -1,5 +1,8 @@
 class ytlaces::ui {
+  # for full unicode support, including japanese characters
   package {"noto-fonts":}
+  package {"noto-fonts-cjk":}
+  package {"noto-fonts-emoji":}
   package {"ttf-hack":}
   package {"xscreensaver":}
   package {"xorg-xfontsel":}
@@ -17,4 +20,5 @@ class ytlaces::ui {
   # for thumbnails
   package {"tumbler":}
   package {"ffmpegthumbnailer":}
+  # for
 }
