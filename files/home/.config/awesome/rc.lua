@@ -14,6 +14,10 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
+-- 3rd party widgets
+local cpu_widget = require("cpu-widget")
+local ram_widget = require("ram-widget")
+local battery_widget = require("battery-widget") {}
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -239,9 +243,9 @@ awful.screen.connect_for_each_screen(function(s)
             wibox.widget.systray(),
             -- require("awesome-wm-widgets.cpu-widget.cpu-widget"),
             -- require("awesome-wm-widgets.ram-widget.ram-widget"),
-            require("cpu-widget"),
-            require("ram-widget"),
-            require("battery-widget") {},
+            cpu_widget,
+            ram_widget,
+            battery_widget,
             mytextclock,
             s.mylayoutbox,
         },
