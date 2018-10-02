@@ -18,3 +18,9 @@ sh
 I've noticed removing and re-connecting the devices doesn't cause the devices to come back.
 
 removing and unauthorizing the device, then reconnecting and waiting a while before approving has worked.
+
+# turn off caps lock
+
+using xdotool:
+
+    xdotool key Caps_Lock
