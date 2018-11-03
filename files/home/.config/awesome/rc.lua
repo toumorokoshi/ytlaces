@@ -50,8 +50,8 @@ beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 beautiful.font = "sans 13"
 
 -- This is used later as the default terminal and editor to run.
-terminal = os.getenv("TERMINAL") or "termite"
-editor = os.getenv("EDITOR") or "nano"
+terminal = os.getenv("TERMINAL") or "alacritty"
+editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
 -- Default modkey.
