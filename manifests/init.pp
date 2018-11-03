@@ -138,6 +138,7 @@ class ytlaces (
         username => $username
       }
       include ytlaces::desktop
+      include ytlaces::network
       include ytlaces::virtualization
     }
     'laptop': {
@@ -145,6 +146,7 @@ class ytlaces (
         username => $username
       }
       include ytlaces::laptop
+      include ytlaces::network
     }
     'work': {
       class {'::ytlaces::work':
