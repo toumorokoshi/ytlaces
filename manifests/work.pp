@@ -19,4 +19,6 @@ class ytlaces::work(
   }
 
   include ytlaces::ui_awesome_work
+
+  package {"avahi-daemon": ensure => 'absent'}
 }
