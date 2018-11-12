@@ -13,4 +13,12 @@ class ytlaces::desktop {
     source => "puppet:///modules/ytlaces/desktop/mnt-data.mount",
     owner => "tsutsumi",
   }
+  file {"/etc/default/grub":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/desktop/etc/default/grub",
+  }
+  file {"/etc/fstab":
+    ensure => "file",
+    source => "puppet:///modules/ytlaces/desktop/etc/fstab",
+  }
 }
