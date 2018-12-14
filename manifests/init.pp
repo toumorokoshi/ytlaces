@@ -130,7 +130,9 @@ class ytlaces (
   class {'::ytlaces::ui_awesome':
     username => $username
   }
-
+  class {'::ytlaces::dropbox':
+    username => $username
+  }
   # conditional includes
   case $type {
     'desktop': {
