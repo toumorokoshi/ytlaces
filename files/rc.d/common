@@ -26,9 +26,9 @@ RESET="\[\033[0;0m\]"
 
 
 # We share a command history throughout all prompts
-export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
-export HISTSIZE=100000                   # big big history
-export HISTFILESIZE=$HISTSIZE            # big big history
+HISTCONTROL=ignoredups:erasedups  # no duplicate entries
+HISTSIZE=100000                   # big big history
+HISTFILESIZE=$HISTSIZE            # big big history
 shopt -s histappend                      # append to history, dont overwrite it
 
 
@@ -90,7 +90,7 @@ function parse_git_dirty_color {
     unset git_status_string git_bare_string git_clean_string git_merge_string
 }
 
-export PS1="$IYELLOW\u:\w\\[\033[\$(parse_git_dirty_color)\]\$(parse_git_repo)\$(__git_ps1)\n$RESET$ "
+PS1="$IYELLOW\u:\w\\[\033[\$(parse_git_dirty_color)\]\$(parse_git_repo)\$(__git_ps1)\n$RESET$ "
 
 # add sub
 tmp=`pwd`; cd $HOME/.ytlaces/sub/libexec/ && . ./sub-init && cd $tmp

@@ -48,8 +48,8 @@ class ytlaces (
 ) {
   user { $username:
     ensure => present,
-    shell => "/bin/bash",
-    home => "/home/$username"
+    shell  => '/bin/bash',
+    home   => "/home/${username}"
   }
 
   # a majority of the relevant files are copied over
@@ -59,66 +59,67 @@ class ytlaces (
   # exist under the root directory. to find them run:
   # $ find . -type s
   # $ find . -type p
-  file {"/home/$username/":
-    ensure => "directory",
-    recurse => "remote",
+  file {"/home/${username}/":
+    ensure       => 'directory',
+    recurse      => 'remote',
     recurselimit => 1,
-    purge => false,
-    source => "puppet:///modules/ytlaces/home/",
-    owner => $username,
+    purge        => false,
+    source       => 'puppet:///modules/ytlaces/home/',
+    owner        => $username,
   }
 
-  file {"/home/$username/.config":
-    ensure => "directory",
+  file {"/home/${username}/.config":
+    ensure  => 'directory',
     recurse => true,
-    purge => false,
-    source => "puppet:///modules/ytlaces/home/.config",
-    owner => $username,
+    purge   => false,
+    source  => 'puppet:///modules/ytlaces/home/.config',
+    owner   => $username,
   }
 
-  file {"/home/$username/bin":
-    ensure => "directory",
+  file {"/home/${username}/bin":
+    ensure  => 'directory',
     recurse => true,
-    purge => false,
-    source => "puppet:///modules/ytlaces/home/bin",
-    owner => $username,
+    purge   => false,
+    source  => 'puppet:///modules/ytlaces/home/bin',
+    owner   => $username,
+    mode    => '0755',
   }
 
-  file {"/home/$username/lib":
-    ensure => "directory",
-    owner => $username,
-  }
-
-
-  file {".ssh":
-    path => "/home/$username/.ssh/",
+  file {"/home/${username}/lib":
     ensure => 'directory',
-    owner => $username,
+    owner  => $username,
+  }
+
+
+  file {'.ssh':
+    ensure => 'directory',
+    path   => "/home/${username}/.ssh/",
+    owner  => $username,
   }
 
   exec {"ssh-keygen -f id_rsa -t rsa -N ''":
-    path => "/usr/bin",
-    creates => "/home/$username/.ssh/id_rsa",
-    user => $username,
-    cwd => "/home/$username/.ssh/",
+    path    => '/usr/bin',
+    creates => "/home/${username}/.ssh/id_rsa",
+    user    => $username,
+    cwd     => "/home/${username}/.ssh/",
   }
 
-  file {"/etc/security/limits.conf":
-    ensure => "file",
-    source => "puppet:///modules/ytlaces/etc/security/limits.conf",
-    owner => "root",
+  file {'/etc/security/limits.conf':
+    ensure => 'file',
+    source => 'puppet:///modules/ytlaces/etc/security/limits.conf',
+    owner  => 'root',
   }
 
-  file {"/etc/systemd/user.conf":
-    ensure => "file",
-    source => "puppet:///modules/ytlaces/etc/systemd/user.conf",
-    owner => "root",
+  file {'/etc/systemd/user.conf':
+    ensure => 'file',
+    source => 'puppet:///modules/ytlaces/etc/systemd/user.conf',
+    owner  => 'root',
   }
 
   # this is needed to clone certain repos, even outside
   # of programming
-  package {"git":}
-  package {"git-lfs":}
+  package {'git':}
+  package {'git-lfs':}
 
   include ytlaces::programs_universal
   class {'::ytlaces::sub':

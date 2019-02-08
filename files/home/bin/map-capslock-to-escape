@@ -1,0 +1,7 @@
+#!/bin/sh
+# I haven't found a great way to always remap capslock to escape
+# so the simplest thing to do was run it all the time.
+while true; do
+    setxkbmap -option caps:escape
+    sleep 2
+done
