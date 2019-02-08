@@ -52,6 +52,10 @@ class ytlaces (
     home   => "/home/${username}"
   }
 
+  Exec {
+    path => '/bin/:/usr/bin'
+  }
+
   # a majority of the relevant files are copied over
   # here. This makes it easy to add to existing configs
   # by modifying the single home directory in ytlaces.

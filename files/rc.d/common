@@ -95,6 +95,9 @@ PS1="$IYELLOW\u:\w\\[\033[\$(parse_git_dirty_color)\]\$(parse_git_repo)\$(__git_
 # add sub
 tmp=`pwd`; cd $HOME/.ytlaces/sub/libexec/ && . ./sub-init && cd $tmp
 
+# add cookbook
+source <($HOME/.ytlaces/packages/cookbook/init y $HOME/.ytlaces/cookbook $0)
+
 # add rustup directories
 PATH=$HOME/.cargo/bin:$PATH
 export PATH=$PATH:$HOME/bin

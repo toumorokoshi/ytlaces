@@ -9,6 +9,7 @@
 
     puppet module install puppetlabs-vcsrepo
     puppet module install puppetlabs-apt
+    puppet module install puppet-archive
 
 * $ puppet apply examples/init.pp
 
