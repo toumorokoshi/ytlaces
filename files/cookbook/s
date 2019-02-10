@@ -1,0 +1,11 @@
+# SOURCE
+if [! -d ~/sandbox ]; then
+    mkdir -p ~/sandbox
+fi
+
+if [ "$1" == "--complete" ]; then
+    ls ~/sandbox
+    exit
+fi
+
+cd ~/sandbox/$1

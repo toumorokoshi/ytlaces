@@ -18,26 +18,20 @@ class ytlaces::sub(
     owner    => $username,
   }
 
-  file {"/home/${username}/.ytlaces/packages/cookbook":
-    ensure => "directory",
-    owner  => $username,
+  # install tome executable
+  exec {'install tome':
+    command     => "curl -L 'https://github.com/toumorokoshi/tome/releases/download/v0.2.0/tome-linux' > ~/bin/tome && chmod 0755 ~/bin/tome",
+    user        => $username,
+    refreshonly =>  true,
   }
 
-  exec {"unpack cookbook":
-    command     => "curl -L 'https://github.com/toumorokoshi/cookbook/releases/download/v0.1.1/cookbook.tar.gz' | tar -xzvf",
-    cwd         => "/home/${username}/.ytlaces/packages/cookbook",
-    refreshonly => true,
-    user => $username,
-  }
-
+  # install tome scripts
   file {"/home/${username}/.ytlaces/cookbook":
-    ensure  => 'directory',
-    recurse => true,
-    purge   => true,
-    source  => 'puppet:///modules/ytlaces/cookbook',
+    ensure             => 'directory',
+    recurse            => true,
+    purge              => true,
+    source             => 'puppet:///modules/ytlaces/cookbook',
     source_permissions => 'use',
-    owner   => $username,
+    owner              => $username,
   }
-
-
 }

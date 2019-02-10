@@ -1,0 +1,11 @@
+# SOURCE
+if [! -d ~/Downloads ]; then
+    mkdir -p ~/Downloads
+fi
+
+if [ "$1" == "--complete" ]; then
+    ls ~/Downloads
+    exit
+fi
+
+cd ~/Downloads/$1

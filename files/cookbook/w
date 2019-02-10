@@ -1,0 +1,11 @@
+# SOURCE
+if [! -d ~/workspace ]; then
+    mkdir -p ~/workspace
+fi
+
+if [ "$1" == "--complete" ]; then
+    ls ~/workspace
+    exit
+fi
+
+cd ~/workspace/$1
