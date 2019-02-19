@@ -1,13 +1,21 @@
 class ytlaces::arch(
   String $username = 'tsutsumi',
 ) {
-  file { "/etc/pacman.conf":
-    ensure => "file",
-    source => "puppet:///modules/ytlaces/etc/pacman.conf",
-    owner => "root",
+  file { '/etc/pacman.conf':
+    ensure => 'file',
+    source => 'puppet:///modules/ytlaces/etc/pacman.conf',
+    owner  => 'root',
   }
 
-  package {"openssh":}
+  # we don't like .local, so let's switch
+  # that to .avahi.
+  file { '/etc/avahi/avahi-daemon.conf':
+    ensure => 'file',
+    source => 'puppet:///modules/ytlaces/etc/avahi/avahi-daemon.conf',
+    owner  => 'root',
+  }
+
+  package {'openssh':}
 
   include ytlaces::audio
   include ytlaces::dropbox

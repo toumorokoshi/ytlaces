@@ -1,0 +1,14 @@
+# source: https://rhodesmill.org/brandon/2017/openconnect-split-dns/
+# Take each "Cisco split domain" defined by the VPN and add
+# it to the "search" line in resolv.conf, so unqualified
+# hostnames are searched for in all the subdomains that
+# the network architects intended.
+
+if [ -n "$CISCO_SPLIT_DNS" ]; then
+    for domain in $(echo "$CISCO_SPLIT_DNS" | sed "s/,/ /g")
+    do
+        # slightly modified to exclude the specific "domain"
+        # field, since this we use systemd-resolved.
+        CISCO_DEF_DOMAIN="$CISCO_DEF_DOMAIN $domain"
+    done
+fi
