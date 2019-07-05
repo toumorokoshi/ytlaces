@@ -1,11 +1,21 @@
 # SOURCE
-if [! -d ~/Downloads ]; then
+# START HELP
+# navigate to the Downloads directory, supports subdirectory navigation 
+# END HELP
+if [ ! -d ~/Downloads ]; then
     mkdir -p ~/Downloads
 fi
 
-if [ "$1" == "--complete" ]; then
-    ls ~/Downloads
+local target_path path_element
+target_path="$HOME/Downloads"
+for path_element in "$@"
+do
+  if [[ "$path_element" = "--complete" ]]; then
+    ls $target_path
     exit
-fi
+  fi
+  target_path="$target_path/$path_element"
+done
 
-cd ~/Downloads/$1
+echo $target_path
+cd $target_path

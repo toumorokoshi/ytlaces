@@ -1,11 +1,21 @@
 # SOURCE
-if [! -d ~/sandbox ]; then
+# START HELP
+# navigate to the sandbox directory, supports subdirectory navigation 
+# END HELP
+if [ ! -d ~/sandbox ]; then
     mkdir -p ~/sandbox
 fi
 
-if [ "$1" == "--complete" ]; then
-    ls ~/sandbox
+local target_path path_element
+target_path="$HOME/sandbox"
+for path_element in "$@"
+do
+  if [[ "$path_element" = "--complete" ]]; then
+    ls $target_path
     exit
-fi
+  fi
+  target_path="$target_path/$path_element"
+done
 
-cd ~/sandbox/$1
+echo $target_path
+cd $target_path
