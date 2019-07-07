@@ -92,9 +92,6 @@ function parse_git_dirty_color {
 
 PS1="$IYELLOW\u:\w\\[\033[\$(parse_git_dirty_color)\]\$(parse_git_repo)\$(__git_ps1)\n$RESET$ "
 
-# add sub
-tmp=`pwd`; cd $HOME/.ytlaces/sub/libexec/ && . ./sub-init && cd $tmp
-
 # add cookbook
 source <($HOME/bin/tome init s $HOME/.ytlaces/cookbook $0)
 

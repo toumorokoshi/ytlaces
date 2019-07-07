@@ -11,13 +11,6 @@ class ytlaces::sub(
     owner  => $username,
   }
 
-  vcsrepo {"/home/${username}/.ytlaces/sub":
-    ensure   => present,
-    provider => git,
-    source   => 'https://github.com/toumorokoshi/sub.git',
-    owner    => $username,
-  }
-
   # install tome executable
   exec {'install tome':
     command     => "curl -L 'https://github.com/toumorokoshi/tome/releases/download/v0.3.0/tome-linux' > ~/bin/tome && chmod 0755 ~/bin/tome",
