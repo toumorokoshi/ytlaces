@@ -17,5 +17,4 @@ do
   target_path="$target_path/$path_element"
 done
 
-echo $target_path
 cd $target_path
