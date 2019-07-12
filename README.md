@@ -18,6 +18,9 @@
 There's a couple more steps that need to run, post-install for now:
 
 * add a section into your bash/zsh rc file that sources in a whole directory of rc files:
+
+    . $HOME/.ytlaces/rc.d/*
+
 * add a resolv.conf line for google's 8.8.8.8 dns. This ensures that a public
 * ibus-setup
 
@@ -46,3 +49,5 @@ There's a couple more steps that need to run, post-install for now:
 
 * dropbox
 * dropbox-cli
+
+
