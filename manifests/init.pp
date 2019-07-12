@@ -160,5 +160,12 @@ class ytlaces (
         username => $username
       }
     }
+    'work_desktop': {
+      class {'::ytlaces::arch':
+        username => $username
+      }
+      include ytlaces::work_desktop
+      include ytlaces::network
+    }
   }
 }
