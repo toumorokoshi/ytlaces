@@ -19,7 +19,5 @@
   autosetuprebase = remote
 [http]
   sslVerify = false
-[core]
-   excludesfile = /home/tsutsumi/.gitignore_global
 [includeIf "gitdir:~/zillow/"]
 	path = ~/.gitconfig.zillow
