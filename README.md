@@ -41,6 +41,10 @@ There's a couple more steps that need to run, post-install for now:
 
 ## Setting up Arch
 
+* after installation, you may need to enable and start up network devices:
+    ip link dev eno1 up
+    systemctl enable dhcpcd
+    systemctl start dhcpcd
 * wifi-menu can be used to connect to the network.
     bin/install_yay
     yay -S install dropbox
@@ -50,4 +54,14 @@ There's a couple more steps that need to run, post-install for now:
 * dropbox
 * dropbox-cli
 
+## Testing
+
+After installing ytlaces, the following should be validated:
+
+* set password
+* install nvidia-settings
+
+## TODO:
+
+* enable lightdm
 

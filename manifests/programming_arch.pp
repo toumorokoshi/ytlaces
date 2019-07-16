@@ -5,7 +5,7 @@ class ytlaces::programming_arch(
   package {'clojure':}
   package {'docker':}
   # for python vscode symbols
-  package {'ctass':}
+  package {'ctags':}
   service {'docker':
     ensure => 'running',
     enable => true

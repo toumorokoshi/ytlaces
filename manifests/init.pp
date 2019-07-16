@@ -101,6 +101,8 @@ class ytlaces (
     owner  => $username,
   }
 
+  package {'openssh':}
+
   exec {"ssh-keygen -f id_rsa -t rsa -N ''":
     path    => '/usr/bin',
     creates => "/home/${username}/.ssh/id_rsa",
@@ -166,6 +168,7 @@ class ytlaces (
       }
       include ytlaces::work_desktop
       include ytlaces::network
+      include ytlaces::ui
     }
   }
 }
