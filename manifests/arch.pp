@@ -15,7 +15,9 @@ class ytlaces::arch(
     owner  => 'root',
   }
 
-  package {'openssh':}
+  # needed for building aur packages
+  package {'binutils':}
+  package {'gcc':}
 
   include ytlaces::audio
   include ytlaces::dropbox
@@ -29,7 +31,7 @@ class ytlaces::arch(
   include ytlaces::terminal
   include ytlaces::time
   include ytlaces::ui
-  include ytlaces::ui_xmonad
+  # include ytlaces::ui_xmonad
   include ytlaces::vpn
   include ytlaces::yubikey
 }

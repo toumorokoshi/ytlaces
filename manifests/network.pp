@@ -4,6 +4,11 @@ class ytlaces::network {
     ensure => 'running',
     enable => true
   }
+
+  service {'systemd-resolved':
+    ensure => 'running',
+    enable => true
+  }
   # for some reason systemd-resolve doesn't add the 
   # symlink, so we need to. or else systemd-resolve
   # won't be the source of truth for vpn.

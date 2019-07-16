@@ -15,7 +15,7 @@ class ytlaces::programming_arch(
   }
    package {'python':}
    # yaourt
-   # package {"code":}
+   package {'code':}
    package {'dotnet-runtime':}
    package {'dotnet-sdk':}
    package {'mono':}

@@ -59,9 +59,3 @@ There's a couple more steps that need to run, post-install for now:
 After installing ytlaces, the following should be validated:
 
 * set password
-* install nvidia-settings
-
-## TODO:
-
-* enable lightdm
-

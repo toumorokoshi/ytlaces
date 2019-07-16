@@ -166,6 +166,8 @@ class ytlaces (
       class {'::ytlaces::arch':
         username => $username
       }
+      # use the nvidia gpu
+      package {'nvidia':}
       include ytlaces::work_desktop
       include ytlaces::network
       include ytlaces::ui
