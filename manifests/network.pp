@@ -37,4 +37,10 @@ class ytlaces::network {
     source => 'puppet:///modules/ytlaces/etc/vpnc/connect.d/parse_cisco_dns',
     mode   => '0755'
   }
+
+  file {'/lib/sysctl.d/09-disable-ipv6.conf':
+    ensure => 'file',
+    source => 'puppet:///modules/ytlaces/lib/sysctl.d/09-disable-ipv6.conf',
+    mode   => '0644'
+  }
 }
