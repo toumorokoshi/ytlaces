@@ -307,9 +307,12 @@ globalkeys = gears.table.join(
     awful.key({}, "F12",
               function () awful.util.spawn("xscreensaver-command -lock") end,
               {description = "lock screen", group = "general"}),
-    awful.key({}, "F4",
-              function() xrandr.xrandr() end,
-              {description = "configure monitors", group = "general"}),
+    awful.key({}, "F2",
+              function () awful.util.spawn("/etc/acpi/handlers/bl -") end,
+              {description = "turn down backlight", group = "general"}),
+    awful.key({}, "F3",
+              function () awful.util.spawn("/etc/acpi/handlers/bl +") end,
+              {description = "turn up backlight", group = "general"}),
 
 
     -- Layout manipulation
@@ -333,7 +336,7 @@ globalkeys = gears.table.join(
         {description = "go back", group = "client"}),
 
     -- Standard program
-    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
+    awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
