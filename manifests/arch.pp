@@ -23,7 +23,9 @@ class ytlaces::arch(
   include ytlaces::dropbox
   include ytlaces::fonts
   include ytlaces::input
-  include ytlaces::programs
+  class {'::ytlaces::programs':
+    username => $username
+  }
   class {'::ytlaces::programming_arch':
     username => $username
   }

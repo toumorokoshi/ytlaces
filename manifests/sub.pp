@@ -13,18 +13,17 @@ class ytlaces::sub(
 
   # install tome executable
   exec {'install tome':
-    command     => "curl -L 'https://github.com/toumorokoshi/tome/releases/download/v0.3.0/tome-linux' > ~/bin/tome && chmod 0755 ~/bin/tome",
-    user        => $username,
-    refreshonly =>  true,
+    command => "curl -L 'https://github.com/toumorokoshi/tome/releases/download/v0.3.0/tome-linux' > ~/bin/tome && chmod 0755 ~/bin/tome",
+    user    => $username,
   }
 
   # install tome scripts
   file {"/home/${username}/.ytlaces/cookbook":
-    ensure             => 'directory',
-    recurse            => true,
-    purge              => true,
-    source             => 'puppet:///modules/ytlaces/cookbook',
-    source_permissions => 'use',
-    owner              => $username,
+    ensure  => 'directory',
+    recurse => true,
+    purge   => true,
+    source  => 'puppet:///modules/ytlaces/cookbook',
+    owner   => $username,
+    mode    =>  '0755'
   }
 }

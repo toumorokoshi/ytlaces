@@ -1,20 +1,27 @@
 # SOURCE
+# SUMMARY: navigate to the workspace directory
 # START HELP
 # navigate to the workspace directory, supports subdirectory navigation 
 # END HELP
-if [ ! -d ~/workspace ]; then
-    mkdir -p ~/workspace
+local root=$HOME/workspace
+if [ ! -d $root ]; then
+    mkdir -p $root
 fi
 
 local target_path path_element
-target_path="$HOME/workspace"
-for path_element in "$@"
+target_path="$root"
+if [ "$1" == "--complete" ]; then
+  shift
+  run_completion=true
+fi
+
+for path_element in $@
 do
-  if [[ "$path_element" = "--complete" ]]; then
-    ls $target_path
-    exit
-  fi
   target_path="$target_path/$path_element"
 done
 
-cd $target_path
+if [ -z "$run_completion" ]; then
+  cd $target_path
+else
+  ls $target_path
+fi

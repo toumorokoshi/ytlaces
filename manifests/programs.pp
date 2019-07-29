@@ -1,14 +1,14 @@
-class ytlaces::programs {
+class ytlaces::programs(
+  String $username = 'tsutsumi'
+) {
   # programs to install
   # uses the AUR + yaourt.
   # package {"write-stylus":}
-  package {"hexchat":}
-  package {"fzf":}
+  package {'hexchat':}
+  package {'fzf':}
 
-  file {"/home/tsutsumi/bin/pacman-static":
-    ensure => "file",
-    source => "https://pkgbuild.com/~eschwartz/pacman-static",
-    owner => "tsutsumi",
-    mode => "0755",
+  exec {'/home/tsutsumi/bin/pacman-static':
+    command => "curl -L 'https://pkgbuild.com/~eschwartz/pacman-static' > ~/bin/pacman-static && chmod 0755 ~/bin/pacman-static",
+    user    => $username,
   }
 }
