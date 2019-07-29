@@ -3,12 +3,12 @@
 # START HELP
 # navigate to the Downloads directory, supports subdirectory navigation 
 # END HELP
-local root=$HOME/Downloads
+local root target_path path_element
+root=$HOME/Downloads
 if [ ! -d $root ]; then
     mkdir -p $root
 fi
 
-local target_path path_element
 target_path="$root"
 if [ "$1" == "--complete" ]; then
   shift

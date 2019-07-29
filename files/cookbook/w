@@ -3,12 +3,12 @@
 # START HELP
 # navigate to the workspace directory, supports subdirectory navigation 
 # END HELP
-local root=$HOME/workspace
+local root target_path path_element
+root=$HOME/workspace
 if [ ! -d $root ]; then
     mkdir -p $root
 fi
 
-local target_path path_element
 target_path="$root"
 if [ "$1" == "--complete" ]; then
   shift
