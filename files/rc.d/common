@@ -25,11 +25,6 @@ BLACK="\[\033[0;30m\]"
 RESET="\[\033[0;0m\]"
 
 
-# We share a command history throughout all prompts
-HISTCONTROL=ignoredups:erasedups  # no duplicate entries
-HISTSIZE=100000                   # big big history
-HISTFILESIZE=$HISTSIZE            # big big history
-shopt -s histappend                      # append to history, dont overwrite it
 
 
 # Save and reload the history after each command finishes
@@ -90,7 +85,29 @@ function parse_git_dirty_color {
     unset git_status_string git_bare_string git_clean_string git_merge_string
 }
 
-PS1="$IYELLOW\u:\w\\[\033[\$(parse_git_dirty_color)\]\$(parse_git_repo)\$(__git_ps1)\n$RESET$ "
+if [ -z "$ZSH_VERSION" ]; then
+    PS1="$IYELLOW\u:\w\\[\033[\$(parse_git_dirty_color)\]\$(parse_git_repo)\$(__git_ps1)\n$RESET$ "
+    # We share a command history throughout all prompts
+    HISTCONTROL=ignoredups:erasedups  # no duplicate entries
+    HISTSIZE=100000                   # big big history
+    HISTFILESIZE=$HISTSIZE            # big big history
+    shopt -s histappend                      # append to history, dont overwrite it
+else 
+    # zsh shell
+    autoload -U compinit && compinit
+    export HISTSIZE=2000
+    export HISTFILE="$HOME/.history"
+    export SAVEHIST=$HISTSIZE
+    setopt PROMPT_SUBST
+    setopt hist_ignore_space
+    setopt autocd
+    autoload -U colors && colors
+    PS1="%{$fg[yellow]%}%n:%d %{$reset_color%}\$(parse_git_repo)\$(__git_ps1)
+"
+    bindkey "^P" up-line-or-search
+    bindkey "^N" down-line-or-search
+    bindkey '^R' history-incremental-search-backward
+fi
 
 # add cookbook
 source <($HOME/bin/tome init s $HOME/.ytlaces/cookbook $0)

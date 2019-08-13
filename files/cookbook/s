@@ -10,7 +10,7 @@ if [ ! -d $root ]; then
 fi
 
 target_path="$root"
-if [ "$1" == "--complete" ]; then
+if [ "$1" = "--complete" ]; then
   shift
   run_completion=true
 fi
