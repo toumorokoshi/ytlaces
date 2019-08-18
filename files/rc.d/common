@@ -94,7 +94,7 @@ if [ -z "$ZSH_VERSION" ]; then
     shopt -s histappend                      # append to history, dont overwrite it
 else 
     # zsh shell
-    autoload -U compinit && compinit
+    autoload +X compinit && compinit
     export HISTSIZE=2000
     export HISTFILE="$HOME/.history"
     export SAVEHIST=$HISTSIZE
@@ -102,10 +102,11 @@ else
     setopt hist_ignore_space
     setopt autocd
     autoload -U colors && colors
-    PS1="%{$fg[yellow]%}%n:%d %{$reset_color%}\$(parse_git_repo)\$(__git_ps1)
+    PS1="%{$fg[yellow]%}%n:%d%{$reset_color%}\$(__git_ps1)
 "
-    bindkey "^P" up-line-or-search
-    bindkey "^N" down-line-or-search
+    # zsh will use the editor mappings that match the editor
+    # defined in EDITOR. This switch switches back to emacs.
+    bindkey -e
     bindkey '^R' history-incremental-search-backward
 fi
 
