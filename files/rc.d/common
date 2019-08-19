@@ -102,8 +102,8 @@ else
     setopt hist_ignore_space
     setopt autocd
     autoload -U colors && colors
-    PS1="%{$fg[yellow]%}%n:%d%{$reset_color%}\$(__git_ps1)
-%? "
+    PS1="%{$fg[yellow]%}%n:%d%{$reset_color%} (%?)\$(__git_ps1)
+$ "
     # zsh will use the editor mappings that match the editor
     # defined in EDITOR. This switch switches back to emacs.
     bindkey -e
