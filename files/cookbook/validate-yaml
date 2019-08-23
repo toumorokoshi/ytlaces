@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+# Summary: validate a yaml file
+import pprint
+import sys
+import yaml
+
+FILE_TO_VALIDATE = sys.argv[1]
+
+with open(FILE_TO_VALIDATE) as fh:
+    result = yaml.safe_load(fh.read())
+    print("{} yaml is valid!".format(FILE_TO_VALIDATE))
+    print("contents: ")
+    pprint.pprint(result)
