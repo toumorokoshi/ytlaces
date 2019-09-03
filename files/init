@@ -1,0 +1,5 @@
+for f in `ls ~/.ytlaces/rc.d/*`; do
+  if [ -f "$f" ] ; then
+    source $f
+  fi
+done
