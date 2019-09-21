@@ -94,7 +94,9 @@ if [ -z "$ZSH_VERSION" ]; then
     shopt -s histappend                      # append to history, dont overwrite it
 else 
     # zsh shell
-    autoload +X compinit && compinit
+    if ! type compdef > /dev/null; then
+        autoload +X compinit && compinit
+    fi
     export HISTFILE="$HOME/.zsh-history"
     export SAVEHIST=$HISTSIZE
     setopt PROMPT_SUBST
