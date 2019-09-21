@@ -48,7 +48,7 @@ class ytlaces (
 ) {
   user { $username:
     ensure => present,
-    shell  => '/bin/bash',
+    shell  => '/bin/zsh',
     home   => "/home/${username}"
   }
 

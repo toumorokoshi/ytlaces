@@ -85,18 +85,17 @@ function parse_git_dirty_color {
     unset git_status_string git_bare_string git_clean_string git_merge_string
 }
 
+HISTSIZE=100000
 if [ -z "$ZSH_VERSION" ]; then
     PS1="$IYELLOW\u:\w\\[\033[\$(parse_git_dirty_color)\]\$(parse_git_repo)\$(__git_ps1)\n$RESET$ "
     # We share a command history throughout all prompts
     HISTCONTROL=ignoredups:erasedups  # no duplicate entries
-    HISTSIZE=100000                   # big big history
     HISTFILESIZE=$HISTSIZE            # big big history
     shopt -s histappend                      # append to history, dont overwrite it
 else 
     # zsh shell
     autoload +X compinit && compinit
-    export HISTSIZE=2000
-    export HISTFILE="$HOME/.history"
+    export HISTFILE="$HOME/.zsh-history"
     export SAVEHIST=$HISTSIZE
     setopt PROMPT_SUBST
     setopt hist_ignore_space

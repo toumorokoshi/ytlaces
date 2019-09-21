@@ -13,6 +13,8 @@ class ytlaces::programming_arch(
   group {'docker':
     members => [$username]
   }
+  # debugging linux
+  package {'sysstat':}
   # python
   package {'python':}
   package {'pyenv':}
