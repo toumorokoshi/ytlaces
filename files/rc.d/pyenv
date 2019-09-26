@@ -1,3 +1,5 @@
 # install configuration for pyenv
 export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
+if ! type _pyenv &> /dev/null; then
+    eval "$(pyenv init -)"
+fi
