@@ -96,6 +96,12 @@
     owner  => 'tsutsumi'
   }
 
+  file {'/home/tsutsumi/.Xresources.d/laptop_dock':
+    ensure => 'file',
+    source => 'puppet:///modules/ytlaces/.Xresources.laptop_dock',
+    owner  => 'tsutsumi'
+  }
+
   vcsrepo { '/home/tsutsumi/.ytlaces/autorandr':
     ensure   => present,
     provider => git,

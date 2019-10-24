@@ -1,0 +1,11 @@
+#!/bin/bash
+# SUMMARY: configure the window environment to be used in a dock
+# START HELP
+# after calling this, applications will have to be restarted to honor
+# new configuration
+# END HELP
+# load configuration for laptop specifically
+xrdb -merge ~/.Xresources.d/laptop
+xrandr --output eDP-1 --mode 3820x2160
+# restart awesome to take advantage of the new dpi
+echo 'awesome.restart()' | awesome-client
