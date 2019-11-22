@@ -614,3 +614,10 @@ end)
 client.connect_signal("focus", function(c) c.border_color = "#FF0000" end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+-- with multiple screens, the screens aside from the primary
+-- can start without being focused on a shared tag.
+-- hence we set them explicitly.
+for i, s in ipairs(screen) do
+    sharedtags.viewonly(tags[i], s)
+end

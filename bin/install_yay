@@ -7,4 +7,4 @@ git clone https://aur.archlinux.org/yay.git
 cd yay
 echo `pwd`
 makepkg -si
-rm $TMP_DIR
+rm -r $TMP_DIR
