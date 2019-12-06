@@ -156,6 +156,7 @@ class ytlaces (
       }
       include ytlaces::laptop
       include ytlaces::network
+      include ytlaces::bluetooth
     }
     'work': {
       class {'::ytlaces::work':

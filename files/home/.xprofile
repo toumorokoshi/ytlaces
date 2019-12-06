@@ -8,3 +8,5 @@ ibus-daemon &
 
 [[ -f ~/.xprofile.desktop ]] && . ~/.xprofile.desktop
 [[ -f ~/.xprofile.work ]] && . ~/.xprofile.work
+
+which blueberry-tray && blueberry-tray

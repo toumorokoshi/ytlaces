@@ -5,8 +5,4 @@
 # new configuration
 # END HELP
 # load configuration for laptop when docked
-xrdb -merge ~/.Xresources.d/laptop_dock
-# set device resolutions to match (1080p both)
-xrandr --output eDP-1 --mode 1920x1080 --output DP-1 --mode 1920x1080 --right-of eDP-1
-# restart awesome to take advantage of the new dpi
-echo 'awesome.restart()' | awesome-client
+xrandr --output eDP-1 --mode 3840x2160 --output DP-1 --mode 3840x2160 --right-of eDP-1
