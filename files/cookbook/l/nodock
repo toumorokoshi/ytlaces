@@ -5,4 +5,4 @@
 # new configuration
 # END HELP
 # load configuration for laptop specifically
-xrandr --output eDP-1 --mode 3840x2160
+xrandr --output eDP-1 --mode 3840x2160 --output DP-1 --off

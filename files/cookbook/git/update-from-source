@@ -1,0 +1,12 @@
+#!/bin/bash
+# START HELP
+# A script to help git repositories stay up to date with a different remote.
+# 
+# If the git repository is configured to have a remote named "source", this script
+# will pull the master branch of that repo, and reset the current branch of master
+# to that branch.
+# END HELP
+set -e 
+git fetch source
+git checkout master
+git reset --hard source/master
