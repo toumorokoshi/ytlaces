@@ -114,4 +114,6 @@
     target => '/home/tsutsumi/.ytlaces/autorandr/autorandr',
     mode   => '0755',
   }
+
+  include ytlaces::thunderbolt
 }
