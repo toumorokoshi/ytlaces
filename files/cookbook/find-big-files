@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec find . -type f -exec du -h -t 100000000 -a {} + 
