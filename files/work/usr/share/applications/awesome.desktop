@@ -4,4 +4,4 @@ Type=Application
 Name=Awesome
 Comment=The awesome launcher!
 TryExec=awesome
-Exec=awesome
+Exec=awesome >> ~/tmp/awesome-stdout 2>> ~/tmp/awesome-stderr

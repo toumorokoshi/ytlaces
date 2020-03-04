@@ -313,6 +313,17 @@ globalkeys = gears.table.join(
     awful.key({}, "F3",
               function () awful.util.spawn("/etc/acpi/handlers/bl +") end,
               {description = "turn up backlight", group = "general"}),
+    awful.key({}, "F3",
+              function () awful.util.spawn("/etc/acpi/handlers/bl +") end,
+              {description = "turn up backlight", group = "general"}),
+    -- Mod1 == alt
+    -- 0.2 second sleep comes from giving time to release the pointer so scrot can grab it.
+    -- https://unix.stackexchange.com/questions/191973/how-to-create-custom-shortcuts-for-scrot-and-gnome-screenshot-interactive-mode
+    -- https://www.reddit.com/r/xfce/comments/43oiid/scrot_doesnt_work_under_keyboard_shortcuts/
+    awful.key({"Mod1", "Shift"}, 4,
+              function () awful.spawn.with_shell("sleep 0.2; mkdir -p ~/Screenshots && cd ~/Screenshots && /usr/bin/scrot -s") end,
+              {description = "take a screenshot with a selection", group = "general"}),
+
 
 
     -- Layout manipulation
