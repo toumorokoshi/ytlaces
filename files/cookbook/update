@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# SUMMARY: update ytlaces
+
+cd $HOME/workspace/ytlaces
+git pull
+bin/install_$1
+local root target_path path_element
+root=$HOME/Downloads
+if [ ! -d $root ]; then
+    mkdir -p $root
+fi
+
+target_path="$root"
+if [ "$1" = "--complete" ]; then
+  shift
+  run_completion=true
+fi
+
+for path_element in $@
+do
+  target_path="$target_path/$path_element"
+done
+
+if [ -z "$run_completion" ]; then
+  cd $target_path
+else
+  ls $target_path
+fi
