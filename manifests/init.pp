@@ -128,6 +128,7 @@ class ytlaces (
   package {'git-lfs':}
 
   include ytlaces::programs_universal
+  include ytlaces::printing
   class {'::ytlaces::sub':
     username => $username
   }
