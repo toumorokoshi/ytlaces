@@ -1,3 +1,5 @@
 class ytlaces::bluetooth {
-  package {'blueberry':}
+  package {'bluez':}
+  package {'bluez-utils':}
+  package {'pulseaudio-bluetooth':}
 }
