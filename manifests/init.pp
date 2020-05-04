@@ -149,6 +149,7 @@ class ytlaces (
       }
       include ytlaces::desktop
       include ytlaces::network
+      include ytlaces::synergy
       include ytlaces::virtualization
     }
     'laptop': {

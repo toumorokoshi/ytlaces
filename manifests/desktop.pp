@@ -8,7 +8,7 @@ class ytlaces::desktop {
   # supported by legacy drivers now.
   package {'nvidia-390xx':}
   package {'nvidia-390xx-utils':}
-  file {'/usr/lib/systemd/system/mnt-data.mount':
+  file {'/etc/systemd/system/mnt-data.mount':
     ensure => 'file',
     source => 'puppet:///modules/ytlaces/desktop/mnt-data.mount',
     owner  => 'tsutsumi',
