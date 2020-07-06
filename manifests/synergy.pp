@@ -5,7 +5,7 @@ class ytlaces::synergy(
 ) {
   file { '/etc/systemd/system/synergy.service':
     ensure => 'file',
-    source => 'puppet:///modules/ytlaces/files/etc/systemd/user/synergy.service',
+    source => 'puppet:///modules/ytlaces/etc/systemd/user/synergy.service',
     owner  => $username
   }
 }

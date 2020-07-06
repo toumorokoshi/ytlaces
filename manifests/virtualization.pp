@@ -1,8 +1,6 @@
 class ytlaces::virtualization  {
-  package {"ovmf":}
-
-  file {"/etc/libvirt/qemu.conf":
-    source => "puppet:///modules/ytlaces/virtualization/qemu.conf",
+  file {'/etc/libvirt/qemu.conf':
     ensure => 'file',
+    source => 'puppet:///modules/ytlaces/virtualization/qemu.conf',
   }
 }
