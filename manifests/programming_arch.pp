@@ -1,11 +1,11 @@
 class ytlaces::programming_arch(
   String $username = 'tsutsumi'
 ) {
-  package {'atom':}
   package {'clojure':}
-  package {'docker':}
   # for python vscode symbols
   package {'ctags':}
+  # docker configs
+  package {'docker':}
   service {'docker':
     ensure => 'running',
     enable => true

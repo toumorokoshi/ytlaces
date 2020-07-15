@@ -141,6 +141,9 @@ class ytlaces (
   class {'::ytlaces::dropbox':
     username => $username
   }
+  class {'::ytlaces::kubernetes':
+    username => $username
+  }
   # conditional includes
   case $type {
     'desktop': {

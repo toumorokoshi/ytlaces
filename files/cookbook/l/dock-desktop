@@ -4,5 +4,5 @@
 # after calling this, applications will have to be restarted to honor
 # new configuration
 # END HELP
-# load configuration for laptop specifically
-xrandr --output eDP-1 --mode 3840x2160 --output DP-1 --off --output DP-2 --off
+# load configuration for laptop when docked
+xrandr --output eDP-1 --off --output DP-1 --auto --output DP-2 --right-of DP-1

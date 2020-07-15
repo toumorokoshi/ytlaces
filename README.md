@@ -59,3 +59,11 @@ There's a couple more steps that need to run, post-install for now:
 After installing ytlaces, the following should be validated:
 
 * set password
+
+## Troubleshooting
+
+### CA certificates /etc/puppetlabs/puppet/ssl expired
+
+- remove existing certs `sudo rm -r /etc/puppetlabs/ssl`
+- install puppetserver (in arch AUR)
+- run `sudo puppetserver ca setup`
