@@ -116,4 +116,5 @@
   }
 
   include ytlaces::thunderbolt
+  include ytlaces::dock
 }
