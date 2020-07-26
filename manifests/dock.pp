@@ -5,6 +5,13 @@ class ytlaces::dock {
     source => 'puppet:///modules/ytlaces/laptop/etc/udev/rules.d/thunderbolt3-dock.rules',
   }
 
+  # to enable the script to copy and remove laptop dpi settings
+  file {'/home/tsutsumi/.Xresources.d/laptop':
+    ensure => 'file',
+    source => 'puppet:///modules/ytlaces/.Xresources.laptop.bak',
+    owner  => 'tsutsumi'
+  }
+
   file { '/opt/ytlaces/dock.sh':
     ensure => 'file',
     source => 'puppet:///modules/ytlaces/laptop/opt/ytlaces/dock.sh',

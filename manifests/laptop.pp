@@ -96,6 +96,12 @@
     owner  => 'tsutsumi'
   }
 
+  file {'/home/tsutsumi/.Xresources.d/laptop':
+    ensure => 'file',
+    source => 'puppet:///modules/ytlaces/.Xresources.laptop.bak',
+    owner  => 'tsutsumi'
+  }
+
   file {'/home/tsutsumi/.Xresources.d/laptop_dock':
     ensure => 'file',
     source => 'puppet:///modules/ytlaces/.Xresources.laptop_dock',
