@@ -92,7 +92,7 @@ if [ -z "$ZSH_VERSION" ]; then
     HISTCONTROL=ignoredups:erasedups  # no duplicate entries
     HISTFILESIZE=$HISTSIZE            # big big history
     shopt -s histappend                      # append to history, dont overwrite it
-else 
+else
     # zsh shell
     if ! type compdef > /dev/null; then
         autoload +X compinit && compinit
@@ -116,11 +116,18 @@ source <($HOME/bin/tome init s $HOME/.ytlaces/cookbook $0)
 
 # add rustup directories
 export PATH=$HOME/.cargo/bin:$PATH
+
+# add GO directories
 export PATH=`go env GOPATH`/bin:$PATH
+
+# add personal bin directori
 export PATH=$PATH:$HOME/bin
 
 # add pip user directories
 PATH=$HOME/.local/bin:$PATH
+
+# add ruby directories
+PATH=$HOME/.gem/ruby/2.7.0/bin:$PATH
 
 # use IBUS as the input manager
 export GTK_IM_MODULE=ibus

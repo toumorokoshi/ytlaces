@@ -19,5 +19,5 @@
   autosetuprebase = remote
 [http]
   sslVerify = false
-[includeIf "gitdir:~/zillow/"]
-	path = ~/.gitconfig.zillow
+[pull]
+  rebase = true
