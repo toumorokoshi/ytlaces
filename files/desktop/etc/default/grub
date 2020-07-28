@@ -5,10 +5,15 @@ GRUB_DISTRIBUTOR="Arch"
 
 GTX_1060_VIDEO_DEVICE_ID="10de:1c03"
 GTX_1060_AUDIO_DEVICE_ID="10de:10f1"
+RADEON_RX570_VIDEO_DEVICE_ID="1002:67df"
+RADEON_RX570_VIDEO_DEVICE_ID="1002:aaf0"
 # in order to run the QEMU VM with device passthrough,
 # the devices must not be claimed by the GPU driver (Nvidia)
 # assigning the device ids here ensure that.
-GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on vfio-pci.ids=10de:1c03,10de:10f1"
+# There is also a required setting efifb:off because my motherboard continues to grab
+# the AMD GPU as the primary GPU (the intention is to use it for the VM).. There is no
+# way to configure it in the bios, so we have to configure the kernel to not bind to it afterward.
+GRUB_CMDLINE_LINUX_DEFAULT="quiet video=efifb:off intel_iommu=on vfio-pci.ids=1002:67df,1002:aaf0"
 GRUB_CMDLINE_LINUX=""
 
 # Preload both GPT and MBR modules so that they are not missed
