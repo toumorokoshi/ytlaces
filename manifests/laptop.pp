@@ -102,6 +102,11 @@
     owner  => 'tsutsumi'
   }
 
+  file {'/etc/systemd/logind.conf':
+    ensure => 'file',
+    source => 'puppet:///modules/ytlaces/laptop/etc/systemd/logind.conf',
+  }
+
   vcsrepo { '/home/tsutsumi/.ytlaces/autorandr':
     ensure   => present,
     provider => git,
