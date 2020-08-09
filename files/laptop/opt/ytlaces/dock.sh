@@ -1,10 +1,12 @@
 #!/bin/sh
-set -e 
+set -e
 
 dock () {
     # collect the thunderbolt device name
     device_name=`cat /sys/bus/thunderbolt/devices/0-1/device_name`
-    currently_docked_device=`cat /tmp/is_docked`
+    if [ -f "/tmp/is_docked" ]; then
+        currently_docked_device=`cat /tmp/is_docked`
+    fi
     x_owner=`ps auxf | grep "xrandr" | cut -f 1 -d ' '`
     if [ "$device_name" == "TBT3-UDV Docking Station" ]; then
         su $x_owner /bin/sh -c "xrandr --display :0 --output eDP-1 --auto --output DP-1 --auto --right-of eDP-1"
