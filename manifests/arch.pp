@@ -17,7 +17,9 @@ class ytlaces::arch(
 
   # needed for building aur packages
   package {'binutils':}
+  package {'base-devel':}
   package {'gcc':}
+  package {'go':}
 
   include ytlaces::audio
   include ytlaces::dropbox

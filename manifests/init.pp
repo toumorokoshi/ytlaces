@@ -106,6 +106,8 @@ class ytlaces (
   }
 
   package {'openssh':}
+  # preferred editor
+  package {'vim':}
 
   exec {"ssh-keygen -f id_rsa -t rsa -N ''":
     path    => '/usr/bin',

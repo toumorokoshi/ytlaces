@@ -10,3 +10,4 @@ ibus-daemon &
 [[ -f ~/.xprofile.work ]] && . ~/.xprofile.work
 
 which blueberry-tray && blueberry-tray
+which dropbox && dropbox &
