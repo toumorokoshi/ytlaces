@@ -4,7 +4,6 @@ class ytlaces::programs(
   # programs to install
   # uses the AUR + yaourt.
   # package {"write-stylus":}
-  package {'hexchat':}
   package {'fzf':}
 
   exec {'/home/tsutsumi/bin/pacman-static':

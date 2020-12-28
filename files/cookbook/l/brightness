@@ -1,0 +1,6 @@
+#!bin/bash
+# SUMMARY: set the screen brightness
+# START HELP
+# END HELP
+brightness=$1
+sudo bash -c "echo $brightness > /sys/class/backlight/intel_backlight/brightness"

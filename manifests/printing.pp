@@ -1,7 +1,7 @@
 class ytlaces::printing {
   package {'cups':}
   package {'system-config-printer':}
-  service {'org.cups.cupsd.service':
+  service {'cups.service':
     ensure => 'running',
     enable => true
   }
