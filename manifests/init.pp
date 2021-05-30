@@ -76,6 +76,13 @@ class ytlaces (
     owner        => $username,
   }
 
+  file {"/usr/local/":
+    recurse      => 'remote',
+    purge        => false,
+    source       => 'puppet:///modules/ytlaces/usr/local/',
+    ensure => 'directory',
+  }
+
   file {"/home/${username}/.config":
     ensure  => 'directory',
     recurse => true,

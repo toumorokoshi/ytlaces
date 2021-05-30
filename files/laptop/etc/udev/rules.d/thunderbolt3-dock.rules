@@ -1,2 +1,0 @@
-ACTION=="add", SUBSYSTEM=="thunderbolt", RUN+="/opt/ytlaces/dock.sh dock"
-ACTION=="remove", SUBSYSTEM=="thunderbolt", RUN+="/opt/ytlaces/dock.sh undock"

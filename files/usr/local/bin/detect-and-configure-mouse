@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Detect if there is a mouse connected, and
+# configure the xmodmap to flip the mouse around if needed.
+main() {
+    if mouse_connected; then
+        echo "mouse detected"
+        xmodmap -e 'pointer = 3 2 1'
+    else
+        echo "mouse not detected"
+        xmodmap -e 'pointer = 1 2 3'
+    fi
+}
+
+mouse_connected() {
+    # this is more complete but probably okay to not go
+    # this extreme (leads to 'Couldn't open device to stderr')
+    # lsusb -v | grep "bInterfaceProtocol.*Mouse"
+    lsusb | grep -qi "mouse"
+}
+
+main

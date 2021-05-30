@@ -3,11 +3,12 @@ xset -b
 # anywhere else as it needs to be under the xsession
 # to affect keybindings
 $HOME/bin/map-capslock-to-escape &
-xscreensaver -no-splash &
+# xscreensaver -no-splash &
 ibus-daemon &
 
 [[ -f ~/.xprofile.desktop ]] && . ~/.xprofile.desktop
 [[ -f ~/.xprofile.work ]] && . ~/.xprofile.work
+/usr/local/bin/ytlaces-poll-loop &
 
 which blueberry-tray && blueberry-tray
 which dropbox && dropbox &

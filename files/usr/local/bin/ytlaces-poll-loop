@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#Some things are easier to do in a simple poll loop.
+#in particular, things that have to run in the context
+#of the current x session.
+#
+while true
+do
+    [[ -f ~/bin/mem-xrandr ]] && ~/bin/mem-xrandr
+    /usr/local/bin/detect-and-configure-mouse
+    sleep 2;
+done
