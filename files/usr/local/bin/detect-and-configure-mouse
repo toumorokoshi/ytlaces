@@ -4,10 +4,20 @@
 main() {
     if mouse_connected; then
         echo "mouse detected"
-        xmodmap -e 'pointer = 3 2 1'
+        # this pre-check of xmodmap had to be added,
+        # as running xmodmap -e constantly resulted in
+        # flickering and crashing of chromium-based apps
+        # (chrome / vscode).
+        if [[ "$(get_first_mapped_pointer_code)" != "3" ]]; then
+            echo "remapping buttons"
+            xmodmap -e 'pointer = 3 2 1'
+        fi
     else
         echo "mouse not detected"
-        xmodmap -e 'pointer = 1 2 3'
+        if [[ "$(get_first_mapped_pointer_code)" != "1" ]]; then
+            echo "remapping buttons"
+            xmodmap -e 'pointer = 1 2 3'
+        fi
     fi
 }
 
@@ -16,6 +26,19 @@ mouse_connected() {
     # this extreme (leads to 'Couldn't open device to stderr')
     # lsusb -v | grep "bInterfaceProtocol.*Mouse"
     lsusb | grep -qi "mouse"
+}
+
+# sample xmodmap -pp output:
+# ---
+# There are 10 pointer buttons defined.
+#
+#     Physical        Button
+#      Button          Code
+#         1              1
+# ---
+##
+get_first_mapped_pointer_code () {
+    xmodmap -pp | head -n 5 | tail -n 1 | awk '{print $2}'
 }
 
 main

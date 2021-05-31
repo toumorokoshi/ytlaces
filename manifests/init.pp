@@ -83,6 +83,14 @@ class ytlaces (
     ensure => 'directory',
   }
 
+  file {"/usr/local/bin":
+    recurse      => 'remote',
+    purge        => false,
+    source       => 'puppet:///modules/ytlaces/usr/local/bin',
+    ensure => 'directory',
+    mode    =>  '0755'
+  }
+
   file {"/home/${username}/.config":
     ensure  => 'directory',
     recurse => true,
