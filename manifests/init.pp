@@ -108,6 +108,13 @@ class ytlaces (
     mode    => '0755',
   }
 
+  file {"/home/${username}/bin/mem-xrandr":
+      ensure => 'file',
+      source => 'https://raw.githubusercontent.com/toumorokoshi/mem-xrandr/main/mem-xrandr',
+      owner  => $username,
+      mode   => '0755'
+  }
+
   file {"/home/${username}/lib":
     ensure => 'directory',
     owner  => $username,
