@@ -1,0 +1,20 @@
+#!/bin/bash
+
+ENGINES=(
+    'xkb:us::eng'
+    'anthy'
+    'xkb:ir::fas'
+)
+
+current_engine="$(ibus engine)"
+engine_count="${#ENGINES[@]}"
+
+for i in "${!ENGINES[@]}"; do
+    ((next_engine=i + 1))
+    if [ "$next_engine" = "$engine_count" ] ; then
+        next_engine=0
+    fi
+    if [ "${ENGINES[i]}" = "$current_engine" ] ; then
+        ibus engine "${ENGINES[$next_engine]}"
+    fi
+done

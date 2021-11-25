@@ -323,6 +323,11 @@ globalkeys = gears.table.join(
     awful.key({"Mod1", "Shift"}, 4,
               function () awful.spawn.with_shell("sleep 0.2; mkdir -p ~/Screenshots && cd ~/Screenshots && /usr/bin/scrot -s") end,
               {description = "take a screenshot with a selection", group = "general"}),
+    -- "-" was chosen as it's a key that is consistent among the ibus engines I use
+    -- (en, anthy, and persian)
+    awful.key({ modkey, }, "-",
+             function () awful.spawn.with_shell("~/bin/cycle-ibus") end,
+             {description = "cycle ibus engines from a predetermined list", group = "general"}),
 
 
 
