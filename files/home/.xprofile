@@ -10,5 +10,5 @@ ibus-daemon &
 [[ -f ~/.xprofile.work ]] && . ~/.xprofile.work
 /usr/local/bin/ytlaces-poll-loop &
 
-which blueberry-tray && blueberry-tray
+which blueman-applet && blueman-applet
 which dropbox && dropbox &

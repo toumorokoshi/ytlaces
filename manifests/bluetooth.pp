@@ -1,10 +1,9 @@
 class ytlaces::bluetooth {
-  package {'bluez':}
-  package {'bluez-utils':}
+  package {'blueman':}
   package {'pulseaudio-bluetooth':}
   service { 'bluetooth.service':
-    ensure => 'running',
+    ensure   => 'running',
     provider => 'systemd',
-    enable => true,
+    enable   => true,
   }
 }

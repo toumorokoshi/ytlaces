@@ -59,3 +59,7 @@ After installing ytlaces, the following should be validated:
 - remove existing certs `sudo rm -r /etc/puppetlabs/ssl`
 - install puppetserver (in arch AUR)
 - run `sudo puppetserver ca setup`
+
+## notes / todos
+
+- add bluetooth via blueman: https://github.com/blueman-project/blueman
