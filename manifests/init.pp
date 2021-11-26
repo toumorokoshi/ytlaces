@@ -76,27 +76,37 @@ class ytlaces (
     owner        => $username,
   }
 
-  file {"/usr/local/":
-    recurse      => 'remote',
-    purge        => false,
-    source       => 'puppet:///modules/ytlaces/usr/local/',
-    ensure => 'directory',
+  file {'/usr/local/':
+    ensure  => 'directory',
+    purge   => false,
+    source  => 'puppet:///modules/ytlaces/usr/local/',
+    recurse => 'remote',
   }
 
-  file {"/usr/local/bin":
-    recurse      => 'remote',
-    purge        => false,
-    source       => 'puppet:///modules/ytlaces/usr/local/bin',
-    ensure => 'directory',
+  file {'/usr/local/bin':
+    ensure  => 'directory',
+    purge   => false,
+    source  => 'puppet:///modules/ytlaces/usr/local/bin',
+    recurse => 'remote',
     mode    =>  '0755'
   }
 
-  file {"/home/${username}/.config":
-    ensure  => 'directory',
-    recurse => true,
-    purge   => false,
-    source  => 'puppet:///modules/ytlaces/home/.config',
-    owner   => $username,
+  package {'rsync':}
+  # have to break down config into subdirectories due to some applications
+  # putting sockets in the config directory.
+  # file {"/home/${username}/.config":
+  #   ensure  => 'directory',
+  #   recurse => true,
+  #   purge   => false,
+  #   source  => 'puppet:///modules/ytlaces/home/.config',
+  #   owner   => $username,
+  #   # sometimes new sockets may pop up, which have to be ignored.
+  #   # find them via `tree --inodes -F | grep =`
+  #   ignore  => '{*.sock*,*SingletonSocket*}'
+  # }
+  exec {'sync-config':
+    command => "rsync -rav ./files/home/.config/ /home/${username}/.config/",
+    user    => $username
   }
 
   file {"/home/${username}/bin":

@@ -1,7 +1,7 @@
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
-local sharedtags = require("awesome-sharedtags")
+local sharedtags = require("awesome-sharedtags-fork")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
@@ -188,7 +188,8 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 -- shared tags across screens, like xmonad
 
-local tags = sharedtags({
+-- make this a global to be accessible when running scripts.
+tags = sharedtags({
     { name = "1: ⌨", layout = awful.layout.layouts[1]},
     { name = "2: W", layout = awful.layout.layouts[1]},
     { name = "3: C", layout = awful.layout.layouts[1]},
@@ -251,6 +252,7 @@ awful.screen.connect_for_each_screen(function(s)
             s.mylayoutbox,
         },
     }
+    sharedtags.viewonly(tags[s.index], s)
 end)
 -- }}}
 
@@ -352,7 +354,7 @@ globalkeys = gears.table.join(
         {description = "go back", group = "client"}),
 
     -- Standard program
-    awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end,
+    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
@@ -629,11 +631,5 @@ end)
 
 client.connect_signal("focus", function(c) c.border_color = "#FF0000" end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
--- }}}
 
--- with multiple screens, the screens aside from the primary
--- can start without being focused on a shared tag.
--- hence we set them explicitly.
-for i, s in ipairs(screen) do
-    sharedtags.viewonly(tags[i], s)
-end
+io.stderr:write("yusuke-11")
