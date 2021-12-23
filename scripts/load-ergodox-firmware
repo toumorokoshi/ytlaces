@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+qmk json2c ./other-configuration/ergodox.json -o /home/tsutsumi/qmk_firmware/keyboards/ergodox_ez/keymaps/yusuke/keymap.c
+qmk json2c ./other-configuration/ergodox.json -o /home/tsutsumi/qmk_firmware/keyboards/hotdox/keymaps/yusuke/keymap.c

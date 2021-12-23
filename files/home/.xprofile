@@ -1,4 +1,6 @@
 xset -b
+# don't want the monitor to blank (causes problems with egpu)
+xset s noblank
 # it's a big difficult to do this one
 # anywhere else as it needs to be under the xsession
 # to affect keybindings

@@ -43,10 +43,9 @@ local sharedtags = {
 -- @param tag The tag to salvage.
 local function salvage(tag)
     -- The screen to move the orphaned tag to.
-    local current_screen = tag.screen
     local newscreen = capi.screen.primary
     for s in capi.screen do
-        if s ~= current_screen then
+        if s ~= tag.screen then
             newscreen = s
         end
     end

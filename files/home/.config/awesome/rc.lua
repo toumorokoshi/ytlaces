@@ -315,9 +315,9 @@ globalkeys = gears.table.join(
     awful.key({}, "F3",
               function () awful.util.spawn("/etc/acpi/handlers/bl +") end,
               {description = "turn up backlight", group = "general"}),
-    awful.key({}, "F3",
-              function () awful.util.spawn("/etc/acpi/handlers/bl +") end,
-              {description = "turn up backlight", group = "general"}),
+    awful.key({}, "XF86AudioPlay",
+              function () awful.util.spawn("playerctl play-pause") end,
+              {description = "play-pause media", group = "general"}),
     -- Mod1 == alt
     -- 0.2 second sleep comes from giving time to release the pointer so scrot can grab it.
     -- https://unix.stackexchange.com/questions/191973/how-to-create-custom-shortcuts-for-scrot-and-gnome-screenshot-interactive-mode
@@ -631,5 +631,3 @@ end)
 
 client.connect_signal("focus", function(c) c.border_color = "#FF0000" end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
-
-io.stderr:write("yusuke-11")
