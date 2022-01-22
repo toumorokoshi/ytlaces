@@ -112,7 +112,7 @@ $ "
 fi
 
 # add cookbook
-source <($HOME/bin/tome init s $HOME/.ytlaces/cookbook $0)
+source <($HOME/bin/tome init s $HOME/.ytlaces/cookbook $SHELL)
 
 # add rustup directories
 export PATH=$HOME/.cargo/bin:$PATH
