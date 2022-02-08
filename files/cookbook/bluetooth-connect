@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
+set -e
 
 E7="FC:58:FA:AD:7C:79"
 U8I="20:19:04:24:0E:95"
 
 # restart bluetooth, it seems to make things more reliable.
 systemctl restart bluetooth
+
+# sleep to give time for the daemon to come up
+sleep 0.25
 
 # turn of bluetooth power, if it's not already
 bluetoothctl power on
