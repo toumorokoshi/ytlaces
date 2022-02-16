@@ -46,18 +46,9 @@ class ytlaces (
   String $type = 'desktop',
   String $username = 'tsutsumi',
 ) {
-  user { $username:
-    ensure => present,
-    shell  => '/bin/zsh',
-    home   => "/home/${username}"
-  }
 
   Exec {
     path => '/bin/:/usr/bin'
-  }
-
-  file {'/opt/ytlaces':
-    ensure => 'directory',
   }
 
   # a majority of the relevant files are copied over
@@ -137,16 +128,16 @@ class ytlaces (
     owner  => $username,
   }
 
-  package {'openssh':}
   # preferred editor
   package {'vim':}
 
-  exec {"ssh-keygen -f id_rsa -t rsa -N ''":
-    path    => '/usr/bin',
-    creates => "/home/${username}/.ssh/id_rsa",
-    user    => $username,
-    cwd     => "/home/${username}/.ssh/",
-  }
+# do this manually.
+#  exec {"ssh-keygen -f id_rsa -t rsa -N ''":
+#    path    => '/usr/bin',
+#    creates => "/home/${username}/.ssh/id_rsa",
+#    user    => $username,
+#    cwd     => "/home/${username}/.ssh/",
+#  }
 
   file {'/etc/security/limits.conf':
     ensure => 'file',
@@ -165,8 +156,8 @@ class ytlaces (
   package {'git':}
   package {'git-lfs':}
 
+  include ytlaces::input
   include ytlaces::programs_universal
-  include ytlaces::printing
   class {'::ytlaces::sub':
     username => $username
   }

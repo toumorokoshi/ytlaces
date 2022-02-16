@@ -2,7 +2,6 @@ class ytlaces::ui_awesome(
   String $username = 'tsutsumi'
 ) {
   package {'awesome':}
-  package {'alacritty':}
 
   vcsrepo {"/home/${username}/.config/awesome/battery-widget":
     ensure   => present,

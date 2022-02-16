@@ -1,6 +1,14 @@
 class ytlaces::arch(
   String $username = 'tsutsumi',
 ) {
+
+  # set default shell to zsh
+  user { $username:
+    ensure => present,
+    shell  => '/bin/zsh',
+    home   => "/home/${username}"
+  }
+
   file { '/etc/pacman.conf':
     ensure => 'file',
     source => 'puppet:///modules/ytlaces/etc/pacman.conf',
@@ -15,16 +23,21 @@ class ytlaces::arch(
     owner  => 'root',
   }
 
+  # arch default terminal
+  package {'alacritty':}
   # needed for building aur packages
   package {'binutils':}
   package {'base-devel':}
   package {'gcc':}
   package {'go':}
 
+  # arch linux provides this package
+  package {'openssh':}
+
   include ytlaces::audio
   include ytlaces::dropbox
   include ytlaces::fonts
-  include ytlaces::input
+  include ytlaces::printing
   class {'::ytlaces::programs':
     username => $username
   }
