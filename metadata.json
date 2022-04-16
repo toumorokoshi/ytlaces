@@ -1,5 +1,5 @@
 {
-  "name": "yt-laces",
+  "name": "ytlaces",
   "version": "0.1.0",
   "author": "yt",
   "summary": "Yusuke Tsutsumi's custom setup",
@@ -20,6 +20,5 @@
       "name": "puppet-archive",
       "version_requirement": ">= 1.0.0"
     }
-  ],
-  "data_provider": null
+  ]
 }

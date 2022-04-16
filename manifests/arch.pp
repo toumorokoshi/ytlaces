@@ -34,7 +34,6 @@ class ytlaces::arch(
   # arch linux provides this package
   package {'openssh':}
 
-  include ytlaces::audio
   include ytlaces::dropbox
   include ytlaces::fonts
   include ytlaces::printing
@@ -48,7 +47,6 @@ class ytlaces::arch(
   include ytlaces::terminal
   include ytlaces::time
   include ytlaces::ui
-  # include ytlaces::ui_xmonad
   include ytlaces::vpn
   include ytlaces::yubikey
 }

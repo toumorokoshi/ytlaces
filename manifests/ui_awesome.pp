@@ -3,6 +3,10 @@ class ytlaces::ui_awesome(
 ) {
   package {'awesome':}
 
+  # packages used by awesome to manipulate things like screen
+  # brightness
+  package {'brightnessctl':}
+
   vcsrepo {"/home/${username}/.config/awesome/battery-widget":
     ensure   => present,
     provider => git,

@@ -156,6 +156,7 @@ class ytlaces (
   package {'git':}
   package {'git-lfs':}
 
+  include ytlaces::audio
   include ytlaces::input
   include ytlaces::programs_universal
   class {'::ytlaces::sub':
@@ -196,16 +197,9 @@ class ytlaces (
       class {'::ytlaces::work':
         username => $username
       }
-    }
-    'work_desktop': {
-      class {'::ytlaces::arch':
-        username => $username
-      }
-      # use the nvidia gpu
-      package {'nvidia':}
-      include ytlaces::work_desktop
-      include ytlaces::network
-      include ytlaces::ui
+
+      package {'scrot':}
+      package {'xclip':}
     }
   }
 }

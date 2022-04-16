@@ -62,6 +62,14 @@ After installing ytlaces, the following should be validated:
 - install puppetserver (in arch AUR)
 - run `sudo puppetserver ca setup`
 
+## cannot find "::ytlaces"
+
+for some reason I had to sudo as root, then do the apply to find the module. some new version of puppet has issues?
+
+This seemed to be fixed by symlinking `ytlaces` into the `/usr/share/puppet/modules` directory, or by fixing the name of the class in `./metadata.json` to `ytlaces` instead of `yt-laces`.
+
+I verified the puppet module was successfully installed with `puppet modules list` as root (since you need to root to run this file).
+
 ## notes / todos
 
 - add bluetooth via blueman: https://github.com/blueman-project/blueman

@@ -1,2 +1,0 @@
-event=button/mute
-action=sudo -u tsutsumi XDG_RUNTIME_DIR=/run/user/1000 pactl set-sink-mute 0 toggle
