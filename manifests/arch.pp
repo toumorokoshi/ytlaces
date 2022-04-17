@@ -44,7 +44,6 @@ class ytlaces::arch(
     username => $username
   }
   include ytlaces::secrets
-  include ytlaces::terminal
   include ytlaces::time
   include ytlaces::ui
   include ytlaces::vpn
