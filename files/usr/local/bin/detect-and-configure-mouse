@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+
+# device if for logitech unifying reciever (mouse)
+LOGITECH="046d:c52b"
+
 # Detect if there is a mouse connected, and
 # configure the xmodmap to flip the mouse around if needed.
 main() {
@@ -25,7 +29,7 @@ mouse_connected() {
     # this is more complete but probably okay to not go
     # this extreme (leads to 'Couldn't open device to stderr')
     # lsusb -v | grep "bInterfaceProtocol.*Mouse"
-    lsusb | grep -qi "mouse"
+    lsusb | grep -qi "mouse\|$LOGITECH"
 }
 
 # sample xmodmap -pp output:
