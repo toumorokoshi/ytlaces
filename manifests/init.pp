@@ -200,6 +200,7 @@ class ytlaces (
 
       package {'scrot':}
       package {'xclip':}
+      package {'pulseaudio-utils':}
     }
   }
 }
