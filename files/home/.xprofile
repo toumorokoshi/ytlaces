@@ -19,3 +19,8 @@ which dropbox && dropbox &
 if [ -f "$HOME/.dropbox-dist/dropboxd" ]; then
     $HOME/.dropbox-dist/dropboxd &
 fi
+
+# turn on xscreensaver
+if which xscreensaver-command > /dev/null; then
+    xscreensaver-command &
+fi

@@ -4,7 +4,6 @@ class ytlaces::ui {
   package {'noto-fonts-cjk':}
   package {'noto-fonts-emoji':}
   package {'ttf-hack':}
-  package {'xscreensaver':}
   package {'xorg-xfontsel':}
   package {'xorg-xlsfonts':}
   package {'xorg':}

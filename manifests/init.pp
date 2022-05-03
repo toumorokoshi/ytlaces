@@ -168,6 +168,9 @@ class ytlaces (
   class {'::ytlaces::ui_awesome':
     username => $username
   }
+  class {'::ytlaces::screensaver':
+    username => $username
+  }
   class {'::ytlaces::dropbox':
     username => $username
   }

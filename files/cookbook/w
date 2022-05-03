@@ -1,7 +1,8 @@
 # SOURCE
+# COMPLETE
 # SUMMARY: navigate to the workspace directory
 # START HELP
-# navigate to the workspace directory, supports subdirectory navigation 
+# navigate to the workspace directory, supports subdirectory navigation
 # END HELP
 local root target_path path_element
 root=$HOME/workspace
