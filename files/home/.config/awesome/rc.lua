@@ -264,6 +264,9 @@ root.buttons(gears.table.join(
 ))
 -- }}}
 
+local mutedebounce
+local playdebounce
+
 -- {{{ Key bindings
 globalkeys = gears.table.join(
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
@@ -316,10 +319,26 @@ globalkeys = gears.table.join(
               function () awful.util.spawn("brightnessctl set 5%-") end,
               {description = "decrease screen brightness", group = "shortcuts"}),
     awful.key({}, "XF86AudioPlay",
-              function () awful.util.spawn("playerctl play-pause") end,
+              function ()
+                if not playdebounce then
+                    playdebounce = true
+                    awful.util.spawn("playerctl play-pause")
+                end
+              end,
+              function ()
+                playdebounce = false
+              end,
               {description = "play-pause media", group = "shortcuts"}),
     awful.key({}, "XF86AudioMute",
-              function () awful.util.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle") end,
+              function ()
+                if not mutedebounce then
+                    mutedebounce = true
+                    awful.util.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")
+                end
+              end,
+              function ()
+                mutedebounce = false
+              end,
               {description = "toggle audio mute", group = "shortcuts"}),
     awful.key({}, "XF86AudioLowerVolume",
               function () awful.util.spawn("pactl set-sink-volume @DEFAULT_SINK@ -10%") end,
