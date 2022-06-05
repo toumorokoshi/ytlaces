@@ -70,6 +70,6 @@ This seemed to be fixed by symlinking `ytlaces` into the `/usr/share/puppet/modu
 
 I verified the puppet module was successfully installed with `puppet modules list` as root (since you need to root to run this file).
 
-## notes / todos
+## Apps
 
-- add bluetooth via blueman: https://github.com/blueman-project/blueman
+-

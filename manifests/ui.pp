@@ -14,6 +14,8 @@ class ytlaces::ui {
     enable => 'true'
   }
   # file management
+  package {'nomacs':} # image viewer
+  package {'qt5-imageformats':} # view webp in nomacs
   package {'thunar':}
   package {'gvfs':}
   # for thumbnails
