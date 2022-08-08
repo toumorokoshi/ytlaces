@@ -16,7 +16,18 @@ class ytlaces::ui {
   # file management
   package {'nomacs':} # image viewer
   package {'qt5-imageformats':} # view webp in nomacs
-  package {'thunar':}
+  # this helps browsers such as chrome, which use xdg-desktop-portal.
+  # choosing KDE-based technologies in particular since some apps (Chrome)
+  # tend to hard-code support for specific desktop environments, and the
+  # technologies need to match.
+  #
+  # if the apps honor layers of abstraction (like xdg-mime), then we can
+  # use those.
+  package {'dolphin':}  # kde file manager
+  # if you don't install this first, xdg-desktop-portal seems to force
+  # xdg-desktop-portal-gnome
+  package {'xdg-desktop-portal-kde':}
+  package {'xdg-desktop-portal':}
   package {'gvfs':}
   # for thumbnails
   package {'tumbler':}
