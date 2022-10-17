@@ -26,6 +26,9 @@ class ytlaces::ui {
   package {'dolphin':}  # kde file manager
   # if you don't install this first, xdg-desktop-portal seems to force
   # xdg-desktop-portal-gnome
+  #
+  # allegedly needed by chrome to interface with KDE file picker.
+  package {'kdialog':}
   package {'xdg-desktop-portal-kde':}
   package {'xdg-desktop-portal':}
   package {'gvfs':}
