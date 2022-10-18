@@ -54,12 +54,6 @@
     owner  => 'tsutsumi'
   }
 
-  file {'/home/tsutsumi/.Xresources.d/laptop_dock':
-    ensure => 'file',
-    source => 'puppet:///modules/ytlaces/.Xresources.laptop_dock',
-    owner  => 'tsutsumi'
-  }
-
   file {'/etc/systemd/logind.conf':
     ensure => 'file',
     source => 'puppet:///modules/ytlaces/laptop/etc/systemd/logind.conf',

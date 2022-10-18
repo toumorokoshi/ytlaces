@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec google-chrome-stable --force-device-scale-factor=1
