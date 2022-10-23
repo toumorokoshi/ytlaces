@@ -15,6 +15,7 @@ ibus-daemon &
 
 which blueman-applet && blueman-applet &
 which dropbox && dropbox &
+which warpd && warpd
 
 if [ -f "$HOME/.dropbox-dist/dropboxd" ]; then
     $HOME/.dropbox-dist/dropboxd &

@@ -38,4 +38,8 @@ class ytlaces::ui {
   # for screenshots
   package {'scrot':}
   package {'xclip':}
+  # Used for mouse manipulation via keyboard. package managers
+  # don't have this normally so have to be installed by hand,
+  # included here for posterity.
+  # package {'warpd': }
 }
