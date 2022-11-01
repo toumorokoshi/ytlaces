@@ -1,2 +1,4 @@
 hint_activation_key: M-X
+activation_key: M-z
+exit: M-z
 drag_button: 3

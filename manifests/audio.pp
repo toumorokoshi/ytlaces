@@ -8,7 +8,7 @@ class ytlaces::audio {
   package {'pavucontrol':}
   # used to control media buttons
   package {'playerctl': }
-  package {'lib32-libpulse':}
-  package {'lib32-alsa-plugins':}
+  # package {'lib32-libpulse':}
+  # package {'lib32-alsa-plugins':}
 
 }

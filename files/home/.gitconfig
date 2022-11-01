@@ -4,10 +4,10 @@
 [alias]
   c = checkout
   ci = commit
-	s = status
-	st = stash
-	l = log --stat --graph
-	sta = stash apply
+  s = status
+  st = stash
+  l = log --stat --graph
+  sta = stash apply
   ls = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
   grep = grep -Ii
   aliases = "!git config -l | grep alias | cut -c 7-"
@@ -15,7 +15,8 @@
   rh = reset --hard
   cam = commit -am
   d = diff
-	p = push -u origin HEAD
+  p = push -u origin HEAD
+  sync = !git checkout $1 && git fetch upstream && git reset --hard upstream/$1
 [branch]
   autosetuprebase = remote
 [http]
