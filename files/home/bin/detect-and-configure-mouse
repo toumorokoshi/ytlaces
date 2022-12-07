@@ -29,7 +29,8 @@ mouse_connected() {
     # this is more complete but probably okay to not go
     # this extreme (leads to 'Couldn't open device to stderr')
     # lsusb check and bluetooth check
-    lsusb | grep -qi "mouse\|\$LOGITECH" || \
+    # Logitech tests for a unifying receiver.
+    lsusb | grep -qi "mouse\|LOGITECH" || \
         bluetoothctl devices Connected | grep -qi "mouse"
 }
 
