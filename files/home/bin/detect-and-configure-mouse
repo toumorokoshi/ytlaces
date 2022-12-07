@@ -28,8 +28,9 @@ main() {
 mouse_connected() {
     # this is more complete but probably okay to not go
     # this extreme (leads to 'Couldn't open device to stderr')
-    # lsusb -v | grep "bInterfaceProtocol.*Mouse"
-    lsusb | grep -qi "mouse\|$LOGITECH"
+    # lsusb check and bluetooth check
+    lsusb | grep -qi "mouse\|\$LOGITECH" || \
+        bluetoothctl devices Connected | grep -qi "mouse"
 }
 
 # sample xmodmap -pp output:

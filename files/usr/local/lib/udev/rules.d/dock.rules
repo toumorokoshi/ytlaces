@@ -1,2 +1,0 @@
-# this rule didn't work, since I need the display.
-# SUBSYSTEMS=="usb", ATTRS{idVendor}=="1532", ATTRS{idProduct}=="007a", RUN+="/usr/local/bin/detect-and-configure-mouse"

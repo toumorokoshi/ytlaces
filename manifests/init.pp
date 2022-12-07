@@ -204,6 +204,8 @@ class ytlaces (
       package {'scrot':}
       package {'xclip':}
       package {'pulseaudio-utils':}
+      # for shell completion improvement
+      package {'fzf':}
     }
   }
 }

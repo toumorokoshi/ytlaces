@@ -6,6 +6,6 @@
 while true
 do
     [[ -f ~/bin/mem-xrandr ]] && ~/bin/mem-xrandr
-    /usr/local/bin/detect-and-configure-mouse
+    ~/bin/detect-and-configure-mouse
     sleep 2;
 done
