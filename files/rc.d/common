@@ -26,9 +26,11 @@ RESET="\[\033[0;0m\]"
 
 
 
-
-# Save and reload the history after each command finishes
-export PROMPT_COMMAND="history -a; history -c; history -r;"
+export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
+export HISTSIZE=100000                   # big big history
+export HISTFILESIZE=100000               # big big history
+shopt -s histappend                      # append to history, don't overwrite it
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # need bash completion
 GIT_PROMPT_PATH=/usr/share/git/completion/git-prompt.sh
@@ -88,10 +90,6 @@ function parse_git_dirty_color {
 HISTSIZE=100000
 if [ -z "$ZSH_VERSION" ]; then
     PS1="$IYELLOW\u:\w\\[\033[\$(parse_git_dirty_color)\]\$(parse_git_repo)\$(__git_ps1)\n$RESET$ "
-    # We share a command history throughout all prompts
-    HISTCONTROL=ignoredups:erasedups  # no duplicate entries
-    HISTFILESIZE=$HISTSIZE            # big big history
-    shopt -s histappend                      # append to history, dont overwrite it
 else
     # zsh shell
     if ! type compdef > /dev/null; then
