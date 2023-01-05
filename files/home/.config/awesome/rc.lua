@@ -264,8 +264,8 @@ root.buttons(gears.table.join(
 ))
 -- }}}
 
-local mutedebounce
-local playdebounce
+local mutedebounce = 0
+local playdebounce = 0
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
@@ -334,13 +334,10 @@ globalkeys = gears.table.join(
               {description = "play-pause media", group = "shortcuts"}),
     awful.key({}, "XF86AudioMute",
               function ()
-                if not mutedebounce then
-                    mutedebounce = true
+                if mutedebounce < os.time() then
                     awful.util.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")
+                    mutedebounce = os.time()
                 end
-              end,
-              function ()
-                mutedebounce = false
               end,
               {description = "toggle audio mute", group = "shortcuts"}),
     awful.key({}, "XF86AudioLowerVolume",

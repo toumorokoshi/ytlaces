@@ -67,21 +67,6 @@ class ytlaces (
     owner        => $username,
   }
 
-  file {'/usr/local/':
-    ensure  => 'directory',
-    purge   => false,
-    source  => 'puppet:///modules/ytlaces/usr/local/',
-    recurse => 'remote',
-  }
-
-  file {'/usr/local/bin':
-    ensure  => 'directory',
-    purge   => false,
-    source  => 'puppet:///modules/ytlaces/usr/local/bin',
-    recurse => 'remote',
-    mode    =>  '0755'
-  }
-
   package {'rsync':}
   # have to break down config into subdirectories due to some applications
   # putting sockets in the config directory.
