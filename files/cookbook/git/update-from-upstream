@@ -7,6 +7,10 @@
 # to that branch.
 # END HELP
 set -e
+BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+if [ $# -gt 1 ]; then
+    BRANCH="$1"
+fi
 git fetch upstream
-git checkout master
-git reset --hard upstream/master
+git checkout "$BRANCH"
+git reset --hard "upstream/$BRANCH"
