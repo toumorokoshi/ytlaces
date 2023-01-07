@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# remove-duplicate-internet checks if the
+# wired ethernet is connected, and if so then
+# disables wifi (two connections messes with some proxies)
+if nmcli dev | grep -r "connected.*Wired" > /dev/null; then
+    nmcli radio wifi off
+    echo "Connected ethernet detected. turning radio off"
+else
+    nmcli radio wifi on
+    echo "Connected ethernet not found. turning radio on"
+fi

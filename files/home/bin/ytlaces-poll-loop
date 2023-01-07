@@ -7,5 +7,6 @@ while true
 do
     [[ -f ~/bin/mem-xrandr ]] && ~/bin/mem-xrandr
     ~/bin/detect-and-configure-mouse
+    ~/bin/remove-duplicate-internet
     sleep 2;
 done
