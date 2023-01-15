@@ -4,9 +4,16 @@ class ytlaces::arch(
 
   # set default shell to zsh
   user { $username:
-    ensure => present,
-    shell  => '/bin/zsh',
-    home   => "/home/${username}"
+    ensure     => present,
+    shell      => '/bin/zsh',
+    home       => "/home/${username}",
+    membership => 'minimum',
+    groups     => [
+      # enables access to input devices for udev,
+      # which enables reading things like tablet mode
+      # toggling.
+      'input',
+    ]
   }
 
   file { '/etc/pacman.conf':

@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+DEVICES_TO_ROTATE=(
+    "ELAN2514:00 04F3:2594"
+    "ELAN2514:00 04F3:2594 Stylus Pen (0)"
+    "ELAN2514:00 04F3:2594 Stylus Eraser (0)"
+)
+# The name of the virtual device on a Spectre x360
+INTEL_VIRTUAL_DEVICE="/dev/input/by-path/platform-INT33D6:00-event"
+
+# use this to read the debug-events
+# sudo libinput debug-events --device /dev/input/event6
+
+main() {
+    echo "starting loop"
+    stdbuf -oL -eL libinput debug-events --device "$INTEL_VIRTUAL_DEVICE" 2>&1 | {
+        while read -r line
+        do
+            echo "$line"
+            detect_tablet_mode "$line"
+        done
+    }
+}
+
+detect_tablet_mode() {
+    LINE="$1"
+
+    if echo "$LINE" | grep "switch tablet-mode state 1" > /dev/null; then
+        tablet_mode
+    fi
+
+    if echo "$LINE" | grep "switch tablet-mode state 0" > /dev/null; then
+        laptop_mode
+    fi
+}
+
+tablet_mode() {
+    for d in "${DEVICES_TO_ROTATE[@]}"
+    do
+        xinput set-prop "${d}" --type=float "Coordinate Transformation Matrix"  0 -1 1 1 0 0 0 0 1
+    done
+    xrandr -o 1
+}
+
+laptop_mode() {
+    for d in "${DEVICES_TO_ROTATE[@]}"
+    do
+        xinput set-prop "${d}" --type=float "Coordinate Transformation Matrix"  0  0 0 0 0 0 0 0 0
+    done
+    xrandr -o 0
+}
+
+main

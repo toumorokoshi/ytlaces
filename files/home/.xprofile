@@ -16,6 +16,7 @@ export PATH=$PATH:$HOME/bin
 [[ -f ~/.xprofile.desktop ]] && . ~/.xprofile.desktop
 [[ -f ~/.xprofile.work ]] && . ~/.xprofile.work
 [[ -f ~/bin/ytlaces-poll-loop ]] && ~/bin/ytlaces-poll-loop &
+[[ -f ~/bin/detect-and-configure-tablet ]] && ~/bin/detect-and-configure-tablet &
 
 which blueman-applet && blueman-applet &
 which dropbox && dropbox &

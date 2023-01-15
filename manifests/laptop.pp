@@ -74,4 +74,5 @@
 
   include ytlaces::thunderbolt
   include ytlaces::dock
+  include ytlaces::tablet
 }
