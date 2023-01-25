@@ -30,7 +30,7 @@ mouse_connected() {
     # this extreme (leads to 'Couldn't open device to stderr')
     # lsusb check and bluetooth check
     # Logitech tests for a unifying receiver.
-    lsusb | grep -qi "mouse\|LOGITECH" || \
+    lsusb | grep -qi "mouse\|LOGITECH\|Areson" || \
         bluetoothctl devices Connected | grep -qi "mouse"
 }
 
