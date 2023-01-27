@@ -32,7 +32,7 @@ export HISTFILESIZE=100000               # big big history
 if [ -z "$ZSH_VERSION" ]; then
     shopt -s histappend                      # append to history, don't overwrite it
 else
-    setopt -s histappend                      # append to history, don't overwrite it
+    setopt histappend                      # append to history, don't overwrite it
 fi
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
