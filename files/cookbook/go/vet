@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# run standard go tests before pushing.
+set -e
+if ! which staticheck > /dev/null; then
+    echo "installing staticcheck..."
+    go install honnef.co/go/tools/cmd/staticcheck@latest
+fi
+staticcheck ./...
+go test ./...
