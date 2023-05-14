@@ -7,14 +7,6 @@ class ytlaces::terminal_config(
     owner  => $username,
   }
 
-  file {"/home/${username}/.ytlaces/rc.d":
-    ensure  => 'directory',
-    recurse => true,
-    purge   => true,
-    source  => 'puppet:///modules/ytlaces/rc.d',
-    owner   => $username,
-  }
-
   file {"/home/${username}/.tmux.conf":
    ensure => 'file',
    source => 'puppet:///modules/ytlaces/home/.tmux.conf',

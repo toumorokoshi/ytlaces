@@ -4,8 +4,6 @@ update_interval 1
 
 lua_load $HOME/.xmonad/conky_scripts/conky_lua_scripts.lua
 
-# note: dropbox needed dropbox-cli on arch
-
 TEXT
 # battery
 ${execi 6 cat /sys/class/power_supply/BAT0/capacity}%: \

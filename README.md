@@ -36,17 +36,16 @@ There's a couple more steps that need to run, post-install for now:
 ## Setting up Arch
 
 * after installation, you may need to enable and start up network devices:
-    ip link dev eno1 up
-    systemctl enable dhcpcd
-    systemctl start dhcpcd
-* wifi-menu can be used to connect to the network.
-    bin/install_yay
-    yay -S install dropbox
-    yay -S install dropbox-cli
-    systemctl enable dropbox@tsutsumi
+  - `ip link dev eno1 up`
+  - `systemctl enable dhcpcd`
+  - `systemctl start dhcpcd`
 
-* dropbox
-* dropbox-cli
+wifi-menu can be used to connect to the network.
+
+Then run:
+
+- `bin/install_yay`
+- `yay -S install insync`
 
 ## Testing
 
@@ -69,7 +68,3 @@ for some reason I had to sudo as root, then do the apply to find the module. som
 This seemed to be fixed by symlinking `ytlaces` into the `/usr/share/puppet/modules` directory, or by fixing the name of the class in `./metadata.json` to `ytlaces` instead of `yt-laces`.
 
 I verified the puppet module was successfully installed with `puppet modules list` as root (since you need to root to run this file).
-
-## Apps
-
--

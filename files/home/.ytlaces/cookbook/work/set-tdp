@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# SUMMARY: set low and high TDP files
+# START HELP
+# END HELP
+CONFIG_LOCATION="/etc/throttled.conf"
+CONFIG_DIRECTORY="${HOME}/.ytlaces/config/throttled"
+if [ "$1" = "--complete" ]; then
+    ls "$CONFIG_DIRECTORY"
+else
+    CONFIG_FILE="${CONFIG_DIRECTORY}/${1}"
+    if [ -f "$CONFIG_FILE" ]; then
+        cp "${CONFIG_FILE}" "${CONFIG_LOCATION}"
+    fi
+fi
