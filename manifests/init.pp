@@ -156,9 +156,11 @@ class ytlaces (
   class {'::ytlaces::screensaver':
     username => $username
   }
-  class {'::ytlaces::dropbox':
-    username => $username
-  }
+  # disabled since I can't install
+  # insync via puppet.
+  # class {'::ytlaces::insync':
+  #   username => $username
+  # }
   class {'::ytlaces::kubernetes':
     username => $username
   }

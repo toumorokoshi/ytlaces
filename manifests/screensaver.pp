@@ -1,3 +1,4 @@
+# install screensaver
 class ytlaces::screensaver(
   String $username = 'tsutsumi'
 ) {

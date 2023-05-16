@@ -5,21 +5,14 @@ class ytlaces::programming_arch(
   # for python vscode symbols
   package {'ctags':}
   # docker configs
-  package {'docker':}
-  service {'docker':
-    ensure => 'running',
-    enable => true
-  }
-  group {'docker':
-    members => [$username]
-  }
+  package {'podman':}
   # debugging linux
   package {'sysstat':}
   # python
   package {'python':}
   package {'pyenv':}
   # yaourt
-  package {'code':}
+  package {'visual-studio-code-bin':}
   package {'dotnet-runtime':}
   package {'dotnet-sdk':}
   package {'mono':}

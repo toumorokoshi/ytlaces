@@ -20,12 +20,8 @@ export PATH=$PATH:$HOME/bin
 [[ -f /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 ]] && /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 
 which blueman-applet && blueman-applet &
-which dropbox && dropbox &
 which warpd && warpd
-
-if [ -f "$HOME/.dropbox-dist/dropboxd" ]; then
-    $HOME/.dropbox-dist/dropboxd &
-fi
+which insync && insync start
 
 # turn on xscreensaver
 if which xscreensaver-command > /dev/null; then
