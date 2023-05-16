@@ -1,0 +1,8 @@
+# hack to start insync
+INSYNC_STARTED_FILE="/tmp/insync-started"
+if [ ! -f "$INSYNC_STARTED_FILE" ] ; then
+    insync start
+    touch "$INSYNC_STARTED_FILE"
+fi
+
+
