@@ -61,7 +61,7 @@ class ytlaces (
   file {"/home/${username}/":
     ensure       => 'directory',
     recurse      => 'remote',
-    recurselimit => 1,
+    recurselimit => 10,
     purge        => false,
     source       => 'puppet:///modules/ytlaces/home/',
     owner        => $username,
@@ -84,6 +84,12 @@ class ytlaces (
     command => "rsync -rav ./files/home/.config/ /home/${username}/.config/",
     user    => $username
   }
+
+  exec {'sync-ytlaces':
+    command => "rsync -rav ./files/home/.ytlaces/ /home/${username}/.ytlaces/",
+    user    => $username
+  }
+
 
   file {"/home/${username}/bin":
     ensure  => 'directory',

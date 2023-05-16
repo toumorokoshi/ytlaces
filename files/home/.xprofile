@@ -21,7 +21,6 @@ export PATH=$PATH:$HOME/bin
 
 which blueman-applet && blueman-applet &
 which warpd && warpd
-which insync && insync start
 
 # turn on xscreensaver
 if which xscreensaver-command > /dev/null; then
