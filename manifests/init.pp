@@ -199,6 +199,7 @@ class ytlaces (
       package {'pulseaudio-utils':}
       # for shell completion improvement
       package {'fzf':}
+      package {'redshift-gtk':}
     }
   }
 }

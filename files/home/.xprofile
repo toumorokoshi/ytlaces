@@ -21,6 +21,7 @@ export PATH=$PATH:$HOME/bin
 
 which blueman-applet && blueman-applet &
 which warpd && warpd
+which redshift-gtk && redshift-gtk &
 
 # turn on xscreensaver
 if which xscreensaver-command > /dev/null; then
