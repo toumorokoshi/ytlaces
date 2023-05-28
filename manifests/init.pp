@@ -188,6 +188,7 @@ class ytlaces (
       include ytlaces::laptop
       include ytlaces::network
       include ytlaces::bluetooth
+      include ytlaces::wine
     }
     'work': {
       class {'::ytlaces::work':
