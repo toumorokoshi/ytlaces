@@ -6,6 +6,7 @@ class ytlaces::programming_arch(
   package {'ctags':}
   # docker configs
   package {'podman':}
+  package {'fuse-overlayfs':} # need user-space driver to use overlayfs
   # debugging linux
   package {'sysstat':}
   # python

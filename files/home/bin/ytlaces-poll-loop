@@ -6,7 +6,9 @@
 while true
 do
     [[ -f ~/bin/mem-xrandr ]] && ~/bin/mem-xrandr
-    ~/bin/detect-and-configure-mouse
+    # using the regular mouse bindings so I can
+    # us the trackpad as needed.
+    # ~/bin/detect-and-configure-mouse
     ~/bin/remove-duplicate-internet
     sleep 2;
 done
