@@ -2,6 +2,7 @@
 local gears = require("gears")
 local awful = require("awful")
 local sharedtags = require("awesome-sharedtags-fork")
+require('awesomewm-micky')
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
