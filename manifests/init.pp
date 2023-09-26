@@ -191,8 +191,10 @@ class ytlaces (
       include ytlaces::wine
     }
     'work': {
-      class {'::ytlaces::work':
-        username => $username
+      file {"/home/$username/.xprofile.work":
+        ensure => "file",
+        source => "puppet:///modules/ytlaces/.xprofile.work",
+        owner => $username
       }
 
       package {'scrot':}

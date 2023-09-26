@@ -12,12 +12,13 @@ ibus-daemon &
 # add to the path to find some self-compiled binaries
 # e.g. warpd.
 export PATH=$PATH:$HOME/bin
+export PATH=$PATH:$HOME/go/bin
 
 [[ -f ~/.xprofile.desktop ]] && . ~/.xprofile.desktop
 [[ -f ~/.xprofile.work ]] && . ~/.xprofile.work
-[[ -f ~/bin/ytlaces-poll-loop ]] && ~/bin/ytlaces-poll-loop &
-[[ -f ~/bin/detect-and-configure-tablet ]] && ~/bin/detect-and-configure-tablet &
-[[ -f /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 ]] && /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
+[[ -f ~/bin/ytlaces-poll-loop ]] && ~/bin/ytlaces-poll-loop > /dev/null &
+[[ -f ~/bin/detect-and-configure-tablet ]] && ~/bin/detect-and-configure-tablet > /dev/null &
+[[ -f /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 ]] && /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 > /dev/null &
 
 which blueman-applet && blueman-applet &
 which warpd && warpd

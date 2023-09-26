@@ -2,25 +2,37 @@
 
 ## Installing
 
-* install puppet
-* clone this repo
-* symlink repo to one of:
+1. clone this repo
+1. install puppet
+1. symlink repo to one of the following until it works:
+  * `/etc/puppet/code/modules/` (possibly since puppet 4?)
   * `/opt/puppetlabs/puppet/modules/ytlaces`
   * `/etc/puppet/code/environments/standalone_puppet/modules`
-* install the following modules:
+4. install the following modules:
   *  `puppet module install puppetlabs-vcsrepo`
   *  `puppet module install puppetlabs-apt`
   *  `puppet module install puppet-archive`
-
+4. Run the appropriate `bin/install_{env}`.
 * `$ puppet apply examples/init.pp`
+
+## installation into rc and profile
+
+The following files serve the following purposes:
+
+| filename          | purpose                                                                      |
+| ----------------- | ---------------------------------------------------------------------------- |
+| `$HOME/.xprofile` | yt-laces managed, for configuration that applies to all yt machines.         |
+| `$HOME/.profile`  | user-managed, for configuration specific to the host.                        |
+| `$HOME/.bashrc`   | user-managed, for configuration specific to the host. should source ytlaces. |
+
+* add a section into your bash/zsh rc file that sources in a whole directory of rc files:
+
+  `. $HOME/.ytlaces/init`
 
 ## post-install setup.
 
 There's a couple more steps that need to run, post-install for now:
 
-* add a section into your bash/zsh rc file that sources in a whole directory of rc files:
-
-  `. $HOME/.ytlaces/init`
 
 * add a resolv.conf line for google's 8.8.8.8 dns. This ensures that a public dns is used before a private one.
 * ibus-setup
