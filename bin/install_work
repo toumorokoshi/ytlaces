@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
-BASE=`dirname $0`
-exec sudo puppet apply $BASE/../examples/work.pp
-# install this puppet recipe. This file should be run as root (helps package manager install things)
+BASE=$(dirname "$0")
+exec sudo puppet apply "$BASE/../examples/work.pp"

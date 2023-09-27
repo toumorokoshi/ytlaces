@@ -1,4 +1,4 @@
 class {'::ytlaces':
   type => 'work',
-  username => 'yusuketsutsumi'
+  username => 'yusuke.tsutsumi'
 }
