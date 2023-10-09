@@ -9,6 +9,8 @@ do
     # using the regular mouse bindings so I can
     # us the trackpad as needed.
     # ~/bin/detect-and-configure-mouse
-    ~/bin/remove-duplicate-internet
+    # disabling because all of my devices support
+    # both ethernet / wifi simultaneously without issue.
+    # ~/bin/remove-duplicate-internet
     sleep 2;
 done

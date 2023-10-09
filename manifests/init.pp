@@ -197,6 +197,13 @@ class ytlaces (
         owner => $username
       }
 
+      # In ubuntu 20.04, the brightnessctl package does not seem to
+      # install the rules for us.
+      file {'/etc/udev/rules.d/90-brightnessctl.rules':
+        ensure => 'file',
+        source => 'puppet:///modules/ytlaces/etc/udev/rules.d/90-brightnessctl.rules',
+      }
+
       package {'scrot':}
       package {'xclip':}
       package {'pulseaudio-utils':}
