@@ -170,6 +170,14 @@ class ytlaces (
   class {'::ytlaces::kubernetes':
     username => $username
   }
+
+  # rules to get elecom trackball to scroll with
+  # the trackball.
+  file {'/etc/X11/xorg.conf.d/40-elecom-trackball.conf':
+      ensure => 'file',
+      source => 'puppet:///modules/ytlaces/etc/X11/xorg.conf.d/40-elecom-trackball.conf',
+  }
+
   # conditional includes
   case $type {
     'desktop': {
@@ -180,6 +188,8 @@ class ytlaces (
       include ytlaces::network
       include ytlaces::synergy
       include ytlaces::virtualization
+      # arch-only package
+      package {'pipewire-alsa':}
     }
     'laptop': {
       class {'::ytlaces::arch':
@@ -190,6 +200,7 @@ class ytlaces (
       include ytlaces::bluetooth
       include ytlaces::wine
     }
+
     'work': {
       file {"/home/$username/.xprofile.work":
         ensure => "file",
@@ -210,6 +221,8 @@ class ytlaces (
       # for shell completion improvement
       package {'fzf':}
       package {'redshift-gtk':}
+      # sync time
+      package {'systemd-timesyncd':}
     }
   }
 }

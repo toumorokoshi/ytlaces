@@ -13,7 +13,7 @@ class ytlaces::sub(
 
   # install tome executable
   exec {'install tome':
-    command => "curl -L 'https://github.com/toumorokoshi/tome/releases/download/v0.9.0/tome-linux_amd64' > ~/bin/tome && chmod 0755 ~/bin/tome",
+    command => "curl -L 'https://github.com/toumorokoshi/tome/releases/download/v0.11.1/tome-linux_amd64' > /home/$username/bin/tome && chmod 0755 /home/$username/bin/tome",
     user    => $username,
   }
 }

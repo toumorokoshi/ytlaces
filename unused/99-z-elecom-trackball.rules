@@ -1,0 +1,2 @@
+ACTION=="bind", ENV{DISPLAY}=":0.0", ENV{XAUTHORITY}="/home/yusuke.tsutsumi/.Xauthority", ENV{ID_VENDOR_ID}=="056e", ENV{ID_MODEL_ID}=="0129", RUN+="/usr/bin/xinput set-prop 'pointer:ELECOM TrackBall Mouse EX-G Pro TrackBall' 'libinput Button Scrolling Button' 11"
+ACTION=="bind", ENV{DISPLAY}=":0.0", ENV{XAUTHORITY}="/home/yusuke.tsutsumi/.Xauthority", ENV{ID_VENDOR_ID}=="056e", ENV{ID_MODEL_ID}=="0129", RUN+="/usr/bin/xinput set-prop 'pointer:ELECOM TrackBall Mouse EX-G Pro TrackBall' 'libinput Scroll Method Enabled' 0 0 1"
