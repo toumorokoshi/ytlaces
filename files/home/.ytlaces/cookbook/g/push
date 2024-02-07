@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# push the state of the current branch to the remote.
+set -ex
+git add .
+git commit -a --amend --no-edit
+git push -uf

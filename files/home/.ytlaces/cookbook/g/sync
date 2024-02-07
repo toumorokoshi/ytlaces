@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Syncs the current branch with the remote branch
+#
+# Performs a force push to the remote branch rather than
+# additional commits.
+git add .
+git commit -a --amend --no-edit
+git push -uf

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# produces a semantic log.
+exec git log --branches --graph --format='%C(yellow)%ae %C(cyan)%ai %C(magenta)%D %C(blue)%h %n%s' --decorate-refs='refs/heads'

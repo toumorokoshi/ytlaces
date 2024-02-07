@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# SUMMARY: create a new branch from the upstream main branch
+branch="$1"
+
+if [ -z "$branch" ]; then
+  echo "Usage: $0 <branch>"
+  exit 1
+fi
+
+git checkout develop
+git pull origin develop
+git checkout -b "$branch"
