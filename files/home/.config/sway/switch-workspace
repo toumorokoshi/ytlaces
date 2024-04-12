@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# move to a virtual workspace 2
+workspace_num="$1"
+output_1="1"
+output_2="2"
+output_3="3"
+if [ "$workspace_num" == "2" ]; then
+    output_1="4"
+    output_2="5"
+    output_3="6"
+fi
+swaymsg workspace "${output_1}"
+swaymsg workspace "${output_2}"
+swaymsg workspace "${output_3}"

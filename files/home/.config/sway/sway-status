@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+battery_state=$(cat /sys/class/power_supply/BAT0/status)
+battery=$(upower -i "$(upower -e | grep 'BAT')" | rg "percentage:\W+(\d+)" -or '$1')
+dt=$(date '+%Y-%m-%d %k:%M:%S')
+
+echo "$battery(${battery_state:0:1}) 🔋 $dt"
