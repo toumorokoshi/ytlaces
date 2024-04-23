@@ -218,6 +218,7 @@ bindsym $mod+w focus output eDP-1
 bindsym $mod+e focus output DP-3
 bindsym $mod+r focus output DP-4
 bindsym $mod+t mode "resize"
+bindsym $mod+i exec ~/.config/sway/swap-workspace
 # Start your launcher
 bindsym $mod+p exec $menu
 # hotkey chosen to complement parent (mod+a)
@@ -240,6 +241,7 @@ workspace 4 output eDP-1
 workspace 5 output DP-3 eDP-1
 workspace 6 output DP-4 eDP-1
 
+output 'Unknown DuexLite DuexLite001' transform 180
 # setup scrolling on my elecom mouse
 input "1390:297:ELECOM_TrackBall_Mouse_EX-G_Pro_TrackBall" {
     scroll_method on_button_down

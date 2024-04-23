@@ -52,8 +52,8 @@ done
 
 # used in the prompt command below to display what git branch im in.
 function has_git_branch {
-    local branch=`git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'`
-    if [ "x$branch" = "x" ]; then
+    local branch=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/')
+    if [ "$branch" = "" ]; then
         return 0
     else
         return 1
@@ -120,7 +120,7 @@ $ "
 fi
 
 # add cookbook
-source <($HOME/bin/tome init s $HOME/.ytlaces/cookbook $SHELL)
+source <("$HOME"/bin/tome init s "$HOME"/.ytlaces/cookbook "$SHELL")
 
 # add rustup directories
 export PATH=$HOME/.cargo/bin:$PATH
@@ -131,7 +131,8 @@ if which go > /dev/null; then
 fi
 
 # add personal bin directories
-export PATH=$PATH:$HOME/bin
+# prefix so we can override
+export PATH=$HOME/bin:$PATH
 
 # add pip user directories
 PATH=$HOME/.local/bin:$PATH
@@ -169,3 +170,13 @@ else
         fi
     done
 fi
+
+# start ssh-agent
+# set SSH_AUTH_SOCK env var to a fixed value
+export SSH_AUTH_SOCK=~/.ssh/ssh-agent.sock
+
+# test whether $SSH_AUTH_SOCK is valid
+ssh-add -l 2>/dev/null >/dev/null
+
+# if not valid, then start ssh-agent using $SSH_AUTH_SOCK
+[ $? -ge 2 ] && rm "$SSH_AUTH_SOCK" ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null

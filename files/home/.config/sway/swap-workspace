@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -e
+CURRENT_WORKSPACE=$(swaymsg -t get_workspaces | jq '.[] | select(.output == "DP-3") | .num')
+if [ "$CURRENT_WORKSPACE" == "2" ]; then
+    l="DP-3"
+    r="DP-4"
+else
+    l="DP-4"
+    r="DP-3"
+fi
+swaymsg workspace 2
+swaymsg move workspace to output ${r}
+swaymsg workspace 5
+swaymsg move workspace to output ${r}
+swaymsg workspace 3
+swaymsg move workspace to output ${l}
+swaymsg workspace 6
+swaymsg move workspace to output ${l}
+swaymsg workspace 2
+swaymsg workspace 3
