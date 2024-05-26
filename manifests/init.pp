@@ -177,6 +177,7 @@ class ytlaces (
       ensure => 'file',
       source => 'puppet:///modules/ytlaces/etc/X11/xorg.conf.d/40-elecom-trackball.conf',
   }
+  include ytlaces::sway
 
   # conditional includes
   case $type {
@@ -197,15 +198,16 @@ class ytlaces (
       }
       include ytlaces::laptop
       include ytlaces::network
-      include ytlaces::bluetooth
+      # include ytlaces::bluetooth
       include ytlaces::wine
+      # install swaync for notifications
     }
 
     'work': {
-      file {"/home/$username/.xprofile.work":
-        ensure => "file",
-        source => "puppet:///modules/ytlaces/.xprofile.work",
-        owner => $username
+      file {"/home/${username}/.xprofile.work":
+        ensure => 'file',
+        source => 'puppet:///modules/ytlaces/.xprofile.work',
+        owner  => $username
       }
 
       # In ubuntu 20.04, the brightnessctl package does not seem to

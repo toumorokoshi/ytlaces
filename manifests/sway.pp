@@ -1,11 +1,9 @@
-class {'::sway':
-  # manual configuration
-  # - configure fcitx with fcitx5-config.
-  type => 'sway',
-  username => 'tsutsumi'
-
+# sway
+class ytlaces::sway(
+) {
   # for IME support
   package {'fcitx5':}
   # Japanese IME
   package {'fcitx5-mozc':}
+  # install swaync for notifications
 }

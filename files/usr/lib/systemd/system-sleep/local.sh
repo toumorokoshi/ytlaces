@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SCRIPT NO LONGER IN USE.
 #
 # script to change virtual terminals before and after a suspend/resume
 # to try and work around an i915 issue with multiple displays
@@ -16,5 +17,5 @@ if [[ "$2" == "suspend" ]]; then
 		vt=$LIGHTDM_VT
 	fi
 	logger "$t-suspend: switching to vt$vt"
-	chvt $vt
+	chvt "$vt"
 fi

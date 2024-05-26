@@ -7,9 +7,8 @@ class ytlaces::ui {
   package {'xorg-xfontsel':}
   package {'xorg-xlsfonts':}
   package {'xorg':}
-  package {'lightdm':}
-  package {'lightdm-gtk-greeter':}
-  service {'lightdm':
+  package {'gdm':}
+  service {'gdm':
     ensure => 'running',
     enable => 'true'
   }
