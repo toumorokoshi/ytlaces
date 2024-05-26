@@ -126,6 +126,7 @@ source <("$HOME"/bin/tome init s "$HOME"/.ytlaces/cookbook "$SHELL")
 export PATH=$HOME/.cargo/bin:$PATH
 
 # add GO directories
+export PATH=$HOME/go/bin/:$PATH
 if which go > /dev/null; then
   export PATH=$(go env GOPATH)/bin:$PATH
 fi
@@ -179,4 +180,4 @@ export SSH_AUTH_SOCK=~/.ssh/ssh-agent.sock
 ssh-add -l 2>/dev/null >/dev/null
 
 # if not valid, then start ssh-agent using $SSH_AUTH_SOCK
-[ $? -ge 2 ] && rm "$SSH_AUTH_SOCK" ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null
+[ $? -ge 2 ] && rm "$SSH_AUTH_SOCK" && ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null

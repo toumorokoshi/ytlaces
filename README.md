@@ -37,6 +37,10 @@ There's a couple more steps that need to run, post-install for now:
 * add a resolv.conf line for google's 8.8.8.8 dns. This ensures that a public dns is used before a private one.
 * ibus-setup
 
+### Work
+
+- hand-modify /etc/gdm3/custom.conf and set `WaylandEnable=true`.
+
 ## Setting up from a fresh Windows install
 
 * run disk manager ("Create and format hard disk partitions") in the search
