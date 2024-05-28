@@ -9,6 +9,7 @@ if [ "$workspace_num" == "2" ]; then
     output_2="5"
     output_3="6"
 fi
-swaymsg workspace "${output_1}"
-swaymsg workspace "${output_2}"
 swaymsg workspace "${output_3}"
+swaymsg workspace "${output_2}"
+# put 1 at the end so that it ends up being the active workspace
+swaymsg workspace "${output_1}"
