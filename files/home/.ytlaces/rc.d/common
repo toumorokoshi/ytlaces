@@ -99,7 +99,7 @@ function parse_git_dirty_color {
 
 HISTSIZE=100000
 if [ -z "$ZSH_VERSION" ]; then
-    PS1="$IYELLOW\u:\w\\[\033[\$(parse_git_dirty_color)\]\$(parse_git_repo)\$(__git_ps1)\n$RESET$ "
+    PS1="$CYAN$(date "+%H:%M:%S") $IYELLOW\u:\w\\[\033[\$(parse_git_dirty_color)\]\$(parse_git_repo)\$(__git_ps1)$RESET\n"
 else
     # zsh shell
     if ! type compdef > /dev/null; then
