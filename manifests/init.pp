@@ -90,6 +90,11 @@ class ytlaces (
     user    => $username
   }
 
+  exec {'sync-local':
+    command => "rsync -rav ./files/home/.local/ /home/${username}/.local/",
+    user    => $username
+  }
+
 
   file {"/home/${username}/bin":
     ensure  => 'directory',
