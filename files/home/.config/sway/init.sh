@@ -15,4 +15,7 @@ systemctl --user start pipewire-media-session
 google-chrome --profile-directory="Profile 1"
 # finally start authcli
 /usr/bin/authcli fastpass proxy -debug > /tmp/fastpass.log &
-# maybe start ssh
+# add a hook for custom scripts as needed.
+if [ -f "${HOME}/.yft_custom.sh" ]; then
+    . "${HOME}/.yft_custom.sh"
+fi
