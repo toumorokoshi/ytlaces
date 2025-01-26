@@ -105,12 +105,12 @@ class ytlaces (
     mode    => '0755',
   }
 
-  file {"/home/${username}/bin/mem-xrandr":
-      ensure => 'file',
-      source => 'https://raw.githubusercontent.com/toumorokoshi/mem-xrandr/main/mem-xrandr',
-      owner  => $username,
-      mode   => '0755'
-  }
+  # file {"/home/${username}/bin/mem-xrandr":
+  #     ensure => 'file',
+  #     source => 'https://raw.githubusercontent.com/toumorokoshi/mem-xrandr/main/mem-xrandr',
+  #     owner  => $username,
+  #     mode   => '0755'
+  # }
 
   file {"/home/${username}/lib":
     ensure => 'directory',
@@ -186,28 +186,8 @@ class ytlaces (
 
   # conditional includes
   case $type {
-    'desktop': {
-      class {'::ytlaces::arch':
-        username => $username
-      }
-      include ytlaces::desktop
-      include ytlaces::network
-      include ytlaces::synergy
-      include ytlaces::virtualization
-      # arch-only package
-      package {'pipewire-alsa':}
-    }
     'laptop': {
-      class {'::ytlaces::arch':
-        username => $username
-      }
-      include ytlaces::laptop
-      include ytlaces::network
-      # include ytlaces::bluetooth
-      include ytlaces::wine
-      # install swaync for notifications
     }
-
     'work': {
       file {"/home/${username}/.xprofile.work":
         ensure => 'file',
@@ -221,15 +201,31 @@ class ytlaces (
         ensure => 'file',
         source => 'puppet:///modules/ytlaces/etc/udev/rules.d/90-brightnessctl.rules',
       }
+    }
 
-      package {'scrot':}
-      package {'xclip':}
-      package {'pulseaudio-utils':}
-      # for shell completion improvement
-      package {'fzf':}
-      package {'redshift-gtk':}
-      # sync time
-      package {'systemd-timesyncd':}
+    # inactive configs
+
+    'desktop': {
+      class {'::ytlaces::arch':
+        username => $username
+      }
+      include ytlaces::desktop
+      include ytlaces::network
+      # we just use wine / proton to run games now
+      # include ytlaces::synergy
+      # include ytlaces::virtualization
+      # arch-only package
+      package {'pipewire-alsa':}
+    }
+    'arch_laptop': {
+      class {'::ytlaces::arch':
+        username => $username
+      }
+      include ytlaces::laptop
+      include ytlaces::network
+      # include ytlaces::bluetooth
+      include ytlaces::wine
+      # install swaync for notifications
     }
   }
 }

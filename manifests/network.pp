@@ -9,7 +9,7 @@ class ytlaces::network {
     ensure => 'running',
     enable => true
   }
-  # for some reason systemd-resolve doesn't add the 
+  # for some reason systemd-resolve doesn't add the
   # symlink, so we need to. or else systemd-resolve
   # won't be the source of truth for vpn.
   file {'/etc/resolv.conf':
@@ -21,7 +21,7 @@ class ytlaces::network {
     ensure => 'file',
     source => 'puppet:///modules/ytlaces/etc/systemd/resolved.conf',
   }
-  # to use the standard dns database over 
+  # to use the standard dns database over
   # the systemd-resolver.
   file {'/etc/nsswitch.conf':
     ensure => 'file',
