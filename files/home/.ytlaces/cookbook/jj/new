@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-jj git fetch --all-remoted
+set -x
 REMOTE_TO_USE="origin"
 # check if the "upstream" string is present
-if ! jj git remote list | grep -q "upstream"; then
+if jj git remote list | grep -q "upstream"; then
   REMOTE_TO_USE="upstream"
 fi
 jj git fetch --remote $REMOTE_TO_USE

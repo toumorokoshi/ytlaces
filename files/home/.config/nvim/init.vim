@@ -4,4 +4,4 @@ set autoindent
 set cursorline
 set visualbell
 set ignorecase
-set hisearch
+set hlsearch
