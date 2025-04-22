@@ -187,6 +187,9 @@ input "type:keyboard" xkb_options caps:escape
 font pango:monospace 1
 titlebar_border_thickness 0
 titlebar_padding 0
+# set environment variables
+exec systemctl --user set-environment XDG_CURRENT_DESKTOP=ubuntu:GNOME
+exec systemctl --user import-environment DISPLAY SWAYSOCK WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 # bar swaybar_command waybar
 exec /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 exec insync start

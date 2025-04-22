@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Sway
 Comment=An i3-compatible Wayland compositor
-Exec=sway
+# --unsupported-gpu is used in case we want to use Nvidia drivers.
+Exec=sway --unsupported-gpu
 Type=Application

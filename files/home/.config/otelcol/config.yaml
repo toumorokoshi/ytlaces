@@ -1,0 +1,29 @@
+receivers:
+  hostmetrics:
+    scrapers:
+      cpu: {}
+      memory: {}
+      network: {}
+      # needs root
+      # disk: {}
+      # process: {}
+processors:
+  batch:
+exporters:
+  prometheus:
+    endpoint: 0.0.0.0:8890
+    namespace: default
+service:
+  telemetry:
+    metrics:
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: ""
+                port: 8889
+  pipelines:
+    metrics:
+      receivers: [hostmetrics]
+      processors: [batch]
+      exporters: [prometheus]

@@ -1,0 +1,17 @@
+#  prometheus
+# sudo prometheus \
+#   --config.file=./files/home/.config/prometheus/config.yaml
+#   --web.listen-address=9091
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  query_log_file: /tmp/prothemus_query.log
+
+rule_files:
+  # - "first.rules"
+  # - "second.rules"
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:8890"]

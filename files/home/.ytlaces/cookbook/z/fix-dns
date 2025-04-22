@@ -1,5 +1,0 @@
-#!/bin/bash
-# START HELP
-# fix dns.
-# END HELP
-sudo resolvectl domain tun0 zit.zillow.local dmz.lyn.zillow.com win.lyn.zillow.com sta.win.lyn.zillow.com del.uni.lyn.zillow.com uni.zillow.local zillow.local zillowgroup.net zgtools.net

@@ -1,4 +1,5 @@
 class ytlaces::programs_universal {
+  package {"rg":}
   package {"fzf":}
   package {"patch":}
   package {"redshift-gtk":}
@@ -7,4 +8,6 @@ class ytlaces::programs_universal {
   package {"tree":}
   package {"xclip":}
   package {"systemd-timesyncd":}
+  # for local monitoring
+  package {"prometheus":}
 }

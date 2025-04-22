@@ -3,10 +3,11 @@
 # SUMMARY: set low and high TDP files
 # START HELP
 # END HELP
-set -x
 CONFIG_LOCATION="/etc/throttled.conf"
 CONFIG_DIRECTORY="${HOME}/.ytlaces/config/throttled"
 if [ "$1" = "--complete" ]; then
+    ls "$CONFIG_DIRECTORY"
+elif [ "$1" = "" ]; then
     ls "$CONFIG_DIRECTORY"
 else
     CONFIG_FILE="${CONFIG_DIRECTORY}/${1}"

@@ -1,6 +1,7 @@
 # sway
 class ytlaces::sway(
 ) {
+  package {'sway':}
   # for IME support
   package {'fcitx5':}
   # Japanese IME
