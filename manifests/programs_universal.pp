@@ -1,5 +1,5 @@
 class ytlaces::programs_universal {
-  package {"rg":}
+  package {"ripgrep":}
   package {"fzf":}
   package {"patch":}
   package {"redshift-gtk":}
