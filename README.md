@@ -1,5 +1,11 @@
 # ytlaces
 
+## prerequisites
+
+- Install [HWE kernels](https://ubuntu.com/kernel/lifecycle). I have encountered issues with older kernels in the past.
+- Install Insync
+- Install Sunshine
+
 ## Installing
 
 1. clone this repo
