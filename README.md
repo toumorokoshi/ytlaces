@@ -5,6 +5,7 @@
 - Install [HWE kernels](https://ubuntu.com/kernel/lifecycle). I have encountered issues with older kernels in the past.
 - Install Insync
 - Install Sunshine
+- Install `fcitx5`, and configure the languages by hand with `fcitx5-confgitool`.
 
 ## Installing
 

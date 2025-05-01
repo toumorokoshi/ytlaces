@@ -125,8 +125,10 @@ source <("$HOME"/bin/tome init s "$HOME"/.ytlaces/cookbook "$SHELL")
 # add rustup directories
 export PATH=$HOME/.cargo/bin:$PATH
 
-# add GO directories
+# add Go directories
 export PATH=$HOME/go/bin/:$PATH
+# assume Go is installed here.
+export PATH=/usr/local/go/bin/:$PATH
 if which go > /dev/null; then
   export PATH=$(go env GOPATH)/bin:$PATH
 fi

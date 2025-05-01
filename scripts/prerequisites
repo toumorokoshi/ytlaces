@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# This script installs the prerequisites for this repository.
+# Mostly containing things that are hard to replicate in puppet.
+# use the ppas, updated fish
+# if [ -z "$(command -v fish)" ]; then
+    echo "Fish shell not found, installing..."
+    sudo apt update
+    sudo apt install -y software-properties-common
+    sudo add-apt-repository ppa:fish-shell/release-3
+    sudo apt update
+    sudo apt install -y fish
+    # install fisher package manager
+    curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+    # install fzf plugin
+    fisher install jethrokuan/fzf
+# else
+#     echo "Fish shell already installed, skipping..."
+# fi

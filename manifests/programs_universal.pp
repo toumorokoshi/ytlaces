@@ -1,13 +1,19 @@
 class ytlaces::programs_universal {
-  package {"ripgrep":}
+  # utilities to test keyboards
+  package {"evtest":}
+  package {"fish":}
   package {"fzf":}
   package {"patch":}
+  # for local monitoring
+  package {"prometheus":}
   package {"redshift-gtk":}
-  package {"scrot":}
+  package {"ripgrep":}
+  package {"systemd-timesyncd":}
   package {"tmux":}
   package {"tree":}
   package {"xclip":}
-  package {"systemd-timesyncd":}
-  # for local monitoring
-  package {"prometheus":}
+  package {"wev":}
+  # for screenshots
+  Package {"grim":}
+  Package {"slurp":}
 }
