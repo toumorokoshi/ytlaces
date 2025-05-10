@@ -182,7 +182,6 @@ class ytlaces (
       ensure => 'file',
       source => 'puppet:///modules/ytlaces/etc/X11/xorg.conf.d/40-elecom-trackball.conf',
   }
-  include ytlaces::sway
 
   # conditional includes
   case $type {

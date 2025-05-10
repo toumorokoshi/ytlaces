@@ -1,0 +1,5 @@
+#!/bin/sh
+# we pretend to be gnome so that sway can use gnome utilities.
+# - gnome-keyring
+export XDG_CURRENT_DESKTOP=ubuntu:GNOME
+exec sway --unsupported-gpu
