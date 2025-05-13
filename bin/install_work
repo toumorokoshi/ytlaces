@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 BASE=$(dirname "$0")
-sudo nextgen/bin/install-base.py
+sudo nextgen/bin/install-base.py "$USER"
 exec sudo puppet apply "$BASE/../examples/work.pp"
