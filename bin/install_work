@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 set -ex
-# get absolute path to the parent directory of this script
 BASE=$(dirname $(dirname "$(realpath "$0")"))
 sudo "$BASE/bin/install-base.py" "$BASE/configs/standard" "$USER"
