@@ -2,6 +2,7 @@
 # install base files and executables required for all host configurations.
 import logging
 import os
+import pwd
 import shutil
 import sys
 from pathlib import Path
@@ -96,9 +97,6 @@ def main(argv=sys.argv[1:]):
         LOGGER.critical("This script must be run as root.")
         return
 
-    if not files_dir.exists():
-        LOGGER.critical(f"Files directory {files_dir} does not exist.")
-        return
     if not config_path.exists():
         LOGGER.critical(f"Config file {config_path} does not exist.")
         return
@@ -109,9 +107,12 @@ def main(argv=sys.argv[1:]):
         _install_packages(config.packages)
     if config.rust:
         _install_rust(username, config.rust)
-    _recursive_copy_files(str(files_dir), "/")
+    if files_dir.exists():
+        _recursive_copy_files(str(files_dir), "/")
     if files_home_dir.exists():
-        _recursive_copy_files(str(files_home_dir), os.path.join("/home", username))
+        _recursive_copy_files(
+            str(files_home_dir), os.path.join("/home", username), user=username
+        )
 
 
 def _add_ppas(ppas: set[str]):
@@ -146,7 +147,7 @@ def _install_rust(username: str, rust_config: RustConfig):
         )
 
 
-def _recursive_copy_files(src, dst):
+def _recursive_copy_files(src, dst, user=None):
     for root, _, files in os.walk(src):
         relative_path = os.path.relpath(root, src)
         target_dir = os.path.join(dst, relative_path)
@@ -157,6 +158,9 @@ def _recursive_copy_files(src, dst):
             target_file = os.path.join(target_dir, file)
             LOGGER.info(f"writing {target_file}")
             shutil.copy2(source_file, target_file)
+            if user:
+                uid = pwd.getpwnam(user).pw_uid
+                os.chown(target_file, uid, -1)
 
 
 def _run_as_user(username: str, command: str):
