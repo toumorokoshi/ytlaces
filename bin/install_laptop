@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
 BASE=$(dirname "$0")
-sudo nextgen/bin/install-base.py
-exec sudo puppet apply "$BASE"/../examples/laptop.pp
+sudo "$BASE/install-base.py" "$BASE/../configs/standard" "$USER"

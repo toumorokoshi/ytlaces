@@ -1,4 +1,4 @@
-if status is-interactive
+t if status is-interactive
     # Commands to run in interactive sessions can go here
 end
 
@@ -8,7 +8,11 @@ set -U fish_greeting ""
 
 fish_add_path $HOME/bin
 fish_add_path $HOME/.local/bin
+# add rust paths
 fish_add_path $HOME/.cargo/bin
+# add go paths
+fish_add_path /usr/local/go/bin
+fish_add_path $HOME/go/bin
 
 function fish_prompt
     set -l last_status $status

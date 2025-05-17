@@ -1,0 +1,13 @@
+# plex is used for home media streaming.
+[Container]
+ContainerName=plex
+Environment=TZ=America/Los_Angeles
+Image=docker.io/plexinc/pms-docker
+Network=host
+Volume=/home/bazzite/.config/plex:/config:z
+Volume=/tmp:/transcode:z
+Volume=/home/bazzite/Videos:/data:z
+
+# Remove if you don't want autostart
+[Install]
+WantedBy=default.target

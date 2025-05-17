@@ -1,0 +1,14 @@
+packages:
+  # fish shell, which I prefer to use.
+  - name: fish
+    ppa: "fish-shell/release-4"
+  # helpful utility to visualize disk usage.
+  - name: ncdu
+  # window manager I prefer to use
+  - name: sway
+  # for IME support
+  - name: fcitx5
+  - name: fcitx5-mozc # for Japanese input
+rust:
+  packages_binstall:
+    - "jj-cli"

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# a script to provision my home bazzite desktop,
+# which I use for game and media streaming
+sudo "$BASE/install-base.py" "$BASE/../configs/bazzite" "$USER"
