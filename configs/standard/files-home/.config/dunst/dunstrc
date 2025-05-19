@@ -1,0 +1,14 @@
+[global]
+    # I like rounder corners
+    corner_radius = 2
+    # smaller notification than full screen
+    width = 300
+
+[urgency_low]
+    timeout = 5
+
+[urgency_normal]
+    timeout = 5
+
+[urgency_critical]
+    timeout = 5
