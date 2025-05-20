@@ -9,6 +9,8 @@ packages:
   # for IME support
   - name: fcitx5
   - name: fcitx5-mozc # for Japanese input
+  # file manager
+  - name: thunar
 rust:
   packages_binstall:
     - "jj-cli"
