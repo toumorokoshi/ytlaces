@@ -28,6 +28,21 @@ class RustConfig:
 
 
 @dataclass
+class Binary:
+    name: str
+    url: str
+
+    def from_dict(data: dict) -> "Binary":
+        return Binary(
+            name=data["name"],
+            url=data["url"],
+        )
+
+    def __str__(self):
+        return self.name
+
+
+@dataclass
 class Package:
     name: str
     ppa: Optional[str] = None
@@ -44,6 +59,7 @@ class Package:
 
 @dataclass
 class Config:
+    binaries: Optional[list[Binary]] = field(default_factory=None)
     packages: Optional[list[Package]] = field(default_factory=None)
     rust: Optional[RustConfig] = field(default=None)
 
@@ -56,7 +72,11 @@ class Config:
                 else None
             )
         rust = RustConfig.from_dict(data["rust"]) if data.get("rust") else None
-        return Config(packages=packages, rust=rust)
+        if "binaries" in data:
+            binaries = [Binary.from_dict(bin) for bin in data.get("binaries", [])]
+        else:
+            binaries = None
+        return Config(packages=packages, rust=rust, binaries=binaries)
 
 
 def load_config(config_path) -> Config:
@@ -107,6 +127,8 @@ def main(argv=sys.argv[1:]):
         _install_packages(config.packages)
     if config.rust:
         _install_rust(username, config.rust)
+    if config.binaries:
+        _install_binaries(config.binaries)
     if files_dir.exists():
         _recursive_copy_files(str(files_dir), "/")
     if files_home_dir.exists():
@@ -145,6 +167,18 @@ def _install_rust(username: str, rust_config: RustConfig):
         _run_as_user(
             username, f"cargo binstall -y {' '.join(rust_config.binstall_packages)}"
         )
+
+
+def _install_binaries(binaries: list[Binary]):
+    LOGGER.info("Installing binaries...")
+    binary_root = f"/usr/local/bin"
+    for binary in binaries:
+        target_path = f"{binary_root}/{binary.name}"
+        if not os.path.exists(target_path):
+            LOGGER.info(f"Downloading {binary.name} from {binary.url} to {target_path}")
+            os.system(f"curl -L {binary.url} -o {target_path}")
+            os.system(f"chmod +x {target_path}")
+            LOGGER.info(f"Installed binary: {binary.name}")
 
 
 def _recursive_copy_files(src, dst, user=None):
