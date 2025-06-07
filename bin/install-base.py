@@ -31,11 +31,13 @@ class RustConfig:
 class Binary:
     name: str
     url: str
+    sha256: Optional[str] = None
 
     def from_dict(data: dict) -> "Binary":
         return Binary(
             name=data["name"],
             url=data["url"],
+            sha256=data.get("sha256"),
         )
 
     def __str__(self):
@@ -174,6 +176,13 @@ def _install_binaries(binaries: list[Binary]):
     binary_root = f"/usr/local/bin"
     for binary in binaries:
         target_path = f"{binary_root}/{binary.name}"
+        if binary.sha256 and os.path.exists(target_path):
+            actual_sha256 = os.popen(f"sha256sum {target_path}").read().split()[0]
+            if actual_sha256 == binary.sha256:
+                LOGGER.info(
+                    f"Binary {binary.name} already installed with SHA256 {binary.sha256}."
+                )
+                continue
         if not os.path.exists(target_path):
             LOGGER.info(f"Downloading {binary.name} from {binary.url} to {target_path}")
             os.system(f"curl -L {binary.url} -o {target_path}")
