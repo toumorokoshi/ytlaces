@@ -16,4 +16,5 @@ rust:
     - "jj-cli"
 binaries:
   - name: "cursor"
-    url: "https://downloads.cursor.com/production/02270c8441bdc4b2fdbc30e6f470a589ec78d60d/linux/x64/Cursor-0.50.7-x86_64.AppImage"
+    # v 1.0
+    url: "https://downloads.cursor.com/production/53b99ce608cba35127ae3a050c1738a959750865/linux/x64/Cursor-1.0.0-x86_64.AppImage"
