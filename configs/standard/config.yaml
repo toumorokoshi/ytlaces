@@ -11,9 +11,10 @@ packages:
   - name: fcitx5-mozc # for Japanese input
   # file manager
   - name: thunar
-rust:
-  packages_binstall:
-    - "jj-cli"
+  # for getting cpu stats
+  - name: sysstat
+packages_binstall:
+  - "jj-cli"
 binaries:
   - name: "cursor"
     # v 1.0

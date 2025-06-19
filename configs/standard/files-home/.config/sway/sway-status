@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+idle_cpu_percent=$(iostat -c | awk 'NR==4 {print $6}')
+available_memory=$(awk '/MemAvailable:/ {print $2 "K"}' < /proc/meminfo | numfmt --from=iec --to=iec)
 battery_state=$(cat /sys/class/power_supply/BAT0/status)
 battery=$(upower -i "$(upower -e | grep 'BAT')" | rg "percentage:\W+(\d+)" -or '$1')
 dt=$(date '+%Y-%m-%d %k:%M:%S')
 
-echo "$battery(${battery_state:0:1}) 🔋 $dt"
+echo "cpu_idle: $idle_cpu_percent% | mem: $available_memory | $battery(${battery_state:0:1}) 🔋 $dt"
