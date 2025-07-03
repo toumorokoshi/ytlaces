@@ -13,6 +13,9 @@ packages:
   - name: thunar
   # for getting cpu stats
   - name: sysstat
+  # for docker containers
+  - name: podman
+  - name: podman-docker
 packages_binstall:
   - "jj-cli"
 binaries:
