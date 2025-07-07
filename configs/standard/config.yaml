@@ -25,3 +25,8 @@ binaries:
     sha256: "1c9893dda0c1eba2b6b257062430b6d7e5a12bf92fe0a08a55982ea5b7e62c6d"
   - name: "bazelisk"
     url: "https://github.com/bazelbuild/bazelisk/releases/download/v1.26.0/bazelisk-linux-amd64"
+  # cli for confighub
+  # didn't work, just install the CLI: curl -fsSL https://hub.confighub.com/cub/install.sh | bash
+  # - name: "cub"
+  #   url: "https://confighub-downloads-6554c6cc.s3.amazonaws.com/public/cub-linux-amd64-latest"
+  #   sha256: "41f28969cc044faf8a3cf2b24f5c11614eda8f4f5fd67b25347e7658c9e50f22"
