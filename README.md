@@ -91,3 +91,25 @@ for some reason I had to sudo as root, then do the apply to find the module. som
 This seemed to be fixed by symlinking `ytlaces` into the `/usr/share/puppet/modules` directory, or by fixing the name of the class in `./metadata.json` to `ytlaces` instead of `yt-laces`.
 
 I verified the puppet module was successfully installed with `puppet modules list` as root (since you need to root to run this file).
+
+## FAQ and Design Discussion
+
+### Rolling my own installer
+
+Previously, this config was mainly based on puppet. Puppet does provide a
+facility for flexible, inheretible configuration units, which was really helpful
+when I was running Arch, OSX, and Debian-based machines simultaneously.
+
+However over time for one reason or another I converged on Ubuntu, and no longer
+had the need for complex configuration. In addition, I couldn't express some
+simpler concepts, like downloading files from random locations on the internet
+without updating every single time, without the use of shell scripts. Once
+things became as generally simple as installing packages from various places and
+installing dotfiles (generally in $HOME/.config), it just became easier to
+half-code/half-generate a hand rolled configuration installer.
+
+### Why put binaries in $HOME instead of in /usr?
+
+I like to put my binaries in $HOME, because:
+
+- No need to run as root to reinstall the files.

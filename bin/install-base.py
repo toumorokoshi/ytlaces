@@ -108,6 +108,7 @@ def main(argv=sys.argv[1:]):
 
     files_dir = root_dir / "files"
     files_home_dir = root_dir / "files-home"
+    target_home_dir = Path(f"/home/{username}")
     config_path = root_dir / "config.yaml"
 
     logging.basicConfig(
@@ -130,13 +131,11 @@ def main(argv=sys.argv[1:]):
     if config.rust:
         _install_rust(username, config.rust)
     if config.binaries:
-        _install_binaries(config.binaries)
+        _install_binaries(username, target_home_dir, config.binaries)
     if files_dir.exists():
         _recursive_copy_files(str(files_dir), "/")
     if files_home_dir.exists():
-        _recursive_copy_files(
-            str(files_home_dir), os.path.join("/home", username), user=username
-        )
+        _recursive_copy_files(str(files_home_dir), target_home_dir, user=username)
 
 
 def _add_ppas(ppas: set[str]):
@@ -171,23 +170,29 @@ def _install_rust(username: str, rust_config: RustConfig):
         )
 
 
-def _install_binaries(binaries: list[Binary]):
+def _install_binaries(username: str, files_home_dir: Path, binaries: list[Binary]):
     LOGGER.info("Installing binaries...")
-    binary_root = f"/usr/local/bin"
+    binary_root = files_home_dir / "bin"
     for binary in binaries:
         target_path = f"{binary_root}/{binary.name}"
-        if binary.sha256 and os.path.exists(target_path):
+        if os.path.exists(target_path):
+            if not binary.sha256:
+                LOGGER.info(
+                    f"Binary {binary.name} already installed, no required sha256 specified"
+                )
+                continue
             actual_sha256 = os.popen(f"sha256sum {target_path}").read().split()[0]
             if actual_sha256 == binary.sha256:
                 LOGGER.info(
                     f"Binary {binary.name} already installed with SHA256 {binary.sha256}."
                 )
                 continue
-        if not os.path.exists(target_path):
-            LOGGER.info(f"Downloading {binary.name} from {binary.url} to {target_path}")
-            os.system(f"curl -L {binary.url} -o {target_path}")
-            os.system(f"chmod +x {target_path}")
-            LOGGER.info(f"Installed binary: {binary.name}")
+        LOGGER.info(f"Downloading {binary.name} from {binary.url} to {target_path}")
+        os.system(f"curl -L {binary.url} -o {target_path}")
+        os.system(f"chmod +x {target_path}")
+        uid = pwd.getpwnam(username).pw_uid
+        os.chown(target_path, uid, -1)
+        LOGGER.info(f"Installed binary: {binary.name}")
 
 
 def _recursive_copy_files(src, dst, user=None):

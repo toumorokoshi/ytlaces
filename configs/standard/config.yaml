@@ -16,13 +16,14 @@ packages:
   # for docker containers
   - name: podman
   - name: podman-docker
+  # install some dependencies for other packages normally installed by .dep
+  - name: miniupnpc
 packages_binstall:
   - "jj-cli"
 binaries:
   - name: "cursor"
     # v 1.0
     url: "https://downloads.cursor.com/production/53b99ce608cba35127ae3a050c1738a959750865/linux/x64/Cursor-1.0.0-x86_64.AppImage"
-    sha256: "1c9893dda0c1eba2b6b257062430b6d7e5a12bf92fe0a08a55982ea5b7e62c6d"
   - name: "bazelisk"
     url: "https://github.com/bazelbuild/bazelisk/releases/download/v1.26.0/bazelisk-linux-amd64"
   # cli for confighub
