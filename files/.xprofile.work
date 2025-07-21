@@ -1,7 +1,0 @@
-export TERMINAL="gnome-terminal"
-export PATH=$PATH:/usr/local/go/bin
-export PATH=$PATH:/usr/local/nvim/bin
-# Pretend to be gnome, to help with
-# using the same encryption keys.
-export XDG_CURRENT_DESKTOP=ubuntu:GNOME
-export XDG_MENU_PREFIX=gnome

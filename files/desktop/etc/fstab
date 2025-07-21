@@ -1,8 +1,0 @@
-#
-# /etc/fstab: static file system information
-#
-# <file system> <dir>   <type>  <options>       <dump>  <pass>
-# UUID=e1725593-3dc3-4e90-af20-3674f8240083
-UUID=e1725593-3dc3-4e90-af20-3674f8240083       /               ext4            rw,relatime,data=ordered          0 1
-UUID=4EAC6E89010CB206                           /mnt/data       ntfs            nofail,x-systemd.device-timeout=1 0 2
-/mnt/data                                       /srv/nfs/data   none            bind                              0 0
