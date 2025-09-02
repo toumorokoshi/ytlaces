@@ -125,5 +125,5 @@ General design:
 
 | port | purpose       |
 | ---- | ------------- |
-| 9100 | prometheus    |
 | 9101 | node_exporter |
+| 9102 | prometheus    |

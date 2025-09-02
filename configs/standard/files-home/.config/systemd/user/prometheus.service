@@ -1,0 +1,9 @@
+[Unit]
+Description=Prometheus Node Exporter
+
+[Service]
+ExecStart=prometheus --config.file=%h/.config/prometheus/config.yaml --web.listen-address=:9102 --storage.tsdb.path=%h/.local/share/prometheus/data
+g
+
+[Install]
+WantedBy=default.target

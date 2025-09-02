@@ -37,3 +37,4 @@ binaries:
 systemd:
   user_services:
   - "prometheus-node-exporter"
+  - "prometheus"

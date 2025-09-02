@@ -247,6 +247,10 @@ def _setup_systemd_services(username: str, systemd_config: SystemdConfig):
         LOGGER.info(f"  Starting {service_name}")
         os.system(f"systemctl --user -M {username}@ start {service_name}")
 
+        # resStart the service
+        LOGGER.info(f"  Restarting {service_name}")
+        os.system(f"systemctl --user -M {username}@ restart {service_name}")
+
 
 def _run_as_user(username: str, command: str):
     full_command = f'su - {username} -c "{command}"'
