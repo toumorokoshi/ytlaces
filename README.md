@@ -113,3 +113,17 @@ half-code/half-generate a hand rolled configuration installer.
 I like to put my binaries in $HOME, because:
 
 - No need to run as root to reinstall the files.
+
+### Prometheus and system monitoring
+
+To help analyze performance issues as they arise, I run a prometheus instance
+to collect metrics, as well as a [node_exporter](https://github.com/prometheus/node_exporter) to collect metrics on things like power.
+
+General design:
+
+- namespace ports 9100-9200 for prometheus-related things.
+
+| port | purpose       |
+| ---- | ------------- |
+| 9100 | prometheus    |
+| 9101 | node_exporter |

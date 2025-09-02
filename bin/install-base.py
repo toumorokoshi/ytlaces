@@ -60,10 +60,22 @@ class Package:
 
 
 @dataclass
+class SystemdConfig:
+    user_services: Set[str] = field(default_factory=set)
+
+    @staticmethod
+    def from_dict(data: dict) -> "SystemdConfig":
+        return SystemdConfig(
+            user_services=set(data.get("user_services", [])),
+        )
+
+
+@dataclass
 class Config:
     binaries: Optional[list[Binary]] = field(default_factory=None)
     packages: Optional[list[Package]] = field(default_factory=None)
     rust: Optional[RustConfig] = field(default=None)
+    systemd: Optional[SystemdConfig] = field(default=None)
 
     def from_dict(data: dict) -> "Config":
         packages = None
@@ -78,7 +90,8 @@ class Config:
             binaries = [Binary.from_dict(bin) for bin in data.get("binaries", [])]
         else:
             binaries = None
-        return Config(packages=packages, rust=rust, binaries=binaries)
+        systemd = SystemdConfig.from_dict(data["systemd"]) if data.get("systemd") else None
+        return Config(packages=packages, rust=rust, binaries=binaries, systemd=systemd)
 
 
 def load_config(config_path) -> Config:
@@ -136,6 +149,8 @@ def main(argv=sys.argv[1:]):
         _recursive_copy_files(str(files_dir), "/")
     if files_home_dir.exists():
         _recursive_copy_files(str(files_home_dir), target_home_dir, user=username)
+    if config.systemd:
+        _setup_systemd_services(username, config.systemd)
 
 
 def _add_ppas(ppas: set[str]):
@@ -211,8 +226,31 @@ def _recursive_copy_files(src, dst, user=None):
                 os.chown(target_file, uid, -1)
 
 
+def _setup_systemd_services(username: str, systemd_config: SystemdConfig):
+    """Enable and start systemd user services."""
+    if not systemd_config.user_services:
+        return
+
+    LOGGER.info("Setting up systemd user services...")
+
+    for service_name in systemd_config.user_services:
+        LOGGER.info(f"  Setting up systemd user service: {service_name}")
+
+        # Reload systemd user daemon to pick up new services
+        os.system(f"systemctl --user -M {username}@ daemon-reload")
+
+        # Enable the service
+        LOGGER.info(f"  Enabling {service_name}")
+        os.system(f"systemctl --user -M {username}@ enable {service_name}")
+
+        # Start the service
+        LOGGER.info(f"  Starting {service_name}")
+        os.system(f"systemctl --user -M {username}@ start {service_name}")
+
+
 def _run_as_user(username: str, command: str):
     full_command = f'su - {username} -c "{command}"'
+    print(f"running {full_command}")
     result = os.system(full_command)
     if result != 0:
         LOGGER.error(f"Command failed: {command}")

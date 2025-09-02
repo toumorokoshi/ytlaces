@@ -5,7 +5,7 @@
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
-  query_log_file: /tmp/prothemus_query.log
+  query_log_file: /tmp/prometheus_query.log
 
 rule_files:
   # - "first.rules"
@@ -15,3 +15,6 @@ scrape_configs:
   - job_name: prometheus
     static_configs:
       - targets: ["localhost:8890"]
+  - job_name: node_exporter
+    static_configs:
+      - targets: ["localhost:8080"]

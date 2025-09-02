@@ -1,0 +1,8 @@
+[Unit]
+Description=Prometheus Node Exporter
+
+[Service]
+ExecStart=/usr/bin/prometheus-node-exporter --web.listen-address=127.0.0.1:9101
+
+[Install]
+WantedBy=default.target

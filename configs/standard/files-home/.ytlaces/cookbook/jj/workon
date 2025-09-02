@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -x
+
+BRANCH_NAME="yft/$1"
+if jj show "$BRANCH_NAME" &> /dev/null; then
+  jj new "$BRANCH_NAME"
+else
+  REMOTE_TO_USE="origin"
+  # check if the "upstream" string is present
+  if jj git remote list | grep -q "upstream"; then
+    REMOTE_TO_USE="upstream"
+  fi
+  jj git fetch --remote $REMOTE_TO_USE
+  jj new "main@${REMOTE_TO_USE}"
+fi
+
+jj bookmark set "$BRANCH_NAME"

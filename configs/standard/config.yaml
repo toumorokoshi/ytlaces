@@ -18,6 +18,9 @@ packages:
   - name: podman-docker
   # install some dependencies for other packages normally installed by .dep
   - name: miniupnpc
+  # for local resource usage monitoring
+  - name: "prometheus-node-exporter"
+  - name: "prometheus"
 packages_binstall:
   - "jj-cli"
 binaries:
@@ -31,3 +34,6 @@ binaries:
   # - name: "cub"
   #   url: "https://confighub-downloads-6554c6cc.s3.amazonaws.com/public/cub-linux-amd64-latest"
   #   sha256: "41f28969cc044faf8a3cf2b24f5c11614eda8f4f5fd67b25347e7658c9e50f22"
+systemd:
+  user_services:
+  - "prometheus-node-exporter"
