@@ -21,6 +21,11 @@ packages:
   # for local resource usage monitoring
   - name: "prometheus-node-exporter"
   - name: "prometheus"
+  # packages to build browsers (e.g. playwright for AEPS)
+  - name: flite1-dev
+  - name: libavif13
+  - name: x264
+  - name: libgstreamer-plugins-bad1.0-dev
 packages_binstall:
   - "jj-cli"
 binaries:
