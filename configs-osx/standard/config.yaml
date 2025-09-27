@@ -1,0 +1,3 @@
+brew_packages:
+  # to program in golang
+  - name: "go"

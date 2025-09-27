@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -ex
+BASE=$(dirname $(dirname "$(realpath "$0")"))
+"$BASE/bin/install-osx.py" "$BASE/configs-osx/standard" "$USER"
