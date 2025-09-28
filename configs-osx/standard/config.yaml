@@ -1,3 +1,8 @@
 brew_packages:
   # to program in golang
   - name: "go"
+  - name: "bufbuild/buf/buf"
+  # better file nav and history
+  - name: "fzf"
+  # zsh plugins
+  - name: "zsh-autosuggestions"
