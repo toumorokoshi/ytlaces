@@ -10,6 +10,9 @@ import argparse
 import yaml
 from dataclasses import dataclass, field
 from typing import Set, Optional
+import tarfile
+import tempfile
+import hashlib
 
 LOGGER = logging.getLogger("install-base")
 
@@ -32,12 +35,14 @@ class Binary:
     name: str
     url: str
     sha256: Optional[str] = None
+    format: Optional[str] = None
 
     def from_dict(data: dict) -> "Binary":
         return Binary(
             name=data["name"],
             url=data["url"],
             sha256=data.get("sha256"),
+            format=data.get("format"),
         )
 
     def __str__(self):
@@ -90,7 +95,9 @@ class Config:
             binaries = [Binary.from_dict(bin) for bin in data.get("binaries", [])]
         else:
             binaries = None
-        systemd = SystemdConfig.from_dict(data["systemd"]) if data.get("systemd") else None
+        systemd = (
+            SystemdConfig.from_dict(data["systemd"]) if data.get("systemd") else None
+        )
         return Config(packages=packages, rust=rust, binaries=binaries, systemd=systemd)
 
 
@@ -188,26 +195,110 @@ def _install_rust(username: str, rust_config: RustConfig):
 def _install_binaries(username: str, files_home_dir: Path, binaries: list[Binary]):
     LOGGER.info("Installing binaries...")
     binary_root = files_home_dir / "bin"
+    if not binary_root.exists():
+        os.makedirs(binary_root)
     for binary in binaries:
         target_path = f"{binary_root}/{binary.name}"
-        if os.path.exists(target_path):
-            if not binary.sha256:
-                LOGGER.info(
-                    f"Binary {binary.name} already installed, no required sha256 specified"
-                )
-                continue
-            actual_sha256 = os.popen(f"sha256sum {target_path}").read().split()[0]
-            if actual_sha256 == binary.sha256:
-                LOGGER.info(
-                    f"Binary {binary.name} already installed with SHA256 {binary.sha256}."
-                )
-                continue
-        LOGGER.info(f"Downloading {binary.name} from {binary.url} to {target_path}")
-        os.system(f"curl -L {binary.url} -o {target_path}")
-        os.system(f"chmod +x {target_path}")
         uid = pwd.getpwnam(username).pw_uid
-        os.chown(target_path, uid, -1)
-        LOGGER.info(f"Installed binary: {binary.name}")
+
+        if (binary.format or "").lower() == "tar.gz":
+            _install_tar_gz_binary(binary, binary_root, uid)
+        else:
+            _download_and_install_binary(binary, target_path, uid)
+
+
+def _download_and_install_binary(binary: Binary, target_path: str, uid: int):
+    # Default behavior: download a single binary file
+    if os.path.exists(target_path):
+        if not binary.sha256:
+            LOGGER.info(
+                f"Binary {binary.name} already installed, no required sha256 specified"
+            )
+            return
+        actual_sha256 = os.popen(f"sha256sum {target_path}").read().split()[0]
+        if actual_sha256 == binary.sha256:
+            LOGGER.info(
+                f"Binary {binary.name} already installed with SHA256 {binary.sha256}."
+            )
+            return
+    LOGGER.info(f"Downloading {binary.name} from {binary.url} to {target_path}")
+    os.system(f"curl -L {binary.url} -o {target_path}")
+    os.system(f"chmod +x {target_path}")
+    os.chown(target_path, uid, -1)
+    LOGGER.info(f"Installed binary: {binary.name}")
+
+
+def _safe_tar_members(tar: tarfile.TarFile):
+    """Yield members that are safe to extract (no absolute paths, no path traversal)."""
+    for member in tar.getmembers():
+        member_path = member.name
+        # Reject absolute paths and up-level references
+        if member_path.startswith("/"):
+            LOGGER.warning(f"Skipping absolute path in tar: {member_path}")
+            continue
+        normalized = os.path.normpath(member_path)
+        if normalized.startswith(".."):
+            LOGGER.warning(f"Skipping unsafe path in tar: {member_path}")
+            continue
+        yield member
+
+
+def _install_tar_gz_binary(binary: Binary, binary_root: Path, uid: int) -> bool:
+    """Download and extract a tar.gz binary into the given bin directory.
+
+    Returns True on success, False on failure.
+    """
+    LOGGER.info(f"Downloading tar.gz {binary.name} from {binary.url}")
+    with tempfile.NamedTemporaryFile(suffix=".tar.gz", delete=False) as tmp_file:
+        tmp_path = tmp_file.name
+    try:
+        os.system(f"curl -L {binary.url} -o {tmp_path}")
+
+        # If sha256 is provided, verify the archive before extraction
+        if binary.sha256:
+            sha256_hash = hashlib.sha256()
+            with open(tmp_path, "rb") as f:
+                for chunk in iter(lambda: f.read(8192), b""):
+                    sha256_hash.update(chunk)
+            actual_sha = sha256_hash.hexdigest()
+            if actual_sha != binary.sha256:
+                LOGGER.error(
+                    f"SHA256 mismatch for {binary.name}: expected {binary.sha256}, got {actual_sha}. Skipping extraction."
+                )
+                return False
+
+        # Extract safely into the bin directory
+        with tarfile.open(tmp_path, "r:gz") as tar:
+            members = _safe_tar_members(tar)
+            tar.extractall(path=binary_root, members=members)
+
+        # Ensure ownership and executability for extracted files
+        with tarfile.open(tmp_path, "r:gz") as tar:
+            for m in tar.getmembers():
+                if m.isdir():
+                    continue
+                dest_file = os.path.join(binary_root, m.name)
+                # Normalize any leading './'
+                dest_file = os.path.normpath(dest_file)
+                if os.path.exists(dest_file):
+                    try:
+                        os.chown(dest_file, uid, -1)
+                    except PermissionError:
+                        LOGGER.warning(f"Failed to chown {dest_file}")
+                    # Make files executable to match previous behavior
+                    try:
+                        st = os.stat(dest_file)
+                        os.chmod(dest_file, st.st_mode | 0o111)
+                    except PermissionError:
+                        LOGGER.warning(f"Failed to chmod +x {dest_file}")
+
+        LOGGER.info(f"Extracted archive for: {binary.name} -> {binary_root}")
+        return True
+    finally:
+        try:
+            os.remove(tmp_path)
+        except Exception:
+            pass
 
 
 def _recursive_copy_files(src, dst, user=None):
