@@ -32,6 +32,7 @@ packages:
   - name: dunst
   - name: fcitx5
   - name: ripgrep
+  - name: brightnessctl
   # using alaacritty as terminal emulator
   - name: alacritty
 packages_binstall:
