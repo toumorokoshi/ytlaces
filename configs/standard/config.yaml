@@ -47,6 +47,9 @@ binaries:
   - name: "jujutsu"
     url: "https://github.com/jj-vcs/jj/releases/download/v0.34.0/jj-v0.34.0-x86_64-unknown-linux-musl.tar.gz"
     format: "tar.gz"
+  - name: "tome"
+    url: "https://github.com/toumorokoshi/tome/releases/download/v0.11.1/tome-linux_amd64"
+
   # cli for confighub
   # didn't work, just install the CLI: curl -fsSL https://hub.confighub.com/cub/install.sh | bash
   # - name: "cub"
