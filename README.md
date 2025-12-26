@@ -34,7 +34,7 @@ The following files serve the following purposes:
 
 * add a section into your bash/zsh rc file that sources in a whole directory of rc files:
 
-  `. $HOME/.ytlaces/init`
+  `. $HOME/.ytlaces/rc.d/init`
 
 ## post-install setup.
 

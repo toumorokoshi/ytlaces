@@ -1,7 +1,14 @@
 packages:
   # fish shell, which I prefer to use.
-  - name: fish
-    ppa: "fish-shell/release-4"
+  #- name: fish
+  #  ppa: "fish-shell/release-4"
+  # zsh, which I prefer to use
+  # switched away from fish due to incompatibilities with posix sourcing
+  # scripts (e.g. nvm)
+  - name: zsh
+  - name: zsh-autosuggestions
+  # fast fuzzy completion
+  - name: fzf
   # helpful utility to visualize disk usage.
   - name: ncdu
   # window manager I prefer to use
@@ -30,7 +37,6 @@ packages:
   # suckless-tools for dmenu for selecting applications
   - name: suckless-tools
   - name: dunst
-  - name: fcitx5
   - name: ripgrep
   - name: brightnessctl
   # using alacritty as terminal emulator
@@ -38,6 +44,9 @@ packages:
   # compilers
   - name: clang
   - name: build-essential
+  # needed for one-off editing in the terminal, I set
+  # EDITOR to this.
+  - name: vim
 binaries:
   - name: "cursor"
     # v 1.0

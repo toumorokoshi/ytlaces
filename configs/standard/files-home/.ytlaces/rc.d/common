@@ -68,7 +68,7 @@ function parse_git_repo {
         local repo=$(git remote -v  2> /dev/null|head -n 1)
         local repo_name=${repo%.git*}
         local repo_name=${repo_name##*/}
-        if [ "x$repo_name" != "x" ];
+        if [ "$repo_name" != "" ];
         then
             echo " ($repo_name)"
         fi
@@ -111,7 +111,7 @@ else
     setopt hist_ignore_space
     setopt autocd
     autoload -U colors && colors
-    PS1="%{$fg[yellow]%}%n:%d%{$reset_color%} (%?)\$(__git_ps1)
+    PS1="%{$fg[blue]%}$(date "+%H:%M:%S") %{$fg[yellow]%}%n:%d%{$reset_color%} (%?)\$(__git_ps1)
 $ "
     # zsh will use the editor mappings that match the editor
     # defined in EDITOR. This switch switches back to emacs.
@@ -155,6 +155,7 @@ export EDITOR=vim
 if [ -z "$ZSH_VERSION" ]; then
     binding_files=(
         "/usr/share/doc/fzf/examples/key-bindings.bash"
+        "/usr/share/doc/fzf/examples/completion.bash"
         "/usr/share/fzf/key-bindings.bash"
     )
     for f in "${binding_files[@]}"; do
@@ -165,6 +166,7 @@ if [ -z "$ZSH_VERSION" ]; then
 else
     binding_files=(
         "/usr/share/doc/fzf/examples/key-bindings.zsh"
+        "/usr/share/doc/fzf/examples/completion.zsh"
         "/usr/share/fzf/key-bindings.zsh"
     )
     for f in "${binding_files[@]}"; do
