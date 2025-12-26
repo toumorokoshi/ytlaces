@@ -33,10 +33,11 @@ packages:
   - name: fcitx5
   - name: ripgrep
   - name: brightnessctl
-  # using alaacritty as terminal emulator
+  # using alacritty as terminal emulator
   - name: alacritty
-packages_binstall:
-  - "jj-cli"
+  # compilers
+  - name: clang
+  - name: build-essential
 binaries:
   - name: "cursor"
     # v 1.0
