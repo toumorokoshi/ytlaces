@@ -255,4 +255,9 @@ input "1390:297:ELECOM_TrackBall_Mouse_EX-G_Pro_TrackBall" {
     scroll_method on_button_down
     scroll_button 278 # far right mouse button (BTN_BACK)
 }
+# framework laptop touchpad
+input "2362:628:PIXA3854:00_093A:0274_Touchpad" {
+    tap enabled
+    dwt enabled
+}
 

@@ -5,6 +5,9 @@ packages:
   # zsh, which I prefer to use
   # switched away from fish due to incompatibilities with posix sourcing
   # scripts (e.g. nvm)
+  # use obs studio to record my screencasts
+  - name: obs-studio
+    ppa: ppa:obsproject/obs-studio
   - name: zsh
   - name: zsh-autosuggestions
   # fast fuzzy completion

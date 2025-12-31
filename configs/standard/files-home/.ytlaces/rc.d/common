@@ -34,7 +34,7 @@ if [ -z "$ZSH_VERSION" ]; then
 else
     setopt histappend                      # append to history, don't overwrite it
 fi
-export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+export PROMPT_COMMAND="history -a; history -c; history -r;"
 
 FILES_TO_SOURCE=(
     # git completion
