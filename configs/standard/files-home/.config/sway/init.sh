@@ -11,8 +11,9 @@ dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
 systemctl --user start pipewire-media-session
 
-# start chrome next, so authcli doesn't fail.
-google-chrome --profile-directory="Profile 1"
+# this was needed for Cruise previously.
+# google-chrome --profile-directory="Profile 1"
+
 # add a hook for custom scripts as needed.
 if [ -f "${HOME}/.yft_custom.sh" ]; then
     . "${HOME}/.yft_custom.sh"
