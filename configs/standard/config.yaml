@@ -5,10 +5,16 @@ packages:
   # zsh, which I prefer to use
   # switched away from fish due to incompatibilities with posix sourcing
   # scripts (e.g. nvm)
+  # for video editing, use kdenlive
+  - name: kdenlive
   # use obs studio to record my screencasts
   - name: obs-studio
     ppa: ppa:obsproject/obs-studio
+  # needed to give obs access to wayland screen capture
+  - name: xdg-desktop-portal-wlr
+  # my terminal of choice
   - name: zsh
+  # add fish-like autosuggestions to zsh
   - name: zsh-autosuggestions
   # fast fuzzy completion
   - name: fzf
