@@ -192,40 +192,124 @@ def _install_rust(username: str, rust_config: RustConfig):
         )
 
 
+@dataclass
+class BinaryManifestEntry:
+    url: str
+
+    @staticmethod
+    def from_dict(data: dict, name: str) -> "BinaryManifestEntry":
+        if not isinstance(data, dict):
+             raise ValueError(f"Manifest entry for '{name}' must be a dictionary, got {type(data).__name__}")
+        if "url" not in data:
+             raise ValueError(f"Manifest entry for '{name}' is missing required field 'url'")
+        return BinaryManifestEntry(url=data["url"])
+
+    def to_dict(self) -> dict:
+         return {"url": self.url}
+
+
+@dataclass
+class Manifest:
+    binaries: dict[str, BinaryManifestEntry] = field(default_factory=dict)
+
+    @staticmethod
+    def from_dict(data: dict) -> "Manifest":
+        if not isinstance(data, dict):
+            raise ValueError(f"Manifest root must be a dictionary, got {type(data).__name__}")
+
+        binaries_data = data.get("binaries", {})
+        if not isinstance(binaries_data, dict):
+             raise ValueError(f"Manifest 'binaries' field must be a dictionary, got {type(binaries_data).__name__}")
+
+        binaries = {}
+        for name, entry_data in binaries_data.items():
+             binaries[name] = BinaryManifestEntry.from_dict(entry_data, name)
+
+        return Manifest(binaries=binaries)
+
+    def to_dict(self) -> dict:
+        return {"binaries": {name: entry.to_dict() for name, entry in self.binaries.items()}}
+
+
+def load_manifest(manifest_path: Path) -> Manifest:
+    if not manifest_path.exists():
+        return Manifest()
+    with open(manifest_path, "r") as f:
+        data = yaml.safe_load(f) or {}
+    return Manifest.from_dict(data)
+
+
+def save_manifest(manifest_path: Path, manifest: Manifest):
+    try:
+        with open(manifest_path, "w") as f:
+            yaml.dump(manifest.to_dict(), f)
+    except Exception as e:
+        LOGGER.warning(f"Failed to save manifest to {manifest_path}: {e}")
+
+
 def _install_binaries(username: str, files_home_dir: Path, binaries: list[Binary]):
     LOGGER.info("Installing binaries...")
     binary_root = files_home_dir / "bin"
     if not binary_root.exists():
         os.makedirs(binary_root)
+
+    manifest_path = binary_root / ".ytlaces-manifest.yaml"
+    manifest = load_manifest(manifest_path)
+    manifest_updated = False
+
     for binary in binaries:
         target_path = f"{binary_root}/{binary.name}"
         uid = pwd.getpwnam(username).pw_uid
 
+        # Check manifest
+        if (
+            binary.name in manifest.binaries
+            and manifest.binaries[binary.name].url == binary.url
+        ):
+             if os.path.exists(target_path):
+                 LOGGER.info(f"Binary {binary.name} already installed (manifest match).")
+                 continue
+
         if (binary.format or "").lower() == "tar.gz":
-            _install_tar_gz_binary(binary, binary_root, uid)
+            success = _install_tar_gz_binary(binary, binary_root, uid)
         else:
-            _download_and_install_binary(binary, target_path, uid)
+            success = _download_and_install_binary(binary, target_path, uid)
+
+        if success:
+             manifest.binaries[binary.name] = BinaryManifestEntry(url=binary.url)
+             manifest_updated = True
+
+    if manifest_updated:
+        save_manifest(manifest_path, manifest)
 
 
-def _download_and_install_binary(binary: Binary, target_path: str, uid: int):
+def _download_and_install_binary(binary: Binary, target_path: str, uid: int) -> bool:
     # Default behavior: download a single binary file
     if os.path.exists(target_path):
         if not binary.sha256:
             LOGGER.info(
                 f"Binary {binary.name} already installed, no required sha256 specified"
             )
-            return
+            # We assume success if it exists, but for manifest updates we might want to know if we *just* installed it.
+            # However, if it exists and we are here, it means the manifest didn't match or entry was missing.
+            # So we should probably update the manifest effectively.
+            return True
         actual_sha256 = os.popen(f"sha256sum {target_path}").read().split()[0]
         if actual_sha256 == binary.sha256:
             LOGGER.info(
                 f"Binary {binary.name} already installed with SHA256 {binary.sha256}."
             )
-            return
+            return True
+
     LOGGER.info(f"Downloading {binary.name} from {binary.url} to {target_path}")
-    os.system(f"curl -L {binary.url} -o {target_path}")
+    if os.system(f"curl -L {binary.url} -o {target_path}") != 0:
+        LOGGER.error(f"Failed to download {binary.url}")
+        return False
+
     os.system(f"chmod +x {target_path}")
     os.chown(target_path, uid, -1)
     LOGGER.info(f"Installed binary: {binary.name}")
+    return True
 
 
 def _safe_tar_members(tar: tarfile.TarFile):

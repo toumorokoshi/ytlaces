@@ -242,11 +242,11 @@ bindsym $mod+Shift+c kill
 # connected
 # use `swaymsg -t get_outputs` to get output information
 workspace 1 output eDP-1
-workspace 2 output DP-1 DP-3 DP-7 eDP-1
-workspace 3 output DP-2 DP-4 DP-8 eDP-1
+workspace 2 output DP-1 DP-3 DP-5 DP-7 eDP-1
+workspace 3 output DP-2 DP-4 DP-6 DP-8 eDP-1
 workspace 4 output eDP-1
-workspace 5 output DP-1 DP-3 DP-7 eDP-1
-workspace 6 output DP-2 DP-4 DP-8 eDP-1
+workspace 5 output DP-1 DP-3 DP-5 DP-7 eDP-1
+workspace 6 output DP-2 DP-4 DP-6 DP-8 eDP-1
 
 # use `swaymsg -t get_inputs` to get input information
 output 'Unknown DuexLite DuexLite001' transform 180

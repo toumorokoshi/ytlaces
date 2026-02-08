@@ -62,7 +62,7 @@ binaries:
     url: "https://downloads.cursor.com/production/53b99ce608cba35127ae3a050c1738a959750865/linux/x64/Cursor-1.0.0-x86_64.AppImage"
   - name: "bazelisk"
     url: "https://github.com/bazelbuild/bazelisk/releases/download/v1.26.0/bazelisk-linux-amd64"
-  - name: "jujutsu"
+  - name: "jj"
     url: "https://github.com/jj-vcs/jj/releases/download/v0.34.0/jj-v0.34.0-x86_64-unknown-linux-musl.tar.gz"
     format: "tar.gz"
   - name: "tome"
