@@ -20,6 +20,9 @@ packages:
   - name: fzf
   # helpful utility to visualize disk usage.
   - name: ncdu
+  # screenshots
+  - name: grim
+  - name: slurp
   # window manager I prefer to use
   - name: sway
   # for IME support
