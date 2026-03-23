@@ -3,4 +3,4 @@
 # which I use for game and media streaming
 set -ex
 BASE=$(dirname $(dirname "$(realpath "$0")"))
-sudo "$BASE/bin/install-base.py" "$BASE/configs/bazzite" "$USER"
+sudo "$BASE/bin/install-base.py" "$BASE/configs/gaming" "$USER"

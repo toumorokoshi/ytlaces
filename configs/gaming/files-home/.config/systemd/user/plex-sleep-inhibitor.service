@@ -1,0 +1,11 @@
+[Unit]
+Description=Plex Sleep Inhibitor
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/inhibit_plex_sleep.py
+Restart=always
+
+[Install]
+WantedBy=default.target
