@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+LOG_FILE=$HOME/sandbox/sunshine.log
+while true; do
+  sleep 5 # give time for the desktop env to come up
+  echo "STARTING SUNSHINE" >> $LOG_FILE || true
+  sudo PULSE_SERVER=unix:/run/user/$(id -u $whoami)/pulse/native /usr/bin/sunshine >> $LOG_FILE || true
+  echo "YFT: SERVER DIED" >> $LOG_FILE || true
+done

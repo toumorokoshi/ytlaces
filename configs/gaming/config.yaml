@@ -1,0 +1,3 @@
+systemd:
+  user_services:
+    - "plex-sleep-inhibitor"
