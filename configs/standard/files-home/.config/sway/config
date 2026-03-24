@@ -250,6 +250,7 @@ workspace 6 output DP-2 DP-4 DP-6 DP-8 eDP-1
 
 # use `swaymsg -t get_inputs` to get input information
 output 'Unknown DuexLite DuexLite001' transform 180
+output 'MOP DuexLite DuexLite001' transform 180
 # setup scrolling on my elecom mouse
 input "1390:297:ELECOM_TrackBall_Mouse_EX-G_Pro_TrackBall" {
     scroll_method on_button_down
