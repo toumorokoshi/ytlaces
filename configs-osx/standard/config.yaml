@@ -6,3 +6,19 @@ brew_packages:
   - name: "fzf"
   # zsh plugins
   - name: "zsh-autosuggestions"
+  # clipboard
+  - name: "maccy"
+
+mac_apps:
+  - name: "Caffeine"
+    url: "https://github.com/domzilla/Caffeine/releases/download/v1.6.4/Caffeine_1.6.4.zip"
+    format: "zip"
+    app_name: "Caffeine.app"
+
+post_install_messages:
+  - >
+    ACTION REQUIRED: Keyboard layout 'QWERTY no option' has been installed.
+    To enable it and resolve Option/Alt hotkey conflicts in VS Code:
+      1. Open System Settings -> Keyboard -> Text Input -> Input Sources -> Edit...
+      2. Click '+' -> select 'Others' in left sidebar -> select 'QWERTY no option' -> Add.
+      3. Switch your layout to 'QWERTY no option' via the menu bar or remove the U.S. layout.

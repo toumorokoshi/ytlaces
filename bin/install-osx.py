@@ -60,10 +60,29 @@ class BrewPackage:
 
 
 @dataclass
+class MacApp:
+    name: str
+    url: str
+    format: str  # "zip" or "dmg"
+    app_name: str
+
+    @staticmethod
+    def from_dict(data: dict) -> "MacApp":
+        return MacApp(
+            name=data["name"],
+            url=data["url"],
+            format=data["format"],
+            app_name=data["app_name"],
+        )
+
+
+@dataclass
 class Config:
     binaries: Optional[list[Binary]] = field(default_factory=None)
     brew_packages: Optional[list[BrewPackage]] = field(default_factory=None)
     rust: Optional[RustConfig] = field(default=None)
+    mac_apps: Optional[list[MacApp]] = field(default_factory=None)
+    post_install_messages: Optional[list[str]] = field(default_factory=list)
 
     def from_dict(data: dict) -> "Config":
         brew_packages = None
@@ -78,7 +97,21 @@ class Config:
             binaries = [Binary.from_dict(bin) for bin in data.get("binaries", [])]
         else:
             binaries = None
-        return Config(brew_packages=brew_packages, rust=rust, binaries=binaries)
+        mac_apps = None
+        if "mac_apps" in data:
+            mac_apps = (
+                [MacApp.from_dict(app) for app in data.get("mac_apps", [])]
+                if data.get("mac_apps")
+                else None
+            )
+        post_install_messages = data.get("post_install_messages", [])
+        return Config(
+            brew_packages=brew_packages,
+            rust=rust,
+            binaries=binaries,
+            mac_apps=mac_apps,
+            post_install_messages=post_install_messages,
+        )
 
 
 def load_config(config_path) -> Config:
@@ -137,6 +170,14 @@ def main(argv=sys.argv[1:]):
         _recursive_copy_files(str(files_dir), "/")
     if files_home_dir.exists():
         _recursive_copy_files(str(files_home_dir), target_home_dir, user=username)
+    if config.mac_apps:
+        _install_mac_apps(username, root_dir, config.mac_apps)
+
+    if config.post_install_messages:
+        print("\n" + "="*80)
+        for msg in config.post_install_messages:
+            print(msg)
+        print("="*80 + "\n")
 
 
 def _check_homebrew_installed() -> bool:
@@ -209,6 +250,90 @@ def _install_binaries(username: str, files_home_dir: Path, binaries: list[Binary
         except KeyError:
             LOGGER.warning(f"User {username} not found, skipping ownership change")
         LOGGER.info(f"Installed binary: {binary.name}")
+
+
+def _install_mac_apps(username: str, root_dir: Path, apps: list[MacApp]):
+    """Download and install macOS Applications (.zip or .dmg) to /Applications/."""
+    LOGGER.info("Installing macOS Applications...")
+    target_apps_dir = Path("/Applications")
+
+    # Create temp directory inside workspace root
+    temp_dir = root_dir / "temp_downloads"
+
+    for app in apps:
+        app_target_path = target_apps_dir / app.app_name
+        if app_target_path.exists():
+            LOGGER.info(f"App {app.name} is already installed at {app_target_path}.")
+            continue
+
+        LOGGER.info(f"Installing {app.name}...")
+        os.makedirs(temp_dir, exist_ok=True)
+        archive_path = temp_dir / f"{app.name}_download.{app.format}"
+
+        # Download
+        LOGGER.info(f"Downloading {app.name} from {app.url}...")
+        download_res = os.system(f"curl -L '{app.url}' -o '{archive_path}'")
+        if download_res != 0:
+            LOGGER.error(f"Failed to download {app.name}.")
+            continue
+
+        extracted_app_path = None
+        mounted_volume = None
+
+        try:
+            if app.format == "zip":
+                extracted_dir = temp_dir / f"{app.name}_extracted"
+                os.makedirs(extracted_dir, exist_ok=True)
+                LOGGER.info(f"Extracting {archive_path}...")
+                unzip_res = os.system(f"unzip -q '{archive_path}' -d '{extracted_dir}'")
+                if unzip_res == 0:
+                    # Find app inside extracted dir
+                    for root, dirs, _ in os.walk(extracted_dir):
+                        for d in dirs:
+                            if d == app.app_name:
+                                extracted_app_path = Path(root) / d
+                                break
+                        if extracted_app_path:
+                            break
+            elif app.format == "dmg":
+                LOGGER.info(f"Mounting {archive_path}...")
+                mount_output = os.popen(f"hdiutil attach -nobrowse -readonly '{archive_path}'").read()
+                for line in mount_output.splitlines():
+                    if "/Volumes/" in line:
+                        mounted_volume = Path(line.split("\t")[-1].strip())
+                        break
+                if mounted_volume:
+                    # Look for the app bundle in the mounted volume
+                    expected_path = mounted_volume / app.app_name
+                    if expected_path.exists():
+                        extracted_app_path = expected_path
+
+            if extracted_app_path and extracted_app_path.exists():
+                LOGGER.info(f"Copying {app.app_name} to {target_apps_dir}...")
+                # Delete existing destination if it was partially copied or directory exists
+                if app_target_path.exists():
+                    shutil.rmtree(app_target_path)
+                shutil.copytree(extracted_app_path, app_target_path, symlinks=True)
+
+                # Update ownership to target user
+                try:
+                    uid = pwd.getpwnam(username).pw_uid
+                    os.system(f"chown -R {username}:staff '{app_target_path}'")
+                    LOGGER.info(f"Successfully installed {app.name} and set ownership to {username}.")
+                except KeyError:
+                    LOGGER.warning(f"User {username} not found, skipping ownership change for {app.name}.")
+            else:
+                LOGGER.error(f"Could not locate {app.app_name} in download.")
+
+        finally:
+            # Cleanup mount if any
+            if mounted_volume:
+                LOGGER.info(f"Unmounting {mounted_volume}...")
+                os.system(f"hdiutil detach '{mounted_volume}'")
+
+    # Cleanup temp directory
+    if temp_dir.exists():
+        shutil.rmtree(temp_dir)
 
 
 def _recursive_copy_files(src, dst, user=None):
