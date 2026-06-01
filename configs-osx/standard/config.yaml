@@ -8,6 +8,8 @@ brew_packages:
   - name: "zsh-autosuggestions"
   # clipboard
   - name: "maccy"
+  # bazel
+  - name: "bazelisk"
 
 mac_apps:
   - name: "Caffeine"
