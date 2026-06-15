@@ -6,5 +6,5 @@
 . "$HOME"/.ytlaces/rc.d/common
 
 if [ -n "$ZSH_VERSION" ]; then
-    . "$HOME"/.ytlaces/rc.d/zsh.sh
+    . "$HOME"/.ytlaces/rc.d/zsh.zsh
 fi

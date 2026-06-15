@@ -386,7 +386,7 @@ def _install_tar_gz_binary(binary: Binary, binary_root: Path, uid: int) -> bool:
 
 
 def _recursive_copy_files(src, dst, user=None):
-    for root, _, files in os.walk(src):
+    for root, _, files in os.walk(src, followlinks=True):
         relative_path = os.path.relpath(root, src)
         target_dir = os.path.join(dst, relative_path)
         if not os.path.exists(target_dir):

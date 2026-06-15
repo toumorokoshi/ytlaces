@@ -1,0 +1,10 @@
+[Unit]
+Description=Llama Server
+After=network.target
+
+[Service]
+ExecStart=%h/bin/llama-server -hf unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M --host 0.0.0.0
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
