@@ -26,3 +26,5 @@
   rebase = true
 [push]
   default = current
+[merge]
+  conflictStyle = diff3
