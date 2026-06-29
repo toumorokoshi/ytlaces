@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+# SUMMARY: auto fold changes
+#
+"""
+autofold merges changes to specific files tracked in git to their nearest commit in the history, ensuring a clean history of changes without having to intermingle multiple changes to the same file.
+
+This helps, for exmaple, for stacked changes in branches such as graphite: in this case you may have a modification to a file A that is in an upstream branch. Normally, you would have to do the following:
+
+1. make the change via `git commit --fixup {sha_of_commit}`, to create a fixup commit.
+2. run `git rebase --autosquash {sha_of_commit}`, to merge the commit upstream.
+
+This script automates that, by doing the following:
+
+1. looking at the modified files
+2. for each file, add it and create a fixup commit of the nearest ancestor which modified that file.
+3. run `git rebase --autosquash` on all commits which have a fixup commit, which will rewrite the history and merge in the changes to the follow.
+"""
