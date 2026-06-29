@@ -2,16 +2,150 @@
 # SUMMARY: auto fold changes
 #
 """
-autofold merges changes to specific files tracked in git to their nearest commit in the history, ensuring a clean history of changes without having to intermingle multiple changes to the same file.
+autofold merges changes to specific files tracked in git to their nearest commit
+ in the history, ensuring a clean history of changes without having to interming
+le multiple changes to the same file.
 
-This helps, for exmaple, for stacked changes in branches such as graphite: in this case you may have a modification to a file A that is in an upstream branch. Normally, you would have to do the following:
+This helps, for exmaple, for stacked changes in branches such as graphite: in th
+is case you may have a modification to a file A that is in an upstream branch. N
+ormally, you would have to do the following:
 
-1. make the change via `git commit --fixup {sha_of_commit}`, to create a fixup commit.
+1. make the change via `git commit --fixup {sha_of_commit}`, to create a fixup c
+ommit.
 2. run `git rebase --autosquash {sha_of_commit}`, to merge the commit upstream.
 
 This script automates that, by doing the following:
 
 1. looking at the modified files
-2. for each file, add it and create a fixup commit of the nearest ancestor which modified that file.
-3. run `git rebase --autosquash` on all commits which have a fixup commit, which will rewrite the history and merge in the changes to the follow.
+2. for each file, add it and create a fixup commit of the nearest ancestor which
+ modified that file.
+3. run `git rebase --autosquash` on all commits which have a fixup commit, which
+ will rewrite the history and merge in the changes to the follow.
 """
+
+import subprocess
+import sys
+from pathlib import Path
+
+
+def run_git_command(args, check=True):
+    """Run a git command and return the output."""
+    result = subprocess.run(
+        ["git"] + args,
+        capture_output=True,
+        text=True,
+        check=check
+    )
+    return result
+
+
+def get_modified_files():
+    """Get list of modified files in the working directory."""
+    result = run_git_command(["status", "--porcelain"])
+    files = []
+    for line in result.stdout.strip().split("\n"):
+        if line:
+            # Format: " M file.py" or "?? file.py" etc.
+            status = line[:2].strip()
+            filepath = line[3:]
+            if status in ("M", "A", "D", "R", "C", "??"):
+                files.append(filepath)
+    return files
+
+
+def find_nearest_commit(filepath):
+    """Find the nearest commit that modified the file."""
+    result = run_git_command(["log", "--follow", "-1", "--format=%H", "--", filepath])
+    if result.stdout.strip():
+        return result.stdout.strip()
+    return None
+
+
+def create_fixup_commit(filepath):
+    """Stage and create a fixup commit for the file."""
+    # Stage the file
+    run_git_command(["add", filepath])
+
+    # Find the nearest commit for this file
+    commit_sha = find_nearest_commit(filepath)
+    if not commit_sha:
+        print(f"Warning: No commit found for file: {filepath}")
+        return None
+
+    # Create fixup commit
+    result = run_git_command([
+        "commit", "--fixup", commit_sha, "--", filepath
+    ])
+
+    if result.returncode == 0:
+        print(f"Created fixup commit for {filepath} -> {commit_sha[:8]}")
+        return commit_sha
+    return None
+
+
+def run_autosquash_rebase():
+    """Run autosquash rebase on all fixup commits."""
+    # Get current branch
+    result = run_git_command(["rev-parse", "--abbrev-ref", "HEAD"])
+    branch = result.stdout.strip()
+
+    # Find the upstream branch or main
+    result = run_git_command(["rev-parse", "HEAD"])
+    current_sha = result.stdout.strip()
+
+    # Try to find upstream
+    result = run_git_command(["rev-parse", "@{u}"], check=False)
+    if result.returncode == 0:
+        upstream_sha = result.stdout.strip()
+    else:
+        # Fall back to main/master
+        for main_branch in ["main", "master"]:
+            result = run_git_command(["rev-parse", main_branch], check=False)
+            if result.returncode == 0:
+                upstream_sha = result.stdout.strip()
+                break
+        else:
+            print("Error: Could not determine upstream branch")
+            return False
+
+    # Run autosquash rebase
+    print(f"Running autosquash rebase onto {upstream_sha[:8]}...")
+    result = run_git_command([
+        "rebase", "--autosquash", upstream_sha
+    ])
+
+    return result.returncode == 0
+
+
+def main():
+    """Main entry point."""
+    # Check if we're in a git repository
+    if not Path(".git").exists():
+        print("Error: Not in a git repository")
+        sys.exit(1)
+
+    # Get modified files
+    modified_files = get_modified_files()
+
+    if not modified_files:
+        print("No modified files to commit")
+        sys.exit(0)
+
+    print(f"Found {len(modified_files)} modified file(s)")
+
+    # Create fixup commits for each file
+    for filepath in modified_files:
+        create_fixup_commit(filepath)
+
+    # Run autosquash rebase
+    success = run_autosquash_rebase()
+
+    if success:
+        print("Autosquash rebase completed successfully")
+    else:
+        print("Autosquash rebase failed - you may need to resolve conflicts")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
