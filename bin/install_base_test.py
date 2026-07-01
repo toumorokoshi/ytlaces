@@ -14,15 +14,16 @@ spec.loader.exec_module(install_base)
 
 Manifest = install_base.Manifest
 Binary = install_base.Binary
+BinaryManifestEntry = install_base.BinaryManifestEntry
 
 class TestManifest(unittest.TestCase):
     def test_from_dict(self):
         data = {"binaries": {"foo": {"url": "http://example.com/foo"}}}
         manifest = Manifest.from_dict(data)
-        self.assertEqual(manifest.binaries, data["binaries"])
+        self.assertEqual(manifest.binaries["foo"].url, "http://example.com/foo")
 
     def test_to_dict(self):
-        manifest = Manifest(binaries={"foo": {"url": "http://example.com/foo"}})
+        manifest = Manifest(binaries={"foo": BinaryManifestEntry(url="http://example.com/foo")})
         self.assertEqual(manifest.to_dict(), {"binaries": {"foo": {"url": "http://example.com/foo"}}})
 
     def test_empty(self):
@@ -38,12 +39,12 @@ class TestManifest(unittest.TestCase):
         mock_path.exists.return_value = True
 
         manifest = install_base.load_manifest(mock_path)
-        self.assertEqual(manifest.binaries["foo"]["url"], "http://example.com/foo")
+        self.assertEqual(manifest.binaries["foo"].url, "http://example.com/foo")
 
     @patch("install_base.open", new_callable=mock_open)
     @patch("install_base.yaml.dump")
     def test_save_manifest(self, mock_yaml, mock_file):
-        manifest = Manifest(binaries={"foo": {"url": "http://example.com/foo"}})
+        manifest = Manifest(binaries={"foo": BinaryManifestEntry(url="http://example.com/foo")})
         install_base.save_manifest(Path("/tmp/manifest.yaml"), manifest)
         mock_yaml.assert_called_once()
         self.assertEqual(mock_yaml.call_args[0][0], {"binaries": {"foo": {"url": "http://example.com/foo"}}})
@@ -86,11 +87,11 @@ class TestInstallBinaries(unittest.TestCase):
         # Manifest should be updated and saved
         self.mock_save_manifest.assert_called_once()
         saved_manifest = self.mock_save_manifest.call_args[0][1]
-        self.assertEqual(saved_manifest.binaries["foo"]["url"], "http://example.com/foo")
-        self.assertEqual(saved_manifest.binaries["bar"]["url"], "http://example.com/bar")
+        self.assertEqual(saved_manifest.binaries["foo"].url, "http://example.com/foo")
+        self.assertEqual(saved_manifest.binaries["bar"].url, "http://example.com/bar")
 
     def test_skip_existing_manifest_match_file_exists(self):
-        manifest = Manifest(binaries={"foo": {"url": "http://example.com/foo"}})
+        manifest = Manifest(binaries={"foo": BinaryManifestEntry(url="http://example.com/foo")})
         self.mock_load_manifest.return_value = manifest
 
         # Determine behavior for os.path.exists
@@ -109,7 +110,7 @@ class TestInstallBinaries(unittest.TestCase):
         self.mock_save_manifest.assert_not_called()
 
     def test_reinstall_if_url_changed(self):
-        manifest = Manifest(binaries={"foo": {"url": "http://example.com/OLD_URL"}})
+        manifest = Manifest(binaries={"foo": BinaryManifestEntry(url="http://example.com/OLD_URL")})
         self.mock_load_manifest.return_value = manifest
 
         # File exists, but URL changed
@@ -125,10 +126,10 @@ class TestInstallBinaries(unittest.TestCase):
         self.mock_download.assert_called_once()
         self.mock_save_manifest.assert_called_once()
         saved_manifest = self.mock_save_manifest.call_args[0][1]
-        self.assertEqual(saved_manifest.binaries["foo"]["url"], "http://example.com/foo")
+        self.assertEqual(saved_manifest.binaries["foo"].url, "http://example.com/foo")
 
     def test_reinstall_if_file_missing_even_if_manifest_match(self):
-        manifest = Manifest(binaries={"foo": {"url": "http://example.com/foo"}})
+        manifest = Manifest(binaries={"foo": BinaryManifestEntry(url="http://example.com/foo")})
         self.mock_load_manifest.return_value = manifest
 
         # File does NOT exist

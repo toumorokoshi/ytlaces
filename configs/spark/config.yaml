@@ -70,9 +70,14 @@ binaries:
     format: "tar.gz"
   - name: "tome"
     url: "https://github.com/toumorokoshi/tome/releases/download/v0.11.1/tome-linux_amd64"
+  - name: "ollama"
+    url: "https://github.com/ollama/ollama/releases/download/v0.1.46/ollama-linux-amd64"
 
   # cli for confighub
   # didn't work, just install the CLI: curl -fsSL https://hub.confighub.com/cub/install.sh | bash
   # - name: "cub"
   #   url: "https://confighub-downloads-6554c6cc.s3.amazonaws.com/public/cub-linux-amd64-latest"
   #   sha256: "41f28969cc044faf8a3cf2b24f5c11614eda8f4f5fd67b25347e7658c9e50f22"
+systemd:
+  user_services:
+    - "llama-server"
