@@ -10,6 +10,8 @@ brew_packages:
   - name: "maccy"
   # bazel
   - name: "bazelisk"
+  # terminal emulator (cask; plain `brew install` resolves cask-only names)
+  - name: "ghostty"
 
 mac_apps:
   - name: "Caffeine"

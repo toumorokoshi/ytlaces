@@ -1,0 +1,24 @@
+# Ghostty configuration, shared verbatim between macOS and Linux.
+#
+# The Linux copy at configs/standard/files-home/.config/ghostty/config is a
+# symlink to this file. The installers copy with shutil.copy2(), which
+# dereferences symlinks, so each platform still gets a real file in $HOME.
+#
+# Ghostty's default bell-features is:
+#   no-system,no-audio,attention,title,no-border
+# Both sound-producing features are off by default, which is why the bell was
+# silent. Of the two that are on, `attention` only fires while the window is
+# unfocused, and tmux overwrites the `title` bell emoji -- so nothing was
+# observable.
+#
+# `system` is deliberately left off. On macOS it plays the system alert sound
+# (which we don't want globally), and on Linux it defers to GNOME/KDE settings
+# that don't exist under sway, so it would simply be silent there. Shipping our
+# own sound keeps behavior identical on both platforms.
+#
+# bell-audio-path is relative, which Ghostty resolves against the directory of
+# the config file referencing it -- ~/.config/ghostty/ once installed. That is
+# what lets this file be byte-identical across platforms.
+bell-features = audio,attention,title,border
+bell-audio-path = bell.wav
+bell-audio-volume = 1.0

@@ -53,6 +53,11 @@ packages:
   - name: brightnessctl
   # using alacritty as terminal emulator
   - name: alacritty
+  # ghostty terminal. only in the official ubuntu archive from 26.04 onward,
+  # and that lags upstream, so use the community PPA (covers noble 24.04,
+  # questing 25.10, resolute 26.04). note: launchpad flags it as untrusted.
+  - name: ghostty
+    ppa: ppa:mkasberg/ghostty-ubuntu
   # compilers
   - name: clang
   - name: build-essential
