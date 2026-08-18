@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# SUMMARY: bidirectionally sync ~/.agents/skills with a remote host
+set -euo pipefail
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $(basename "$0") <remote-host>"
+  echo "Example: $(basename "$0") cruise"
+  exit 1
+fi
+
+REMOTE_HOST="$1"
+LOCAL_DIR="${HOME}/.agents/skills/"
+REMOTE_DIR="~/.agents/skills/"
+
+# Ensure local directory exists
+mkdir -p "${LOCAL_DIR}"
+
+# Ensure remote directory exists
+ssh "${REMOTE_HOST}" "mkdir -p ${REMOTE_DIR}"
+
+echo "==> Syncing: Local -> ${REMOTE_HOST} (updating newer/missing files)..."
+rsync -avzuh --progress "${LOCAL_DIR}" "${REMOTE_HOST}:${REMOTE_DIR}"
+
+echo "==> Syncing: ${REMOTE_HOST} -> Local (updating newer/missing files)..."
+rsync -avzuh --progress "${REMOTE_HOST}:${REMOTE_DIR}" "${LOCAL_DIR}"
+
+echo "==> Skills sync with ${REMOTE_HOST} complete!"

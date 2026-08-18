@@ -40,42 +40,100 @@ def run_git_command(args, check=True):
 
 
 def get_modified_files():
-    """Get list of modified files in the working directory."""
+    """Get list of modified files in the working directory.
+
+    Returns a list of tuples: (filepath, oldpath_or_none)
+    - filepath: the current path of the file
+    - oldpath_or_none: the old path for renames/copies, None otherwise
+      (used to search history when the new path doesn't exist yet)
+    """
     result = run_git_command(["status", "--porcelain"])
     files = []
     for line in result.stdout.strip().split("\n"):
-        if line:
-            # Format: " M file.py" or "?? file.py" etc.
-            status = line[:2].strip()
-            filepath = line[3:]
-            if status in ("M", "A", "D", "R", "C", "??"):
-                files.append(filepath)
+        if not line:
+            continue
+        # Format: "XY filepath" where X=index status, Y=working-tree status
+        # For renames/copies: "R200 oldpath -> newpath" or "R oldpath -> newpath"
+        # For untracked: "?? filepath"
+        status = line[:2].strip()
+        if status in ("R", "C"):
+            # Rename/copy format: "R[NNN] oldpath -> newpath" or "R oldpath -> newpath"
+            # Extract the old and new paths
+            parts = line.split(None, 2)
+            # parts[0] = status (e.g., "R200" or "R")
+            # parts[1] = old path
+            # parts[2] = "-> newpath"
+            if len(parts) >= 3:
+                oldpath = parts[1]
+                newpath = parts[2]
+                if newpath.startswith("-> "):
+                    newpath = newpath[3:]
+            elif len(parts) == 2:
+                oldpath = parts[1]
+                newpath = parts[1]
+            else:
+                continue
+            # Renames are already staged; use oldpath for history lookup
+            files.append((newpath, oldpath))
+        elif status == "??":
+            # Untracked files - skip them since they have no commit history
+            # to fixup against. They should be committed normally first.
+            continue
+        else:
+            # Normal format: status + space + filepath
+            # Use split to handle both " M file" and "M file" formats
+            parts = line.split(None, 1)
+            if len(parts) < 2:
+                continue
+            filepath = parts[1]
+            files.append((filepath, None))
+
     return files
 
 
-def find_nearest_commit(filepath):
-    """Find the nearest commit that modified the file."""
-    result = run_git_command(["log", "--follow", "-1", "--format=%H", "--", filepath])
-    if result.stdout.strip():
-        return result.stdout.strip()
+def find_nearest_commit(filepath, oldpath=None):
+    """Find the nearest commit that modified the file, searching all branches.
+
+    For renamed files, search using the old path first (since the new path
+    won't exist in history yet), then fall back to the new path.
+    """
+    # For renames, try the old path first (it exists in history)
+    search_paths = [oldpath, filepath] if oldpath else [filepath]
+    for path in search_paths:
+        result = run_git_command(
+            ["log", "--all", "--follow", "-1", "--format=%H", "--", path],
+            check=False
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout.strip()
     return None
 
 
-def create_fixup_commit(filepath):
+def create_fixup_commit(filepath, oldpath=None):
     """Stage and create a fixup commit for the file."""
-    # Stage the file
-    run_git_command(["add", filepath])
+    # Check if already staged (e.g. renames from git mv)
+    result = run_git_command(["diff", "--cached", "--name-only"], check=False)
+    staged_files = result.stdout.strip().split("\n") if result.stdout.strip() else []
+    is_staged = filepath in staged_files
 
-    # Find the nearest commit for this file
-    commit_sha = find_nearest_commit(filepath)
+    # Stage the file if not already staged
+    if not is_staged:
+        run_git_command(["add", filepath])
+
+    # Find the nearest commit for this file (use oldpath for renames)
+    commit_sha = find_nearest_commit(filepath, oldpath)
     if not commit_sha:
         print(f"Warning: No commit found for file: {filepath}")
         return None
 
     # Create fixup commit
-    result = run_git_command([
-        "commit", "--fixup", commit_sha, "--", filepath
-    ])
+    # For renames (already staged), commit without pathspec so the rename
+    # operation itself is included in the commit. For normal changes, use
+    # pathspec to only commit the specific file.
+    if is_staged:
+        result = run_git_command(["commit", "--fixup", commit_sha])
+    else:
+        result = run_git_command(["commit", "--fixup", commit_sha, "--", filepath])
 
     if result.returncode == 0:
         print(f"Created fixup commit for {filepath} -> {commit_sha[:8]}")
@@ -85,35 +143,25 @@ def create_fixup_commit(filepath):
 
 def run_autosquash_rebase():
     """Run autosquash rebase on all fixup commits."""
-    # Get current branch
-    result = run_git_command(["rev-parse", "--abbrev-ref", "HEAD"])
-    branch = result.stdout.strip()
-
-    # Find the upstream branch or main
-    result = run_git_command(["rev-parse", "HEAD"])
-    current_sha = result.stdout.strip()
-
     # Try to find upstream
     result = run_git_command(["rev-parse", "@{u}"], check=False)
     if result.returncode == 0:
         upstream_sha = result.stdout.strip()
+        print(f"Running autosquash rebase onto upstream {upstream_sha[:8]}...")
+        result = run_git_command([
+            "rebase", "--autosquash", upstream_sha
+        ], check=False)
     else:
-        # Fall back to main/master
-        for main_branch in ["main", "master"]:
-            result = run_git_command(["rev-parse", main_branch], check=False)
-            if result.returncode == 0:
-                upstream_sha = result.stdout.strip()
-                break
-        else:
-            print("Error: Could not determine upstream branch")
-            return False
+        # No upstream - rebase from root so that fixup commits can squash
+        # into any commit in the history (including early commits that would
+        # be excluded if we rebased onto a branch tip).
+        print("Running autosquash rebase from root...")
+        result = run_git_command([
+            "rebase", "--autosquash", "--root"
+        ], check=False)
 
-    # Run autosquash rebase
-    print(f"Running autosquash rebase onto {upstream_sha[:8]}...")
-    result = run_git_command([
-        "rebase", "--autosquash", upstream_sha
-    ])
-
+    if result.returncode != 0:
+        print(f"Rebase error: {result.stderr.strip()}")
     return result.returncode == 0
 
 
@@ -134,8 +182,15 @@ def main():
     print(f"Found {len(modified_files)} modified file(s)")
 
     # Create fixup commits for each file
-    for filepath in modified_files:
-        create_fixup_commit(filepath)
+    fixup_created = False
+    for filepath, oldpath in modified_files:
+        if create_fixup_commit(filepath, oldpath):
+            fixup_created = True
+
+    # Only run rebase if we actually created fixup commits
+    if not fixup_created:
+        print("No fixup commits created - nothing to rebase")
+        sys.exit(0)
 
     # Run autosquash rebase
     success = run_autosquash_rebase()
