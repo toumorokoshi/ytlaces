@@ -338,7 +338,7 @@ def _install_mac_apps(username: str, root_dir: Path, apps: list[MacApp]):
 
 def _recursive_copy_files(src, dst, user=None):
     """Recursively copy files from source to destination."""
-    for root, _, files in os.walk(src):
+    for root, _, files in os.walk(src, followlinks=True):
         relative_path = os.path.relpath(root, src)
         target_dir = os.path.join(dst, relative_path)
         if not os.path.exists(target_dir):
