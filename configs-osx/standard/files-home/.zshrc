@@ -7,6 +7,7 @@ HISTCONTROL=ignoredups:erasedups  # no duplicate entries
 HISTSIZE=100000                   # big big history
 HISTFILESIZE=100000               # big big history
 setopt histappend # append to history, don't overwrite it
+source "${HOME}/.ytlaces/rc.d/common"
 
 
 PS1="%{$fg[cyan]%}[%*] %{$fg[yellow]%}%~${reset_color}"$'\n'

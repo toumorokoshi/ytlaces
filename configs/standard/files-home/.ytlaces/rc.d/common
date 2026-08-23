@@ -120,7 +120,7 @@ $ "
 fi
 
 # add cookbook
-if [ -f "$HOME/bin/tome" ];
+if [ -f "$HOME/bin/tome" ]; then
     source <("$HOME"/bin/tome init s "$HOME"/.ytlaces/cookbook "$SHELL")
 fi
 
