@@ -1,27 +1,139 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 # SUMMARY: bidirectionally sync ~/.agents/skills with a remote host
-set -euo pipefail
+import argparse
+from pathlib import Path
+import shlex
+import shutil
+import subprocess
+import sys
+from typing import Callable, Iterable, List, Optional, Sequence, Set, Tuple
 
-if [ $# -lt 1 ]; then
-  echo "Usage: $(basename "$0") <remote-host>"
-  echo "Example: $(basename "$0") cruise"
-  exit 1
-fi
+LOCAL_DIR = Path.home() / ".agents" / "skills"
+REMOTE_DIR = "~/.agents/skills"
 
-REMOTE_HOST="$1"
-LOCAL_DIR="${HOME}/.agents/skills/"
-REMOTE_DIR="~/.agents/skills/"
 
-# Ensure local directory exists
-mkdir -p "${LOCAL_DIR}"
+# --- Pure Functions ---
 
-# Ensure remote directory exists
-ssh "${REMOTE_HOST}" "mkdir -p ${REMOTE_DIR}"
 
-echo "==> Syncing: Local -> ${REMOTE_HOST} (updating newer/missing files)..."
-rsync -avzuh --progress "${LOCAL_DIR}" "${REMOTE_HOST}:${REMOTE_DIR}"
+def filter_skill_names(names: Iterable[str]) -> Set[str]:
+    """Filter out empty lines and hidden directories (starting with .)."""
+    return {name.strip() for name in names if name.strip() and not name.strip().startswith(".")}
 
-echo "==> Syncing: ${REMOTE_HOST} -> Local (updating newer/missing files)..."
-rsync -avzuh --progress "${REMOTE_HOST}:${REMOTE_DIR}" "${LOCAL_DIR}"
 
-echo "==> Skills sync with ${REMOTE_HOST} complete!"
+def compute_skill_diff(local_skills: Set[str], remote_skills: Set[str]) -> Tuple[List[str], List[str]]:
+    """Return sorted lists of local-only and remote-only skill directory names."""
+    return sorted(local_skills - remote_skills), sorted(remote_skills - local_skills)
+
+
+def parse_action(choice: str) -> str:
+    """Parse user choice string, returning 'copy' or 'delete'."""
+    lowered = choice.strip().lower()
+    if lowered in ("c", "copy"):
+        return "copy"
+    if lowered in ("d", "delete"):
+        return "delete"
+    return ""
+
+
+def parse_args(args: Optional[Sequence[str]] = None) -> argparse.Namespace:
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Bidirectionally sync ~/.agents/skills with a remote host."
+    )
+    parser.add_argument("remote_host", help="Remote host to sync skills with (e.g. cruise)")
+    return parser.parse_args(args)
+
+
+# --- State-Modifying Functions / Wrappers ---
+
+
+def get_local_skills(directory: Path) -> Set[str]:
+    """Return set of skill directory names from local path."""
+    if not directory.exists():
+        return set()
+    return filter_skill_names(entry.name for entry in directory.iterdir())
+
+
+def get_remote_skills(remote_host: str, remote_dir: str) -> Set[str]:
+    """Return set of skill directory names from remote host using SSH."""
+    cmd = ["ssh", remote_host, f"mkdir -p {remote_dir} && ls -1A {remote_dir}"]
+    output = subprocess.check_output(cmd, text=True)
+    return filter_skill_names(output.splitlines())
+
+
+def delete_local_skill(skill_path: Path) -> None:
+    """Delete a skill directory from local filesystem."""
+    print(f"==> Deleting local skill: {skill_path.name}")
+    if skill_path.is_dir() and not skill_path.is_symlink():
+        shutil.rmtree(skill_path)
+    elif skill_path.exists():
+        skill_path.unlink()
+
+
+def delete_remote_skill(remote_host: str, remote_dir: str, skill_name: str) -> None:
+    """Delete a skill directory on remote host using SSH."""
+    print(f"==> Deleting remote skill on {remote_host}: {skill_name}")
+    quoted_path = f"{remote_dir.rstrip('/')}/{shlex.quote(skill_name)}"
+    subprocess.run(["ssh", remote_host, f"rm -rf {quoted_path}"], check=True)
+
+
+def prompt_action(skill: str, missing_on: str, input_func: Callable[[str], str] = input) -> str:
+    """Prompt user until they choose to copy or delete a missing skill."""
+    prompt_text = f"Skill '{skill}' is missing on {missing_on}. [c]opy or [d]elete? "
+    while True:
+        action = parse_action(input_func(prompt_text))
+        if action:
+            return action
+        print("Invalid choice. Enter 'c' to copy or 'd' to delete.")
+
+
+def sync_skills(
+    remote_host: str,
+    local_dir: Path = LOCAL_DIR,
+    remote_dir: str = REMOTE_DIR,
+    input_func: Callable[[str], str] = input,
+) -> None:
+    """Synchronize skills between local machine and remote host."""
+    local_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["ssh", remote_host, f"mkdir -p {remote_dir}"], check=True)
+
+    local_skills = get_local_skills(local_dir)
+    remote_skills = get_remote_skills(remote_host, remote_dir)
+
+    local_only, remote_only = compute_skill_diff(local_skills, remote_skills)
+
+    for skill in local_only:
+        action = prompt_action(skill, missing_on=remote_host, input_func=input_func)
+        if action == "delete":
+            delete_local_skill(local_dir / skill)
+
+    for skill in remote_only:
+        action = prompt_action(skill, missing_on="local", input_func=input_func)
+        if action == "delete":
+            delete_remote_skill(remote_host, remote_dir, skill)
+
+    print(f"==> Syncing: Local -> {remote_host} (updating newer/missing files)...")
+    subprocess.run(
+        ["rsync", "-avzuh", "--progress", f"{local_dir}/", f"{remote_host}:{remote_dir}/"],
+        check=True,
+    )
+
+    print(f"==> Syncing: {remote_host} -> Local (updating newer/missing files)...")
+    subprocess.run(
+        ["rsync", "-avzuh", "--progress", f"{remote_host}:{remote_dir}/", f"{local_dir}/"],
+        check=True,
+    )
+
+    print(f"==> Skills sync with {remote_host} complete!")
+
+
+def main() -> None:
+    args = parse_args()
+    try:
+        sync_skills(args.remote_host)
+    except KeyboardInterrupt:
+        sys.exit(130)
+
+
+if __name__ == "__main__":
+    main()
