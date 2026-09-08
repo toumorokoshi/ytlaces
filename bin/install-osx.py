@@ -10,6 +10,10 @@ import argparse
 import yaml
 from dataclasses import dataclass, field
 from typing import Set, Optional
+import tarfile
+import tempfile
+import hashlib
+import platform
 
 LOGGER = logging.getLogger("install-osx")
 
@@ -32,12 +36,23 @@ class Binary:
     name: str
     url: str
     sha256: Optional[str] = None
+    format: Optional[str] = None
 
+    @staticmethod
     def from_dict(data: dict) -> "Binary":
+        raw_url = data["url"]
+        arch = platform.machine()
+        url = raw_url.format(arch=arch) if isinstance(raw_url, str) else raw_url
+        raw_sha256 = data.get("sha256")
+        if isinstance(raw_sha256, dict):
+            sha256 = raw_sha256.get(arch)
+        else:
+            sha256 = raw_sha256
         return Binary(
             name=data["name"],
-            url=data["url"],
-            sha256=data.get("sha256"),
+            url=url,
+            sha256=sha256,
+            format=data.get("format"),
         )
 
     def __str__(self):
@@ -221,35 +236,206 @@ def _install_rust(username: str, rust_config: RustConfig):
         )
 
 
+@dataclass
+class BinaryManifestEntry:
+    url: str
+
+    @staticmethod
+    def from_dict(data: dict, name: str) -> "BinaryManifestEntry":
+        if not isinstance(data, dict):
+            raise ValueError(
+                f"Manifest entry for '{name}' must be a dictionary, got {type(data).__name__}"
+            )
+        if "url" not in data:
+            raise ValueError(f"Manifest entry for '{name}' is missing required field 'url'")
+        return BinaryManifestEntry(url=data["url"])
+
+    def to_dict(self) -> dict:
+        return {"url": self.url}
+
+
+@dataclass
+class Manifest:
+    binaries: dict[str, BinaryManifestEntry] = field(default_factory=dict)
+
+    @staticmethod
+    def from_dict(data: dict) -> "Manifest":
+        if not isinstance(data, dict):
+            raise ValueError(f"Manifest root must be a dictionary, got {type(data).__name__}")
+
+        binaries_data = data.get("binaries", {})
+        if not isinstance(binaries_data, dict):
+            raise ValueError(
+                f"Manifest 'binaries' field must be a dictionary, got {type(binaries_data).__name__}"
+            )
+
+        binaries = {}
+        for name, entry_data in binaries_data.items():
+            binaries[name] = BinaryManifestEntry.from_dict(entry_data, name)
+
+        return Manifest(binaries=binaries)
+
+    def to_dict(self) -> dict:
+        return {"binaries": {name: entry.to_dict() for name, entry in self.binaries.items()}}
+
+
+def load_manifest(manifest_path: Path) -> Manifest:
+    if not manifest_path.exists():
+        return Manifest()
+    with open(manifest_path, "r") as f:
+        data = yaml.safe_load(f) or {}
+    return Manifest.from_dict(data)
+
+
+def save_manifest(manifest_path: Path, manifest: Manifest):
+    try:
+        with open(manifest_path, "w") as f:
+            yaml.dump(manifest.to_dict(), f)
+    except Exception as e:
+        LOGGER.warning(f"Failed to save manifest to {manifest_path}: {e}")
+
+
+def _compute_sha256(path: str | Path) -> str:
+    sha256_hash = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            sha256_hash.update(chunk)
+    return sha256_hash.hexdigest()
+
+
+def _safe_tar_members(tar: tarfile.TarFile):
+    """Yield members that are safe to extract (no absolute paths, no path traversal)."""
+    for member in tar.getmembers():
+        member_path = member.name
+        # Reject absolute paths and up-level references
+        if member_path.startswith("/"):
+            LOGGER.warning(f"Skipping absolute path in tar: {member_path}")
+            continue
+        normalized = os.path.normpath(member_path)
+        if normalized.startswith(".."):
+            LOGGER.warning(f"Skipping unsafe path in tar: {member_path}")
+            continue
+        yield member
+
+
+def _install_tar_gz_binary(binary: Binary, binary_root: Path, uid: int) -> bool:
+    """Download and extract a tar.gz binary into the given bin directory.
+
+    Returns True on success, False on failure.
+    """
+    LOGGER.info(f"Downloading tar.gz {binary.name} from {binary.url}")
+    with tempfile.NamedTemporaryFile(suffix=".tar.gz", delete=False) as tmp_file:
+        tmp_path = tmp_file.name
+    try:
+        if os.system(f"curl -L '{binary.url}' -o '{tmp_path}'") != 0:
+            LOGGER.error(f"Failed to download {binary.url}")
+            return False
+
+        if binary.sha256:
+            actual_sha = _compute_sha256(tmp_path)
+            if actual_sha != binary.sha256:
+                LOGGER.error(
+                    f"SHA256 mismatch for {binary.name}: expected {binary.sha256}, got {actual_sha}. Skipping extraction."
+                )
+                return False
+
+        with tarfile.open(tmp_path, "r:gz") as tar:
+            members = _safe_tar_members(tar)
+            tar.extractall(path=binary_root, members=members)
+
+        with tarfile.open(tmp_path, "r:gz") as tar:
+            for m in tar.getmembers():
+                if m.isdir():
+                    continue
+                dest_file = os.path.join(binary_root, m.name)
+                dest_file = os.path.normpath(dest_file)
+                if os.path.exists(dest_file):
+                    try:
+                        os.chown(dest_file, uid, -1)
+                    except (KeyError, PermissionError):
+                        LOGGER.warning(f"Failed to chown {dest_file}")
+                    try:
+                        st = os.stat(dest_file)
+                        os.chmod(dest_file, st.st_mode | 0o111)
+                    except (KeyError, PermissionError):
+                        LOGGER.warning(f"Failed to chmod +x {dest_file}")
+
+        LOGGER.info(f"Extracted archive for: {binary.name} -> {binary_root}")
+        return True
+    finally:
+        try:
+            os.remove(tmp_path)
+        except Exception:
+            pass
+
+
+def _download_and_install_binary(binary: Binary, target_path: str, uid: int) -> bool:
+    if os.path.exists(target_path):
+        if not binary.sha256:
+            LOGGER.info(
+                f"Binary {binary.name} already installed, no required sha256 specified"
+            )
+            return True
+        actual_sha256 = _compute_sha256(target_path)
+        if actual_sha256 == binary.sha256:
+            LOGGER.info(
+                f"Binary {binary.name} already installed with SHA256 {binary.sha256}."
+            )
+            return True
+
+    LOGGER.info(f"Downloading {binary.name} from {binary.url} to {target_path}")
+    if os.system(f"curl -L '{binary.url}' -o '{target_path}'") != 0:
+        LOGGER.error(f"Failed to download {binary.url}")
+        return False
+
+    os.system(f"chmod +x '{target_path}'")
+    try:
+        os.chown(target_path, uid, -1)
+    except (KeyError, PermissionError):
+        LOGGER.warning(f"Failed to chown {target_path}")
+    LOGGER.info(f"Installed binary: {binary.name}")
+    return True
+
+
 def _install_binaries(username: str, files_home_dir: Path, binaries: list[Binary]):
     """Install binary files."""
     LOGGER.info("Installing binaries...")
     binary_root = files_home_dir / "bin"
-    os.makedirs(binary_root, exist_ok=True)
+    if not binary_root.exists():
+        os.makedirs(binary_root, exist_ok=True)
+
+    manifest_path = binary_root / ".ytlaces-manifest.yaml"
+    manifest = load_manifest(manifest_path)
+    manifest_updated = False
+
+    try:
+        uid = pwd.getpwnam(username).pw_uid
+    except KeyError:
+        uid = os.getuid()
 
     for binary in binaries:
         target_path = f"{binary_root}/{binary.name}"
-        if os.path.exists(target_path):
-            if not binary.sha256:
-                LOGGER.info(
-                    f"Binary {binary.name} already installed, no required sha256 specified"
-                )
+
+        # Check manifest
+        if (
+            binary.name in manifest.binaries
+            and manifest.binaries[binary.name].url == binary.url
+        ):
+            if os.path.exists(target_path):
+                LOGGER.info(f"Binary {binary.name} already installed (manifest match).")
                 continue
-            actual_sha256 = os.popen(f"shasum -a 256 {target_path}").read().split()[0]
-            if actual_sha256 == binary.sha256:
-                LOGGER.info(
-                    f"Binary {binary.name} already installed with SHA256 {binary.sha256}."
-                )
-                continue
-        LOGGER.info(f"Downloading {binary.name} from {binary.url} to {target_path}")
-        os.system(f"curl -L {binary.url} -o {target_path}")
-        os.system(f"chmod +x {target_path}")
-        try:
-            uid = pwd.getpwnam(username).pw_uid
-            os.chown(target_path, uid, -1)
-        except KeyError:
-            LOGGER.warning(f"User {username} not found, skipping ownership change")
-        LOGGER.info(f"Installed binary: {binary.name}")
+
+        if (binary.format or "").lower() == "tar.gz":
+            success = _install_tar_gz_binary(binary, binary_root, uid)
+        else:
+            success = _download_and_install_binary(binary, target_path, uid)
+
+        if success:
+            manifest.binaries[binary.name] = BinaryManifestEntry(url=binary.url)
+            manifest_updated = True
+
+    if manifest_updated:
+        save_manifest(manifest_path, manifest)
 
 
 def _install_mac_apps(username: str, root_dir: Path, apps: list[MacApp]):

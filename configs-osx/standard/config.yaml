@@ -13,6 +13,11 @@ brew_packages:
   # terminal emulator (cask; plain `brew install` resolves cask-only names)
   - name: "ghostty"
 
+binaries:
+  - name: "tome"
+    url: "https://github.com/toumorokoshi/tome/releases/download/v0.12.2/tome-macOS-{arch}.tar.gz"
+    format: "tar.gz"
+
 mac_apps:
   - name: "Caffeine"
     url: "https://github.com/domzilla/Caffeine/releases/download/v1.6.4/Caffeine_1.6.4.zip"
