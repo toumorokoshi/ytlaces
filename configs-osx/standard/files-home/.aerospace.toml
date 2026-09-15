@@ -144,13 +144,6 @@ alt-shift-semicolon = 'mode service'
 
 # bindings for non-service mode
 alt-comma = 'layout v_accordion'
-# I don't remember what I was trying to do here, but keeping
-# for posterity.
-# alt-shift-h = ['join-with left', 'mode main']
-# alt-shift-j = ['join-with down', 'mode main']
-# alt-shift-k = ['join-with up', 'mode main']
-# alt-shift-l = ['join-with right', 'mode main']
-
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -163,8 +156,17 @@ f = [
 ] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
 
+# Make it easy to join and auto-tile. specifically choose service mode
+# since alt-shift-* is already attached to just moving tiles.
+alt-shift-h = ['join-with left', 'mode main']
+alt-shift-j = ['join-with down', 'mode main']
+alt-shift-k = ['join-with up', 'mode main']
+alt-shift-l = ['join-with right', 'mode main']
+
+
 # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 #s = ['layout sticky tiling', 'mode main']
+
 
 
 down = 'volume down'
