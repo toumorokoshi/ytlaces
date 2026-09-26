@@ -9,12 +9,56 @@ from pathlib import Path
 import argparse
 import yaml
 from dataclasses import dataclass, field
-from typing import Set, Optional
+from typing import Set, Optional, Sequence
 import tarfile
 import tempfile
 import hashlib
 
 LOGGER = logging.getLogger("install-base")
+
+DEFAULT_AGENT_SYMLINKS: tuple[tuple[str, str], ...] = (
+    (".gemini/config/skills", ".agents/skills"),
+)
+
+
+@dataclass(frozen=True)
+class SymlinkSpec:
+    link_path: Path
+    target_path: Path
+
+
+@dataclass(frozen=True)
+class SymlinkAction:
+    spec: SymlinkSpec
+    should_link: bool
+    should_remove_existing: bool
+
+
+def compute_symlink_specs(
+    target_home_dir: Path, specs: Sequence[tuple[str, str]] = DEFAULT_AGENT_SYMLINKS
+) -> list[SymlinkSpec]:
+    return [
+        SymlinkSpec(
+            link_path=target_home_dir / link_rel,
+            target_path=target_home_dir / target_rel,
+        )
+        for link_rel, target_rel in specs
+    ]
+
+
+def evaluate_symlink_action(
+    spec: SymlinkSpec,
+    is_symlink: bool,
+    current_target: Optional[Path],
+    path_exists: bool,
+) -> SymlinkAction:
+    if is_symlink:
+        if current_target == spec.target_path:
+            return SymlinkAction(spec=spec, should_link=False, should_remove_existing=False)
+        return SymlinkAction(spec=spec, should_link=True, should_remove_existing=True)
+    if path_exists:
+        return SymlinkAction(spec=spec, should_link=False, should_remove_existing=False)
+    return SymlinkAction(spec=spec, should_link=True, should_remove_existing=False)
 
 
 @dataclass
@@ -156,6 +200,7 @@ def main(argv=sys.argv[1:]):
         _recursive_copy_files(str(files_dir), "/")
     if files_home_dir.exists():
         _recursive_copy_files(str(files_home_dir), target_home_dir, user=username)
+    _setup_agent_symlinks(target_home_dir, username=username)
     if config.systemd:
         _setup_systemd_services(username, config.systemd)
 
@@ -435,6 +480,52 @@ def _run_as_user(username: str, command: str):
         LOGGER.error(f"Command failed: {command}")
     else:
         LOGGER.info(f"Successfully ran command as {username}: {command}")
+
+
+def _inspect_symlink_state(spec: SymlinkSpec) -> tuple[bool, Optional[Path], bool]:
+    is_symlink = spec.link_path.is_symlink()
+    current_target = None
+    if is_symlink:
+        try:
+            raw_target = Path(os.readlink(spec.link_path))
+            if raw_target.is_absolute():
+                current_target = raw_target
+            else:
+                current_target = Path(os.path.normpath(spec.link_path.parent / raw_target))
+        except OSError:
+            current_target = None
+    path_exists = spec.link_path.exists()
+    return is_symlink, current_target, path_exists
+
+
+def _apply_symlink_action(action: SymlinkAction, username: Optional[str] = None):
+    if not action.should_link:
+        return
+    link_path = action.spec.link_path
+    target_path = action.spec.target_path
+
+    if action.should_remove_existing:
+        LOGGER.info(f"Removing existing symlink at {link_path}")
+        link_path.unlink()
+
+    link_path.parent.mkdir(parents=True, exist_ok=True)
+    LOGGER.info(f"Creating symlink: {link_path} -> {target_path}")
+    os.symlink(target_path, link_path)
+
+    if username:
+        try:
+            uid = pwd.getpwnam(username).pw_uid
+            os.lchown(link_path, uid, -1)
+        except (KeyError, PermissionError, OSError):
+            LOGGER.warning(f"Could not chown symlink {link_path} for user {username}")
+
+
+def _setup_agent_symlinks(target_home_dir: Path, username: Optional[str] = None):
+    specs = compute_symlink_specs(target_home_dir)
+    for spec in specs:
+        is_symlink, current_target, path_exists = _inspect_symlink_state(spec)
+        action = evaluate_symlink_action(spec, is_symlink, current_target, path_exists)
+        _apply_symlink_action(action, username=username)
 
 
 if __name__ == "__main__":

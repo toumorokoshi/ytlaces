@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch, mock_open
 import sys
 import os
+import tempfile
 from pathlib import Path
 import importlib.util
 
@@ -15,6 +16,11 @@ spec.loader.exec_module(install_base)
 Manifest = install_base.Manifest
 Binary = install_base.Binary
 BinaryManifestEntry = install_base.BinaryManifestEntry
+SymlinkSpec = install_base.SymlinkSpec
+SymlinkAction = install_base.SymlinkAction
+compute_symlink_specs = install_base.compute_symlink_specs
+evaluate_symlink_action = install_base.evaluate_symlink_action
+_setup_agent_symlinks = install_base._setup_agent_symlinks
 
 class TestManifest(unittest.TestCase):
     def test_from_dict(self):
@@ -145,6 +151,52 @@ class TestInstallBinaries(unittest.TestCase):
         # if success: manifest.binaries[name] = url; manifest_updated = True
         # Yes, it updates and saves. This is fine.
         self.mock_save_manifest.assert_called_once()
+
+
+class TestAgentSymlinksPure(unittest.TestCase):
+    def test_compute_symlink_specs(self):
+        home = Path("/home/testuser")
+        specs = compute_symlink_specs(home)
+        self.assertEqual(
+            specs,
+            [
+                SymlinkSpec(home / ".gemini/config/skills", home / ".agents/skills"),
+            ],
+        )
+
+    def test_evaluate_symlink_action_missing(self):
+        spec = SymlinkSpec(Path("/home/u/.gemini/config/skills"), Path("/home/u/.agents/skills"))
+        action = evaluate_symlink_action(spec, is_symlink=False, current_target=None, path_exists=False)
+        self.assertTrue(action.should_link)
+        self.assertFalse(action.should_remove_existing)
+
+    def test_evaluate_symlink_action_already_correct(self):
+        spec = SymlinkSpec(Path("/home/u/.gemini/config/skills"), Path("/home/u/.agents/skills"))
+        action = evaluate_symlink_action(spec, is_symlink=True, current_target=Path("/home/u/.agents/skills"), path_exists=True)
+        self.assertFalse(action.should_link)
+        self.assertFalse(action.should_remove_existing)
+
+    def test_evaluate_symlink_action_mismatched_target(self):
+        spec = SymlinkSpec(Path("/home/u/.gemini/config/skills"), Path("/home/u/.agents/skills"))
+        action = evaluate_symlink_action(spec, is_symlink=True, current_target=Path("/home/u/other"), path_exists=True)
+        self.assertTrue(action.should_link)
+        self.assertTrue(action.should_remove_existing)
+
+    def test_evaluate_symlink_action_regular_file_exists(self):
+        spec = SymlinkSpec(Path("/home/u/.gemini/config/skills"), Path("/home/u/.agents/skills"))
+        action = evaluate_symlink_action(spec, is_symlink=False, current_target=None, path_exists=True)
+        self.assertFalse(action.should_link)
+        self.assertFalse(action.should_remove_existing)
+
+
+class TestAgentSymlinksIntegration(unittest.TestCase):
+    def test_setup_agent_symlinks_creates_links(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            home = Path(tmp_dir)
+            _setup_agent_symlinks(home)
+            skills_link = home / ".gemini" / "config" / "skills"
+            self.assertTrue(skills_link.is_symlink())
+            self.assertEqual(Path(os.readlink(skills_link)), home / ".agents" / "skills")
 
 
 if __name__ == "__main__":
