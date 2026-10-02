@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # SUMMARY: bidirectionally sync ~/.agents/skills with a remote host
 import argparse
+import os
 from pathlib import Path
 import shlex
 import shutil
@@ -20,8 +21,44 @@ def filter_skill_names(names: Iterable[str]) -> Set[str]:
     return {name.strip() for name in names if name.strip() and not name.strip().startswith(".")}
 
 
+def filter_paths(paths: Iterable[str]) -> Set[str]:
+    """Filter out empty lines and paths containing hidden components (starting with .)."""
+    result = set()
+    for path in paths:
+        cleaned = path.strip()
+        if cleaned.startswith("./"):
+            cleaned = cleaned[2:]
+        if not cleaned:
+            continue
+        parts = Path(cleaned).parts
+        if not any(part.startswith(".") for part in parts):
+            result.add(cleaned)
+    return result
+
+
+def is_subpath_of_any(path: str, parent_dirs: Iterable[str]) -> bool:
+    """Check if path is identical to or inside any of the parent directories."""
+    for parent in parent_dirs:
+        if path == parent or path.startswith(parent + "/"):
+            return True
+    return False
+
+
+def parse_remote_find_output(output: str) -> Tuple[Set[str], Set[str]]:
+    """Parse output of remote find command into (directories, files)."""
+    lines = output.splitlines()
+    if "---" in lines:
+        sep_index = lines.index("---")
+        raw_dirs = lines[:sep_index]
+        raw_files = lines[sep_index + 1:]
+    else:
+        raw_dirs = lines
+        raw_files = []
+    return filter_paths(raw_dirs), filter_paths(raw_files)
+
+
 def compute_skill_diff(local_skills: Set[str], remote_skills: Set[str]) -> Tuple[List[str], List[str]]:
-    """Return sorted lists of local-only and remote-only skill directory names."""
+    """Return sorted lists of local-only and remote-only names."""
     return sorted(local_skills - remote_skills), sorted(remote_skills - local_skills)
 
 
@@ -56,9 +93,49 @@ def get_local_skills(directory: Path) -> Set[str]:
 
 def get_remote_skills(remote_host: str, remote_dir: str) -> Set[str]:
     """Return set of skill directory names from remote host using SSH."""
-    cmd = ["ssh", remote_host, f"mkdir -p {remote_dir} && ls -1A {remote_dir}"]
+    clean_dir = remote_dir.rstrip("/")
+    if clean_dir.startswith("~/"):
+        remote_target = f"~/{shlex.quote(clean_dir[2:])}"
+    else:
+        remote_target = shlex.quote(clean_dir)
+    cmd = ["ssh", remote_host, f"mkdir -p {remote_target} && ls -1A {remote_target}"]
     output = subprocess.check_output(cmd, text=True)
     return filter_skill_names(output.splitlines())
+
+
+def get_local_entries(directory: Path) -> Tuple[Set[str], Set[str]]:
+    """Return sets of (directory_relative_paths, file_relative_paths) from local directory."""
+    if not directory.exists():
+        return set(), set()
+    dirs = set()
+    files = set()
+    for root, dirnames, filenames in os.walk(directory):
+        dirnames[:] = [d for d in dirnames if not d.startswith(".")]
+        rel_root = Path(root).relative_to(directory)
+        for d in dirnames:
+            rel_dir = str(rel_root / d) if rel_root != Path(".") else d
+            dirs.add(rel_dir)
+        for f in filenames:
+            if not f.startswith("."):
+                rel_file = str(rel_root / f) if rel_root != Path(".") else f
+                files.add(rel_file)
+    return dirs, files
+
+
+def get_remote_entries(remote_host: str, remote_dir: str) -> Tuple[Set[str], Set[str]]:
+    """Return sets of (directory_relative_paths, file_relative_paths) from remote host using SSH."""
+    clean_dir = remote_dir.rstrip("/")
+    if clean_dir.startswith("~/"):
+        remote_target = f"~/{shlex.quote(clean_dir[2:])}"
+    else:
+        remote_target = shlex.quote(clean_dir)
+    cmd = [
+        "ssh",
+        remote_host,
+        f"mkdir -p {remote_target} && cd {remote_target} && find . -mindepth 1 -type d && echo '---' && find . -mindepth 1 ! -type d",
+    ]
+    output = subprocess.check_output(cmd, text=True)
+    return parse_remote_find_output(output)
 
 
 def delete_local_skill(skill_path: Path) -> None:
@@ -66,7 +143,7 @@ def delete_local_skill(skill_path: Path) -> None:
     print(f"==> Deleting local skill: {skill_path.name}")
     if skill_path.is_dir() and not skill_path.is_symlink():
         shutil.rmtree(skill_path)
-    elif skill_path.exists():
+    elif skill_path.exists() or skill_path.is_symlink():
         skill_path.unlink()
 
 
@@ -77,9 +154,48 @@ def delete_remote_skill(remote_host: str, remote_dir: str, skill_name: str) -> N
     subprocess.run(["ssh", remote_host, f"rm -rf {quoted_path}"], check=True)
 
 
-def prompt_action(skill: str, missing_on: str, input_func: Callable[[str], str] = input) -> str:
-    """Prompt user until they choose to copy or delete a missing skill."""
-    prompt_text = f"Skill '{skill}' is missing on {missing_on}. [c]opy or [d]elete? "
+def delete_local_file(file_path: Path, rel_path: Optional[str] = None) -> None:
+    """Delete a file from local filesystem."""
+    display_name = rel_path or file_path.name
+    print(f"==> Deleting local file: {display_name}")
+    if file_path.is_dir() and not file_path.is_symlink():
+        shutil.rmtree(file_path)
+    elif file_path.exists() or file_path.is_symlink():
+        file_path.unlink()
+
+
+def delete_remote_file(remote_host: str, remote_dir: str, file_name: str) -> None:
+    """Delete a file on remote host using SSH."""
+    print(f"==> Deleting remote file on {remote_host}: {file_name}")
+    quoted_path = f"{remote_dir.rstrip('/')}/{shlex.quote(file_name)}"
+    subprocess.run(["ssh", remote_host, f"rm -rf {quoted_path}"], check=True)
+
+
+def delete_local_dir(dir_path: Path, rel_path: Optional[str] = None) -> None:
+    """Delete a directory from local filesystem."""
+    display_name = rel_path or dir_path.name
+    print(f"==> Deleting local directory: {display_name}")
+    if dir_path.is_dir() and not dir_path.is_symlink():
+        shutil.rmtree(dir_path)
+    elif dir_path.exists() or dir_path.is_symlink():
+        dir_path.unlink()
+
+
+def delete_remote_dir(remote_host: str, remote_dir: str, dir_name: str) -> None:
+    """Delete a directory on remote host using SSH."""
+    print(f"==> Deleting remote directory on {remote_host}: {dir_name}")
+    quoted_path = f"{remote_dir.rstrip('/')}/{shlex.quote(dir_name)}"
+    subprocess.run(["ssh", remote_host, f"rm -rf {quoted_path}"], check=True)
+
+
+def prompt_action(
+    item: str,
+    missing_on: str,
+    input_func: Callable[[str], str] = input,
+    item_type: str = "Skill",
+) -> str:
+    """Prompt user until they choose to copy or delete a missing skill or file."""
+    prompt_text = f"{item_type} '{item}' is missing on {missing_on}. [c]opy or [d]elete? "
     while True:
         action = parse_action(input_func(prompt_text))
         if action:
@@ -93,24 +209,65 @@ def sync_skills(
     remote_dir: str = REMOTE_DIR,
     input_func: Callable[[str], str] = input,
 ) -> None:
-    """Synchronize skills between local machine and remote host."""
+    """Synchronize skills and files between local machine and remote host."""
     local_dir.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["ssh", remote_host, f"mkdir -p {remote_dir}"], check=True)
+    clean_dir = remote_dir.rstrip("/")
+    if clean_dir.startswith("~/"):
+        remote_target = f"~/{shlex.quote(clean_dir[2:])}"
+    else:
+        remote_target = shlex.quote(clean_dir)
+    subprocess.run(["ssh", remote_host, f"mkdir -p {remote_target}"], check=True)
 
-    local_skills = get_local_skills(local_dir)
-    remote_skills = get_remote_skills(remote_host, remote_dir)
+    local_dirs, local_files = get_local_entries(local_dir)
+    remote_dirs, remote_files = get_remote_entries(remote_host, remote_dir)
 
-    local_only, remote_only = compute_skill_diff(local_skills, remote_skills)
+    local_only_dirs, remote_only_dirs = compute_skill_diff(local_dirs, remote_dirs)
+    local_only_files, remote_only_files = compute_skill_diff(local_files, remote_files)
 
-    for skill in local_only:
-        action = prompt_action(skill, missing_on=remote_host, input_func=input_func)
+    local_only_dirs.sort(key=lambda p: (p.count("/"), p))
+    remote_only_dirs.sort(key=lambda p: (p.count("/"), p))
+
+    # Handle local items missing on remote
+    handled_local_dirs: Set[str] = set()
+    for d in local_only_dirs:
+        if is_subpath_of_any(d, handled_local_dirs):
+            continue
+        item_type = "Skill" if "/" not in d else "Directory"
+        action = prompt_action(d, missing_on=remote_host, input_func=input_func, item_type=item_type)
+        handled_local_dirs.add(d)
         if action == "delete":
-            delete_local_skill(local_dir / skill)
+            if "/" not in d:
+                delete_local_skill(local_dir / d)
+            else:
+                delete_local_dir(local_dir / d, rel_path=d)
 
-    for skill in remote_only:
-        action = prompt_action(skill, missing_on="local", input_func=input_func)
+    for f in local_only_files:
+        if is_subpath_of_any(f, handled_local_dirs):
+            continue
+        action = prompt_action(f, missing_on=remote_host, input_func=input_func, item_type="File")
         if action == "delete":
-            delete_remote_skill(remote_host, remote_dir, skill)
+            delete_local_file(local_dir / f, rel_path=f)
+
+    # Handle remote items missing on local
+    handled_remote_dirs: Set[str] = set()
+    for d in remote_only_dirs:
+        if is_subpath_of_any(d, handled_remote_dirs):
+            continue
+        item_type = "Skill" if "/" not in d else "Directory"
+        action = prompt_action(d, missing_on="local", input_func=input_func, item_type=item_type)
+        handled_remote_dirs.add(d)
+        if action == "delete":
+            if "/" not in d:
+                delete_remote_skill(remote_host, remote_dir, d)
+            else:
+                delete_remote_dir(remote_host, remote_dir, d)
+
+    for f in remote_only_files:
+        if is_subpath_of_any(f, handled_remote_dirs):
+            continue
+        action = prompt_action(f, missing_on="local", input_func=input_func, item_type="File")
+        if action == "delete":
+            delete_remote_file(remote_host, remote_dir, f)
 
     print(f"==> Syncing: Local -> {remote_host} (updating newer/missing files)...")
     subprocess.run(
