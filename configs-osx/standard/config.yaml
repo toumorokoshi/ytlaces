@@ -31,3 +31,9 @@ post_install_messages:
       1. Open System Settings -> Keyboard -> Text Input -> Input Sources -> Edit...
       2. Click '+' -> select 'Others' in left sidebar -> select 'QWERTY no option' -> Add.
       3. Switch your layout to 'QWERTY no option' via the menu bar or remove the U.S. layout.
+  - >
+    ACTION REQUIRED: Disable macOS auto-switching Spaces on app activation.
+    Otherwise focusing a Chrome window in AeroSpace switches other monitors to workspaces with Chrome windows:
+      1. Open System Settings -> Desktop & Dock -> Mission Control.
+      2. Turn off 'When switching to an application, switch to a Space with open windows for the application'.
+      Or run: defaults write com.apple.dock workspaces-auto-swoosh -bool NO && killall Dock
